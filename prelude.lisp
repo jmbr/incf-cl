@@ -94,3 +94,12 @@ elements, TAKE returns the entire sequence."
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
   (values (span predicate list)))
+
+(defun unzip (alist)
+  "Applied to the association list ALIST, returns two lists (as
+VALUES) containing the keys and values of each element in ALIST
+respectively.  This function is the reverse of PAIRLIS."
+  (do ((alist alist (cdr alist))
+       (xs nil (cons (caar alist) xs))
+       (ys nil (cons (cdar alist) ys)))
+      ((null alist) (values xs ys))))

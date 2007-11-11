@@ -31,4 +31,4 @@
            #:assemble #:<-
            #:range
            #:break* #:drop #:drop-while #:flip #:insert #:replicate
-           #:span #:split-at #:take #:take-while))
+           #:span #:split-at #:take #:take-while #:unzip))
