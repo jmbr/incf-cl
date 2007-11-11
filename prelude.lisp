@@ -71,7 +71,6 @@ two lists (returned as VALUES) at the position corresponding to the
 given integer.  If the N is greater than the length of LIST, it
 returns a tuple containing the entire list as its first element and
 the empty list as its second element."
-  (assert (>= n 0))
   (do ((list list (cdr list))
        (n n (1- n))
        (xs nil (cons (car list) xs)))
@@ -79,21 +78,13 @@ the empty list as its second element."
            (null list))
        (values (nreverse xs) list))))
 
-(defun replicate (n x)
-  "Returns a list contaning N times the value X"
-  (loop repeat n collect x))
+(defun take (n list)
+  "Applied to the integer N and LIST, returns the specified number of
+elements from the front of LIST.  If the sequence has less than N
+elements, TAKE returns the entire sequence."
+  (values (split-at n list)))
 
-(defun take (n xs)
-  "Applied to an integer N and a sequence XS, returns the specified
-number of elements from the front of the sequence.  If the sequence
-has less than the required number of elements, take returns the entire
-sequence."
-  (assert (>= n 0))
-  (handler-case (subseq xs 0 n)
-    (condition () xs)))
-
-(defun take-while (pred xs)
-  "Applied to a predicate PRED and a list XS, returns a list
-containing elements from the front of the list while PRED is
-satisfied."
-  (loop for x in xs while (funcall pred x) collect x))
+(defun take-while (predicate list)
+  "Applied to PREDICATE and LIST, returns a list containing elements
+from the front of LIST while PREDICATE is satisfied."
+  (values (span predicate list)))
