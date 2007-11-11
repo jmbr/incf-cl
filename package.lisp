@@ -29,4 +29,6 @@
   (:export #:curry
            #:vector+ #:vector- #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-
-           #:range))
+           #:range
+           ;; #:break
+           #:flip #:span #:replicate #:take #:take-while))
