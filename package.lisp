@@ -31,4 +31,4 @@
            #:assemble #:<-
            #:range
            ;; #:break
-           #:flip #:span #:replicate #:take #:take-while))
+           #:flip #:span #:split-at #:replicate #:take #:take-while))

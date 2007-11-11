@@ -47,6 +47,20 @@ elements from LIST once PREDICATE is not satisfied."
             (not (funcall predicate x)))
         (values (nreverse (rest ys)) xs))))
 
+(defun split-at (n list)
+  "Given an integer N (positive or zero) and LIST, splits LIST into
+two lists (returned as VALUES) at the position corresponding to the
+given integer.  If the N is greater than the length of LIST, it
+returns a tuple containing the entire list as its first element and
+the empty list as its second element."
+  (assert (>= n 0))
+  (do ((list list (cdr list))
+       (n n (1- n))
+       (xs nil (cons (car list) xs)))
+      ((or (zerop n)
+           (null list))
+       (values (nreverse xs) list))))
+
 (defun replicate (n x)
   "Returns a list contaning N times the value X"
   (loop repeat n collect x))
