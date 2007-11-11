@@ -30,7 +30,7 @@
   :description "incf-cl is a library of convenience functions for Common Lisp"
   :version "0.0.1"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
-  :license "GNU GPLv2"
+  :license "X11"
   :components ((:file "package")
                (:file "curry" :depends-on ("package"))
                (:file "vector" :depends-on ("package"))
