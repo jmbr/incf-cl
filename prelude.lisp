@@ -36,13 +36,13 @@ entire LIST and the second element is NIL."
   "Applied to N (a non-negative integer) and LIST, returns the list
 with the specified number of elements removed from the front of LIST.
 If LIST has less than N elements then it returns NIL."
-;;;   (nth-value 1 (split-at n list))
   (nthcdr n list))
 
 (defun drop-while (predicate list)
   "Applied to PREDICATE and LIST, removes elements from the front of
 LIST while PREDICATE is satisfied."
-  (nth-value 1 (span predicate list)))
+  (do ((list list (rest list)))
+      ((not (funcall predicate (first list))) list)))
   
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
@@ -88,12 +88,14 @@ the empty list as its second element."
   "Applied to the integer N and LIST, returns the specified number of
 elements from the front of LIST.  If the sequence has less than N
 elements, TAKE returns the entire sequence."
-  (values (split-at n list)))
+  (subseq list 0 n))
 
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
-  (values (span predicate list)))
+  (do ((list list (rest list))
+       (xs nil (cons (car list) xs)))
+      ((not (funcall predicate (first list))) (nreverse xs))))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
