@@ -22,6 +22,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
+;;; Most of the docstrings are taken from A tour of the Haskell
+;;; Prelude by Bernie Pope.
+
 (defun break (predicate list)
   "Given a PREDICATE and a LIST, breaks LIST into two lists (returned
 as VALUES) at the point where PREDICATE is first satisfied.  If
@@ -29,11 +32,27 @@ PREDICATE is never satisfied then the first returned value is the
 entire LIST and the second element is NIL."
   (span (complement predicate) list))
 
+(defun drop (n list)
+  "Applied to N (a non-negative integer) and LIST, returns the list
+with the specified number of elements removed from the front of LIST.
+If LIST has less than N elements then it returns NIL."
+;;;   (nth-value 1 (split-at n list))
+  (nthcdr n list))
+
+(defun drop-while (predicate list)
+  "Applied to PREDICATE and LIST, removes elements from the front of
+LIST while PREDICATE is satisfied."
+  (nth-value 1 (span predicate list)))
+  
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
 order of the arguments reversed."
   (lambda (x y)
     (funcall f y x)))
+
+(defun replicate (n x)
+  "Returns a list contaning N times the value X"
+  (loop repeat n collect x))
 
 (defun span (predicate list)
   "Splits LIST into two lists (returned as VALUES) such that elements
