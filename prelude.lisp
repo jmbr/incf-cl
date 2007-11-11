@@ -56,15 +56,14 @@ order of the arguments reversed."
 
 (defun span (predicate list)
   "Splits LIST into two lists (returned as VALUES) such that elements
-in the first list are taken from the head of LIST while PREDICATE
-is satisfied, and elements in the second list are the remaining
-elements from LIST once PREDICATE is not satisfied."
-  (do* ((xs list (rest xs))
-        (x (first xs) (first xs))
-        (ys (cons x nil) (cons x ys)))
-       ((or (null xs)
-            (not (funcall predicate x)))
-        (values (nreverse (rest ys)) xs))))
+in the first list are taken from the head of LIST while PREDICATE is
+satisfied, and elements in the second list are the remaining elements
+from LIST once PREDICATE is not satisfied."
+  (do ((list list (rest list))
+       (xs nil (cons (first list) xs)))
+      ((or (null list)
+           (not (funcall predicate (first list))))
+       (values (nreverse xs) list))))
 
 (defun split-at (n list)
   "Given an integer N (positive or zero) and LIST, splits LIST into
