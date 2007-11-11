@@ -22,7 +22,7 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defmacro dohash ((key value table &optional (result-form 'nil)) &body body)
+(defmacro dohash ((key value table &optional (result-form nil)) &body body)
   "DOHASH iterates over the keys and values of a hash table."
   `(loop for ,key being each hash-key in ,table using (hash-value ,value) do
         (progn
