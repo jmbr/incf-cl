@@ -23,9 +23,9 @@
 
 (cl:in-package :cl-user)
 
-(defpackage :com.superadditive.incf-cl
-  (:nicknames :incf-cl)
-  (:use :common-lisp)
+(defpackage #:com.superadditive.incf-cl
+  (:nicknames #:incf-cl)
+  (:use #:common-lisp)
   (:export #:curry
            #:vector+ #:vector- #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-

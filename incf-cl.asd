@@ -21,10 +21,10 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defpackage :com.superadditive.incf-cl-system
+(defpackage #:com.superadditive.incf-cl-system
   (:use :common-lisp :asdf))
 
-(in-package :com.superadditive.incf-cl-system)
+(in-package #:com.superadditive.incf-cl-system)
 
 (defsystem "incf-cl"
   :description "incf-cl is a library of convenience functions for Common Lisp"
