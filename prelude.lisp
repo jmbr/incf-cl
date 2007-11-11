@@ -77,9 +77,9 @@ two lists (returned as VALUES) at the position corresponding to the
 given integer.  If the N is greater than the length of LIST, it
 returns a tuple containing the entire list as its first element and
 the empty list as its second element."
-  (do ((list list (cdr list))
+  (do ((list list (rest list))
        (n n (1- n))
-       (xs nil (cons (car list) xs)))
+       (xs nil (cons (first list) xs)))
       ((or (zerop n)
            (null list))
        (values (nreverse xs) list))))
@@ -94,14 +94,14 @@ elements, TAKE returns the entire sequence."
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
   (do ((list list (rest list))
-       (xs nil (cons (car list) xs)))
+       (xs nil (cons (first list) xs)))
       ((not (funcall predicate (first list))) (nreverse xs))))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
 VALUES) containing the keys and values of each element in ALIST
 respectively.  This function is the reverse of PAIRLIS."
-  (do ((alist alist (cdr alist))
+  (do ((alist alist (rest alist))
        (xs nil (cons (caar alist) xs))
        (ys nil (cons (cdar alist) ys)))
       ((null alist) (values xs ys))))
