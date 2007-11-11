@@ -1,3 +1,4 @@
+(in-package :com.superadditive.incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;; 
@@ -21,15 +22,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(cl:in-package :cl-user)
-
-(defpackage #:com.superadditive.incf-cl
-  (:nicknames #:incf-cl)
-  (:use #:common-lisp)
-  (:export #:curry
-           #:vector+ #:vector- #:vector> #:vector= #:vector-zero-p
-           #:assemble #:<-
-           #:range
-           #:break* #:drop #:drop-while #:flip #:insert #:replicate
-           #:span #:split-at #:take #:take-while #:unzip
-           #:dohash))
+(defmacro dohash ((key value table &optional (result-form 'nil)) &body body)
+  "DOHASH iterates over the keys and values of a hash table."
+  `(loop for ,key being each hash-key in ,table using (hash-value ,value) do
+        (progn
+          ,@body)
+        finally (return ,result-form)))

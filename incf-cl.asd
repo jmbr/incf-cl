@@ -36,4 +36,5 @@
                (:file "vector" :depends-on ("package"))
                (:file "assemble" :depends-on ("package"))
                (:file "range" :depends-on ("package"))
-               (:file "prelude" :depends-on ("package"))))
+               (:file "prelude" :depends-on ("package"))
+               (:file "dohash" :depends-on ("package"))))
