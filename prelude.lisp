@@ -50,6 +50,12 @@ order of the arguments reversed."
   (lambda (x y)
     (funcall f y x)))
 
+(defun insert (x list &key (test #'<))
+  "Inserts X before the first element in LIST which is greater than X.
+The order relation can be specified by the keyword TEST"
+  (multiple-value-bind (lt ge) (span (curry (flip test) x) list)
+    (nconc lt (cons x ge))))
+
 (defun replicate (n x)
   "Returns a list contaning N times the value X"
   (loop repeat n collect x))
