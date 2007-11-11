@@ -30,5 +30,5 @@
            #:vector+ #:vector- #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-
            #:range
-           ;; #:break
-           #:drop #:drop-while #:flip #:replicate #:span #:split-at #:take #:take-while))
+           #:break* #:drop #:drop-while #:flip #:insert #:replicate
+           #:span #:split-at #:take #:take-while))

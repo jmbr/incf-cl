@@ -25,7 +25,7 @@
 ;;; Most of the docstrings are taken from A tour of the Haskell
 ;;; Prelude by Bernie Pope.
 
-(defun break (predicate list)
+(defun break* (predicate list)
   "Given a PREDICATE and a LIST, breaks LIST into two lists (returned
 as VALUES) at the point where PREDICATE is first satisfied.  If
 PREDICATE is never satisfied then the first returned value is the
