@@ -88,7 +88,7 @@ the entire list first and the empty list second in VALUES."
   "Applied to the integer N and LIST, returns the specified number of
 elements from the front of LIST.  If LIST has less than N elements,
 TAKE returns the entire LIST."
-  (subseq list 0 n))
+  (values (funcall #'split-at n list)))
 
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
