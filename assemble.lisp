@@ -46,4 +46,3 @@ COLLECTION-FORM and subject to QUANTIFIERS."
              `(when ,filter-form ,@(translate collection-form qs))))
     (unless (null quantifiers)
       `(loop repeat 1 ,@(translate collection-form quantifiers)))))
-

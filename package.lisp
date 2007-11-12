@@ -33,4 +33,4 @@
            #:break* #:drop #:drop-while #:flip #:insert #:replicate
            #:span #:split-at #:take #:take-while #:unzip
            #-clisp #:dohash #:hash-table->alist #:alist->hash-table
-           #:string-startswith #:string-endswith))
+           #:starts-with #:ends-with))

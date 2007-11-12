@@ -22,36 +22,34 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defun string-startswith (string prefix)
-  "Returns T if STRING starts with PREFIX, NIL otherwise.  PREFIX can
-be either a string or a list of prefixes to try to match."
-  (assert (and string prefix))
-  (flet ((match-start (string prefix)
-           (let ((string-len (length string))
+(defun starts-with (sequence prefix &key (test #'equal))
+  "Returns T if SEQUENCE starts with PREFIX, NIL otherwise.  PREFIX
+can also be a list of prefixes to try to match."
+  (assert (and sequence prefix))
+  (flet ((match-start (sequence prefix)
+           (let ((sequence-len (length sequence))
                  (prefix-len (length prefix)))
-             (assert (<= prefix-len string-len))
-             (string= (subseq string 0 prefix-len) prefix))))
-    (ctypecase prefix
-      (list
-       (dolist (p prefix)
-         (when (match-start string p)
-           (return t))))
-      (string
-       (match-start string prefix)))))
+             (assert (<= prefix-len sequence-len))
+             (funcall test (subseq sequence 0 prefix-len) prefix))))
+    (if (listp prefix)
+        (dolist (p prefix)
+          (when (match-start sequence p)
+            (return t)))
+        (match-start sequence prefix))))
 
-(defun string-endswith (string suffix)
-  "Returns T if STRING ends with SUFFIX, NIL otherwise.  SUFFIX can be
-either a string or a list of suffixes to try to match."
-  (assert (and string suffix))
-  (flet ((match-end (string suffix)
-           (let ((string-len (length string))
+(defun ends-with (sequence suffix &key (test #'equal))
+  "Returns T if SEQUENCE ends with SUFFIX, NIL otherwise.  SUFFIX can
+also be a list of suffixes to try to match."
+  (assert (and sequence suffix))
+  (flet ((match-end (sequence suffix)
+           (let ((sequence-len (length sequence))
                  (suffix-len (length suffix)))
-             (assert (<= suffix-len string-len))
-             (string= (subseq string (- string-len suffix-len) string-len) suffix))))
-    (ctypecase suffix
-      (list
-       (dolist (s suffix)
-         (when (match-end string s)
-           (return t))))
-      (string
-       (match-end string suffix)))))
+             (assert (<= suffix-len sequence-len))
+             (funcall test (subseq sequence
+                                   (- sequence-len suffix-len)
+                                   sequence-len) suffix))))
+    (if (listp suffix)
+        (dolist (s suffix)
+          (when (match-end sequence s)
+            (return t)))
+        (match-end sequence suffix))))

@@ -38,4 +38,4 @@
                (:file "range" :depends-on ("package"))
                (:file "prelude" :depends-on ("package"))
                (:file "hash-table" :depends-on ("package"))
-               (:file "string" :depends-on ("package"))))
+               (:file "sequence" :depends-on ("package"))))
