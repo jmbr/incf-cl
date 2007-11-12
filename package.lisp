@@ -32,4 +32,4 @@
            #:range
            #:break* #:drop #:drop-while #:flip #:insert #:replicate
            #:span #:split-at #:take #:take-while #:unzip
-           #-clisp #:dohash))
+           #-clisp #:dohash #:hash-table->alist #:alist->hash-table))
