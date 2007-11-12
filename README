@@ -58,7 +58,7 @@ Examples
 Ranges
 ^^^^^^
 
-The function RANGE is similar to Matlab's vector notation.  Some uses
+The function RANGE is similar to Matlab's vector notation.  Some use
 cases are:
 
 -----------------------------------------------------------------------
