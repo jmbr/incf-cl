@@ -26,9 +26,9 @@
 ;;; resembling Matlab vector notation).
 
 (defun range (a b &optional c)
-  (flet ((|:| (start step stop)
+  (flet ((aux (start step stop)
            (assert (and (<= start stop) (> step 0)))
            (loop for x from start to stop by step collect x)))
     (if c
-        (|:| a b c)
-        (|:| a 1 b))))
+        (aux a b c)
+        (aux a 1 b))))
