@@ -34,7 +34,7 @@
 (defun hash-table->alist (hash-table)
   "Returns an association list containing the keys and values in
 HASH-TABLE."
-  (let ((alist))
+  (let (alist)
     (dohash (key value hash-table alist)
       (setf alist (acons key value alist)))))
 
