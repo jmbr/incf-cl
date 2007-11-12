@@ -42,7 +42,8 @@ If LIST has less than N elements then it returns NIL."
   "Applied to PREDICATE and LIST, removes elements from the front of
 LIST while PREDICATE is satisfied."
   (do ((list list (rest list)))
-      ((not (funcall predicate (first list))) list)))
+      ((or (null list)
+           (not (funcall predicate (first list)))) list)))
   
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
@@ -94,7 +95,8 @@ TAKE returns the entire LIST."
 from the front of LIST while PREDICATE is satisfied."
   (do ((list list (rest list))
        (xs nil (cons (first list) xs)))
-      ((not (funcall predicate (first list))) (nreverse xs))))
+      ((or (null list)
+           (not (funcall predicate (first list)))) (nreverse xs))))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
