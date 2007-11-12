@@ -27,7 +27,7 @@
   (:nicknames #:incf-cl)
   (:use #:common-lisp)
   (:export #:curry
-           #:vector+ #:vector- #:vector> #:vector= #:vector-zero-p
+           #:vector+ #:vector- #:vector* #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-
            #:range
            #:break* #:drop #:drop-while #:flip #:insert #:replicate

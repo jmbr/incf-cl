@@ -30,6 +30,10 @@
   "Returns the difference of the two vectors V1 and V2."
   (map 'vector #'- v1 v2))
 
+(defun vector* (v1 v2)
+  "Returns the scalar product of V1 and V2."
+  (reduce #'+ (map 'list #'* v1 v2)))
+
 (defun vector-zero-p (v)
   "Returns T if every compoment in V is zero."
   (every #'zerop v))
