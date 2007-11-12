@@ -24,7 +24,8 @@
 
 (defmacro dohash ((key value hash-table &optional (result-form nil))
                   &body body)
-  "DOHASH iterates over the keys and values of a hash table."
+  "DOHASH iterates over the keys and values of HASH-TABLE.  It returns
+NIL or the result of evaluating RESULT-FORM if it was specified."
   `(loop
       for ,key being each hash-key in ,hash-table using (hash-value ,value) do
       (progn

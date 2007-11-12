@@ -74,9 +74,8 @@ from LIST once PREDICATE is not satisfied."
 (defun split-at (n list)
   "Given an integer N (positive or zero) and LIST, splits LIST into
 two lists (returned as VALUES) at the position corresponding to the
-given integer.  If the N is greater than the length of LIST, it
-returns a tuple containing the entire list as its first element and
-the empty list as its second element."
+given integer.  If N is greater than the length of LIST, it returns
+the entire list first and the empty list second in VALUES."
   (do ((list list (rest list))
        (n n (1- n))
        (xs nil (cons (first list) xs)))
@@ -86,8 +85,8 @@ the empty list as its second element."
 
 (defun take (n list)
   "Applied to the integer N and LIST, returns the specified number of
-elements from the front of LIST.  If the sequence has less than N
-elements, TAKE returns the entire sequence."
+elements from the front of LIST.  If LIST has less than N elements,
+TAKE returns the entire LIST."
   (subseq list 0 n))
 
 (defun take-while (predicate list)
