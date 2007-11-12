@@ -23,33 +23,19 @@
 ;;; DEALINGS IN THE SOFTWARE.
 
 (defun starts-with (sequence prefix &key (test #'equal))
-  "Returns T if SEQUENCE starts with PREFIX, NIL otherwise.  PREFIX
-can also be a list of prefixes to try to match."
+  "Returns T if SEQUENCE starts with PREFIX, NIL otherwise."
   (assert (and sequence prefix))
-  (flet ((match-start (sequence prefix)
-           (let ((sequence-len (length sequence))
-                 (prefix-len (length prefix)))
-             (assert (<= prefix-len sequence-len))
-             (funcall test (subseq sequence 0 prefix-len) prefix))))
-    (if (listp prefix)
-        (dolist (p prefix)
-          (when (match-start sequence p)
-            (return t)))
-        (match-start sequence prefix))))
+  (let ((sequence-len (length sequence))
+        (prefix-len (length prefix)))
+    (assert (<= prefix-len sequence-len))
+    (funcall test (subseq sequence 0 prefix-len) prefix)))
 
 (defun ends-with (sequence suffix &key (test #'equal))
-  "Returns T if SEQUENCE ends with SUFFIX, NIL otherwise.  SUFFIX can
-also be a list of suffixes to try to match."
+  "Returns T if SEQUENCE ends with SUFFIX, NIL otherwise."
   (assert (and sequence suffix))
-  (flet ((match-end (sequence suffix)
-           (let ((sequence-len (length sequence))
-                 (suffix-len (length suffix)))
-             (assert (<= suffix-len sequence-len))
-             (funcall test (subseq sequence
-                                   (- sequence-len suffix-len)
-                                   sequence-len) suffix))))
-    (if (listp suffix)
-        (dolist (s suffix)
-          (when (match-end sequence s)
-            (return t)))
-        (match-end sequence suffix))))
+  (let ((sequence-len (length sequence))
+        (suffix-len (length suffix)))
+    (assert (<= suffix-len sequence-len))
+    (funcall test (subseq sequence
+                          (- sequence-len suffix-len)
+                          sequence-len) suffix)))
