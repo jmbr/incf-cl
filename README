@@ -1,0 +1,184 @@
+(incf cl) utilities
+===================
+Juan M. Bello Rivas <jmbr@superadditive.com>
+v0.0.1, November 2007
+
+Overview
+--------
+
+The package (incf cl) is a collection of convenience functions and
+macros to aid in the development of software written in Common Lisp.
+
+License
+-------
+
+The code is released under the X11 license.  This means that you can
+use it for almost anything as long as you keep the copyright notice.
+It is also compatible with the GNU GPL.
+
+Availability
+------------
+
+You can download the latest version of (incf cl) from 
+http://superadditive.com/software/incf-cl.tar.gz[]
+
+Portability
+-----------
+
+This code has been tested under SBCL 1.0.11, CMU Common Lisp 19d, and
+GNU CLISP 2.42
+
+Installation
+------------
+
+The easiest way is to use ASDF-INSTALL if you have it on your system:
+
+----------------------------------------------------
+  (asdf-install:install "/path/to/incf-cl.tar.gz")
+----------------------------------------------------
+
+Usage
+-----
+
+Loading the package
+~~~~~~~~~~~~~~~~~~~
+
+To start using the package write: 
+
+--------------------------------------------------
+  CL-USER> (asdf:operate 'asdf:load-op :incf-cl)
+  NIL
+  CL-USER> (use-package :incf-cl)
+  T
+--------------------------------------------------
+
+Examples
+~~~~~~~~
+
+Ranges
+^^^^^^
+
+The function RANGE is similar to Matlab's vector notation.  Some uses
+cases are:
+
+-----------------------------------------------------------------------
+  CL-USER> (range 1 10)
+  (1 2 3 4 5 6 7 8 9 10)
+  CL-USER> (range 0 1/4 1)
+  (0 1/4 1/2 3/4 1)
+-----------------------------------------------------------------------
+
+List comprehensions
+^^^^^^^^^^^^^^^^^^^
+
+List comprehensions are a programming language construct that closely
+mimics the way you declare a set in mathematics and sometimes are more
+succinct and readable than using a composition of MAPCAR, DELETE-IF or
+an ad hoc imperative loop.
+
+-----------------------------------------------------------------------
+  CL-USER> (assemble (sin x) (<- x (range 0 .25 (/ pi 2))))
+  (0.0 0.24740396 0.47942555 0.6816388 0.84147096 0.9489846 0.997495)
+  CL-USER> (assemble (cons x y) (<- x (range 0 2)) (<- y (range 0 2))
+                     (= (+ x y) 2))
+  ((0 . 2) (1 . 1) (2 . 0))
+-----------------------------------------------------------------------
+
+Hash table utilities
+^^^^^^^^^^^^^^^^^^^^
+
+To quickly create a hash table you can use ALIST->HASH-TABLE.  Here's
+an example:
+
+-----------------------------------------------------------------------------
+  CL-USER> (defparameter *hash-table*
+             (alist->hash-table (pairlis '("one" "two" "three") '(1 2 3))))
+  *HASH-TABLE*
+  CL-USER> *hash-table*
+  #<HASH-TABLE :TEST EQL :COUNT 3 {AAEAF99}>
+-----------------------------------------------------------------------------
+
+The function ALIST->HASH-TABLE will process the specified list and
+pass every other parameter to MAKE-HASH-TABLE.  That way, you can
+control how the hash table will behave.
+  
+Now, if you want to traverse a hash table, DOHASH can iterate over it
+with semantics similar to those of DOLIST:
+
+-------------------------------------------------------
+  CL-USER> (dohash (key value *hash-table*)
+             (format t "~a => ~d~%" key value))
+  three => 3
+  two => 2
+  one => 1
+  NIL
+  CL-USER> (let ((product 1))
+             (dohash (key value *hash-table* product)
+               (setf product (* product value))))
+  6  
+-------------------------------------------------------
+
+Finally, for easy serialization, there's HASH-TABLE->ALIST, which
+converts the specified hash table to an association list:
+
+---------------------------------------------
+  CL-USER> (hash-table->alist *hash-table*)
+  (("one" . 1) ("two" . 2) ("three" . 3))
+---------------------------------------------
+
+Prelude
+^^^^^^^
+
+There are a few compatibility functions with Haskell's Prelude.
+Currently, the following are implemented:
+
+* BREAK*
+* CURRY
+* DROP
+* DROP-WHILE
+* FLIP
+* INSERT
+* REPLICATE
+* SPAN
+* SPLIT-AT
+* TAKE
+* TAKE-WHILE
+* UNZIP
+
+Since Common Lisp doesn't guarantee tail call elimination, these
+functions are written iteratively instead of recursively to avoid
+stack overflows.
+
+You can read the online documentation for each function (using
+DESCRIBE or C-c C-d d in SLIME) and also
+http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
+tour of the Haskell's prelude] to see more use cases.
+
+Sequences
+^^^^^^^^^
+
+To check whether a string (or another sequence) begins with a certain
+prefix, use:
+
+-------------------------------------------------
+  CL-USER> (starts-with "Hello, world!" "Hell")
+  T
+  CL-USER> (starts-with "Hello, world!" "Hola")
+  NIL
+-------------------------------------------------
+
+You can also provide a test function as the key parameter TEST.
+
+The function ENDS-WITH works in a similar way.
+
+Vectors
+^^^^^^^
+
+There are a few very basic functions to work with vectors (in the
+mathematical sense of the word).
+ 
+Feedback
+--------
+
+Please send your suggestions, patches, and bug reports to
+jmbr@superadditive.com
