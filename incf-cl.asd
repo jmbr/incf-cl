@@ -31,7 +31,9 @@
   :version "0.0.1"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
-  :components ((:file "package")
+  :components ((:doc-file "README")
+               (:doc-file "THANKS")
+               (:file "package")
                (:file "curry" :depends-on ("package"))
                (:file "vector" :depends-on ("package"))
                (:file "assemble" :depends-on ("package"))
