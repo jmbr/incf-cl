@@ -36,7 +36,8 @@ entire LIST and the second element is NIL."
   "Applied to N (a non-negative integer) and LIST, returns the list
 with the specified number of elements removed from the front of LIST.
 If LIST has less than N elements then it returns NIL."
-  (nthcdr n list))
+  (when (plusp n)
+    (nthcdr n list)))
 
 (defun drop-while (predicate list)
   "Applied to PREDICATE and LIST, removes elements from the front of
@@ -59,7 +60,8 @@ The order relation can be specified by the keyword TEST"
 
 (defun replicate (n x)
   "Returns a list contaning N times the value X"
-  (loop repeat n collect x))
+  (when (plusp n)
+    (loop repeat n collect x)))
 
 (defun span (predicate list)
   "Splits LIST into two lists (returned as VALUES) such that elements
