@@ -36,7 +36,7 @@ entire LIST and the second element is NIL."
   "Applied to N (a non-negative integer) and LIST, returns the list
 with the specified number of elements removed from the front of LIST.
 If LIST has less than N elements then it returns NIL."
-  (when (plusp n)
+  (unless (minusp n)
     (nthcdr n list)))
 
 (defun drop-while (predicate list)
