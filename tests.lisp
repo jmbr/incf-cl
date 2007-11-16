@@ -71,4 +71,12 @@
   (is (equal (acons 0 0 (acons 0 1 (acons 1 0 (acons 1 1 nil))))
              (assemble (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
 
+(test hash-table->alist
+  (is (equal (sort (hash-table->alist
+                    (alist->hash-table
+                     (pairlis '("one" "two" "three")
+                              '(1 2 3))))
+                   #'< :key #'cdr)
+             (acons "one" 1 (acons "two" 2 (acons "three" 3) nil)))))
+
 (run! 'incf-cl-test-suite)
