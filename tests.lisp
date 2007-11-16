@@ -57,4 +57,18 @@
   (is (eq nil (replicate 0 'x)))
   (is (equal (list 1 1 1) (replicate 3 1))))
 
+(test starts-with
+  (is (eq t (starts-with "Hello, world!" "Hell")))
+  (is (eq nil (starts-with "Hello, world!" "Hola"))))
+
+(test ends-with
+  (is (eq t (ends-with "Hello, world!" "world!")))
+  (is (eq nil (ends-with "Hello, world!" "world"))))
+
+(test assemble
+  (is (eq nil (assemble (constantly nil))))
+  (is (equal (list 1 2 3) (assemble x (<- x (range 1 3)))))
+  (is (equal (acons 0 0 (acons 0 1 (acons 1 0 (acons 1 1 nil))))
+             (assemble (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
+
 (run! 'incf-cl-test-suite)
