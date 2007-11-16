@@ -77,6 +77,6 @@
                      (pairlis '("one" "two" "three")
                               '(1 2 3))))
                    #'< :key #'cdr)
-             (acons "one" 1 (acons "two" 2 (acons "three" 3) nil)))))
+             (acons "one" 1 (acons "two" 2 (acons "three" 3 nil))))))
 
 (run! 'incf-cl-test-suite)
