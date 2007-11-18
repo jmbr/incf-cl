@@ -31,7 +31,8 @@
   :version "0.0.1"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
-  :components ((:doc-file "README")
+  :components ((:static-file "incf-cl.asd")
+               (:doc-file "README")
                (:doc-file "THANKS")
                (:file "package")
                (:file "curry" :depends-on ("package"))
