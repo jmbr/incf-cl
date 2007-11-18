@@ -1,3 +1,4 @@
+(in-package :com.superadditive.incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;; 
@@ -21,31 +22,14 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defpackage :com.superadditive.incf-cl-system
-  (:use :common-lisp :asdf))
-
-(in-package :com.superadditive.incf-cl-system)
-
-(defsystem "incf-cl"
-  :description "incf-cl is a library of convenience functions for Common Lisp"
-  :version "0.0.1"
-  :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
-  :license "X11"
-  :components ((:static-file "incf-cl.asd")
-               (:doc-file "README")
-               (:doc-file "THANKS")
-               (:file "package")
-               (:file "curry" :depends-on ("package"))
-               (:file "vector" :depends-on ("package"))
-               (:file "assemble" :depends-on ("package"))
-               (:file "range" :depends-on ("package"))
-               (:file "prelude" :depends-on ("package"))
-               (:file "hash-table" :depends-on ("package"))
-               (:file "sequence" :depends-on ("package"))
-               (:file "iteration" :depends-on ("package"))
-               (:file "string" :depends-on ("package"))))
-
-(defsystem "incf-cl-tests"
-  :description "Test suite for the INCF-CL library."
-  :depends-on (:stefil :incf-cl)
-  :components ((:file "tests")))
+(defun string-join (list &optional (sep " "))
+  "Returns a string joining each string in LIST by SEP.  If SEP is not
+specified, the default separator is a space."
+  ;; Based on Pascal Costanza's approach at
+  ;; http://groups.google.com/group/comp.lang.lisp/msg/8adbef3a067ece78
+  (when list
+    (with-output-to-string (stream)
+      (write-string (first list) stream)
+      (dolist (string (rest list) stream)
+        (write-string sep stream)
+        (write-string string stream)))))

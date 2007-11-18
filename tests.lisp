@@ -75,4 +75,13 @@
                    #'< :key #'cdr)
              (acons "one" 1 (acons "two" 2 (acons "three" 3 nil))))))
 
+(deftest test-string-join ()
+  (is (eq nil (string-join nil nil)))
+  (is (eq nil (string-join nil)))
+  (is (eq nil (string-join nil ", ")))
+  (is (string= "Hello world"
+               (string-join (list "Hello" "world"))))
+  (is (string= "Hello, world"
+               (string-join (list "Hello" "world") ", "))))
+
 ;;; (incf-cl-test-suite)

@@ -176,6 +176,20 @@ Vectors
 
 There are a few very basic functions to work with vectors (in the
 mathematical sense of the word).
+
+Strings
+^^^^^^^
+
+The function string-join glues together a list of strings placing a
+given separator between each string.  By default, the separator is a
+space.
+
+------------------------------------------------------
+  CL-USER> (string-join (list "Hello" "world"))
+  "Hello world"
+  CL-USER> (string-join (list "Hello" "world") ", ")
+  "Hello, world"
+------------------------------------------------------
  
 Feedback
 --------
