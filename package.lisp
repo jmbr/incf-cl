@@ -35,3 +35,5 @@
            #-clisp #:dohash #:hash-table->alist #:alist->hash-table
            #:starts-with #:ends-with
            #:while))
+
+(cl:pushnew :incf-cl *features*)
