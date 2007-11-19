@@ -90,6 +90,8 @@
   (is (equal (multiple-value-list (filter (constantly t) (list 1 2 3)))
              (list (list 1 2 3) nil)))
   (is (equal (multiple-value-list (filter (constantly nil) (list 1 2 3)))
-             (list nil (list 1 2 3)))))
+             (list nil (list 1 2 3))))
+  (is (equal (multiple-value-list (filter #'oddp (list 1 2 3 4 5)))
+             (list (list 1 3 5) (list 2 4)))))
 
 ;;; (incf-cl-test-suite)
