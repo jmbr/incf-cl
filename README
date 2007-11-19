@@ -136,6 +136,7 @@ Currently, the following are implemented:
 * CURRY
 * DROP
 * DROP-WHILE
+* FILTER (more general than its Haskell counterpart).
 * FLIP
 * INSERT
 * REPLICATE
