@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-v0.0.1, November 2007
+November 2007
 
 Overview
 --------
@@ -180,7 +180,7 @@ mathematical sense of the word).
 Strings
 ^^^^^^^
 
-The function string-join glues together a list of strings placing a
+The function STRING-JOIN glues together a list of strings placing a
 given separator between each string.  By default, the separator is a
 space.
 
