@@ -45,7 +45,17 @@ LIST while PREDICATE is satisfied."
   (do ((list list (rest list)))
       ((or (null list)
            (not (funcall predicate (first list)))) list)))
-  
+
+(defun filter (predicate list)
+  "Applied to PREDICATE and LIST, returns two values: a list
+containing all the elements from LIST that satisfy PREDICATE, and its
+complementary list."
+  (let (xs ys)
+    (dolist (elem list (values (nreverse xs) (nreverse ys)))
+      (if (funcall predicate elem)
+          (push elem xs)
+          (push elem ys)))))
+
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
 order of the arguments reversed."

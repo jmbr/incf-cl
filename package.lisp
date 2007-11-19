@@ -30,7 +30,7 @@
            #:vector+ #:vector- #:vector* #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-
            #:range
-           #:break* #:drop #:drop-while #:flip #:insert #:replicate
+           #:break* #:drop #:drop-while #:filter #:flip #:insert #:replicate
            #:span #:split-at #:take #:take-while #:unzip
            #-clisp #:dohash #:hash-table->alist #:alist->hash-table
            #:starts-with #:ends-with

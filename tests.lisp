@@ -84,4 +84,12 @@
   (is (string= "Hello, world"
                (string-join (list "Hello" "world") ", "))))
 
+(deftest test-filter ()
+  (is (equal (multiple-value-list (filter nil nil))
+             (list nil nil)))
+  (is (equal (multiple-value-list (filter (constantly t) (list 1 2 3)))
+             (list (list 1 2 3) nil)))
+  (is (equal (multiple-value-list (filter (constantly nil) (list 1 2 3)))
+             (list nil (list 1 2 3)))))
+
 ;;; (incf-cl-test-suite)
