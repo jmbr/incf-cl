@@ -57,3 +57,6 @@
   (warn "(declaim (optimize (debug 3))) was issued to help later C-c C-c'ing")
   (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
   (values))
+
+(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
+  nil)
