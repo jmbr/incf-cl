@@ -31,19 +31,20 @@
   :version "0.0.1"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
+  :serial t
   :components ((:static-file "incf-cl.asd")
                (:doc-file "README")
                (:doc-file "THANKS")
                (:file "package")
-               (:file "curry" :depends-on ("package"))
-               (:file "vector" :depends-on ("package"))
-               (:file "assemble" :depends-on ("package"))
-               (:file "range" :depends-on ("package"))
-               (:file "prelude" :depends-on ("package"))
-               (:file "hash-table" :depends-on ("package"))
-               (:file "sequence" :depends-on ("package"))
-               (:file "iteration" :depends-on ("package"))
-               (:file "string" :depends-on ("package"))))
+               (:file "curry")
+               (:file "vector")
+               (:file "assemble")
+               (:file "range")
+               (:file "prelude")
+               (:file "hash-table")
+               (:file "sequence")
+               (:file "iteration")
+               (:file "string")))
 
 (defsystem "incf-cl-tests"
   :description "Test suite for the INCF-CL library."
