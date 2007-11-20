@@ -49,3 +49,10 @@
   :description "Test suite for the INCF-CL library."
   :depends-on (:stefil :incf-cl)
   :components ((:file "tests")))
+
+(defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
+  (operate 'load-op :incf-cl-tests)
+  (declaim (optimize (debug 3)))
+  (warn "(declaim (optimize (debug 3))) was issued to help later C-c C-c'ing")
+  (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
+  (values))
