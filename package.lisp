@@ -23,7 +23,7 @@
 
 (cl:in-package :cl-user)
 
-(defpackage :com.superadditive.incf-cl
+(cl:defpackage :com.superadditive.incf-cl
   (:nicknames :incf-cl)
   (:use #:common-lisp)
   (:export #:curry
