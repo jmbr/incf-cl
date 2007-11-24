@@ -113,7 +113,7 @@ from the front of LIST while PREDICATE is satisfied."
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
 VALUES) containing the keys and values of each element in ALIST
-respectively.  This function is the reverse of PAIRLIS."
+respectively.  This function is the inverse of PAIRLIS."
   (do ((alist alist (rest alist))
        (xs nil (cons (caar alist) xs))
        (ys nil (cons (cdar alist) ys)))
