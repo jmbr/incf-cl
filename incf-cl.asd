@@ -26,9 +26,13 @@
 
 (in-package :com.superadditive.incf-cl-system)
 
+(defparameter *incf-cl-version* "0.0.1")
+
+(export '*incf-cl-version*)
+
 (defsystem "incf-cl"
   :description "incf-cl is a library of convenience functions for Common Lisp"
-  :version "0.0.1"
+  :version #.*incf-cl-version*
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
   :serial t
