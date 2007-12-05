@@ -35,7 +35,7 @@
   :version #.*incf-cl-version*
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
-  :depends-on ("cl-ppcre")
+  :depends-on ("cl-ppcre")              ; for doctest
   :serial t
   :components ((:static-file "incf-cl.asd")
                (:doc-file "README")
