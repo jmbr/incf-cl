@@ -35,6 +35,7 @@
   :version #.*incf-cl-version*
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :license "X11"
+  :depends-on ("cl-ppcre")
   :serial t
   :components ((:static-file "incf-cl.asd")
                (:doc-file "README")
@@ -48,7 +49,8 @@
                (:file "hash-table")
                (:file "sequence")
                (:file "iteration")
-               (:file "string")))
+               (:file "string")
+               (:file "doctest")))
 
 (defsystem "incf-cl-tests"
   :description "Test suite for the INCF-CL library."

@@ -35,6 +35,7 @@
            #-clisp #:dohash #:hash-table->alist #:alist->hash-table
            #:starts-with #:ends-with
            #:while
-           #:string-join))
+           #:string-join
+           #:doctest))
 
 (cl:pushnew :incf-cl *features*)
