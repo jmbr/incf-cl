@@ -24,7 +24,7 @@
 (defpackage :com.superadditive.incf-cl-tests
   (:nicknames :incf-cl-tests)
   (:use :common-lisp :incf-cl :stefil)
-  (:export #:test))
+  (:export #:test #:test-doctest))
 
 (in-package :com.superadditive.incf-cl-tests)
 
@@ -93,3 +93,14 @@
              (list nil (list 1 2 3))))
   (is (equal (multiple-value-list (filter #'oddp (list 1 2 3 4 5)))
              (list (list 1 3 5) (list 2 4)))))
+
+(deftest test-doctest ()
+  "This is a sample docstring.
+
+  INCF-CL-TESTS> \"Hello, doctest!\"
+  \"Hello, doctest!\"
+
+  INCF-CL-TESTS> (unzip (pairlis (list 'a 'b 'c) (list 1 2 3)))
+  (A B C)
+  (1 2 3)"
+  (is (eq t (doctest :incf-cl-tests))))
