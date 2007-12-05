@@ -22,7 +22,15 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-
+(define-condition doctest-failure ()
+  ((sexpr :initarg :sexpr :reader sexpr)
+   (actual-values :initarg :actual-values :reader actual-values)
+   (expected-values :initarg :expected-values :reader expected-values))
+  (:report (lambda (condition stream)
+             (format stream "~s => ~{~a~^ ~} /= ~{~a~^ ~}"
+                     (sexpr condition)
+                     (actual-values condition)
+                     (expected-values condition)))))
 
 (defun symbol-function-or-nil (symbol)
   ;; Taken verbatim from the Hyperspec.
@@ -32,47 +40,53 @@
       (symbol-function symbol)
       nil))
 
-(defun check (input-stream output-stream)
-  (let ((sexpr (read input-stream nil input-stream)))
-    (if (eq sexpr input-stream)
-        nil
-        (progn
-          (let* ((actual-results (multiple-value-list (eval sexpr)))
-                 (expected-results (mapcar #'(lambda (_)
-                                               (declare (ignore _))
-                                               (read input-stream nil input-stream))
-                                           actual-results)))
-            ;; The EOF check is a bit ugly but it's simple and works.
-            (if (and (notany #'(lambda (x) (eq x input-stream)) expected-results)
-                     (every #'equalp actual-results expected-results))
-                (princ #\. output-stream)
-                (progn
-                  (format output-stream
-                          "FAILED: ~s => ~{~a~^ ~}~%(expected ~{~a~^ ~})~%"
-                          sexpr actual-results expected-results)
-                  nil)))))))
+(defun test-docstring (documentation)
+  "Returns T if the first doctest found in DOCUMENTATION passes,
+signals DOCTEST-FAILURE otherwise."
+  (with-input-from-string (input-stream documentation)
+    (labels ((aux (_)
+               (declare (ignore _))
+               (read input-stream nil input-stream)))
+      (let* ((sexpr (read input-stream))
+             (actual-values (multiple-value-list (eval sexpr)))
+             (expected-values (mapcar #'aux actual-values))
+             (eof-pos (position-if (curry #'eq input-stream)
+                                   expected-values)))
+        (if (every #'equalp actual-values expected-values)
+            t
+            (signal 'doctest-failure
+                    :sexpr sexpr
+                    :actual-values actual-values
+                    :expected-values (if eof-pos
+                                         (take eof-pos expected-values)
+                                         expected-values)))))))
 
-(defun test-docstring (package-name function documentation stream)
-  (let* ((passed t)
+(defun test-function (package-name function stream)
+  "Returns T if every test written in FUNCTION's docstring passes, NIL
+otherwise."
+  (let* ((passed-p t)
+         (documentation (documentation function 'function))
          (re (concatenate 'string "[ \t]*" package-name "> "))
          (matches (cl-ppcre:all-matches re documentation)))
-    (when matches
-      (format stream "~a~%" function)
-      (loop for start in (rest matches) by #'cddr do
-           (with-input-from-string (s documentation :start start)
-             (unless (check s stream)
-               (setf passed nil)))
-           finally (terpri)))
-    passed))
+    (loop for start in (rest matches) by #'cddr do
+         (handler-case
+             (when (test-docstring (subseq documentation start))
+               (princ #\. stream))
+           (end-of-file (_)
+             (declare (ignore _))
+             (format stream "~%MALFORMED TEST: ~a~%" function))
+           (doctest-failure (condition)
+             (format stream "~%FAILED TEST: ~a~%~a~%" function condition)
+             (setf passed-p nil)))
+         finally (return passed-p))))
 
-(defun doctest (package-name &optional (stream *standard-output*))
-  "Checks the docstrings of each exported function in package
-PACKAGE-NAME and outputs the results to STREAM."
-  (let ((*package* (find-package package-name))
-        (result t))
-    (do-external-symbols (symbol package-name result)
-      (let* ((function (symbol-function-or-nil symbol))
-             (documentation (documentation function 'function)))
-        (when (and function documentation)
-          (unless (test-docstring package-name function documentation stream)
-            (setf result nil)))))))
+(defun doctest (package &optional (stream *standard-output*))
+  "Checks the docstrings of each exported function in PACKAGE
+and outputs the results to STREAM."
+  (let ((passed-p t)
+        (*package* (find-package package)))
+    (do-external-symbols (symbol package passed-p)
+      (let ((function (symbol-function-or-nil symbol)))
+        (when function
+          (unless (test-function (symbol-name package) function stream)
+            (setf passed-p nil)))))))
