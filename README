@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-November 2007
+December 2007
 
 Overview
 --------
@@ -12,9 +12,7 @@ macros to aid in the development of software written in Common Lisp.
 License
 -------
 
-The code is released under the X11 license.  This means that you can
-use it for almost anything as long as you keep the copyright notice.
-It is also compatible with the GNU GPL.
+The code is released under the X11 license.
 
 Availability
 ------------
@@ -31,11 +29,12 @@ GNU CLISP 2.42
 Installation
 ------------
 
-The easiest way is to use ASDF-INSTALL if you have it on your system:
+The easiest way to install (incf-cl) is to use ASDF-INSTALL if you
+have it on your system:
 
-----------------------------------------------------
-  (asdf-install:install "/path/to/incf-cl.tar.gz")
-----------------------------------------------------
+-----------------------------------------------------------------------------
+  (asdf-install:install "http://superadditive.com/software/incf-cl.tar.gz")
+-----------------------------------------------------------------------------
 
 Usage
 -----
@@ -84,6 +83,101 @@ an ad hoc imperative loop.
   ((0 . 2) (1 . 1) (2 . 0))
 -----------------------------------------------------------------------
 
+Doctests
+^^^^^^^^
+
+The DOCTEST function makes sure the examples given in every exported
+function in a package are correct.  It scans each function's
+documentation string looking for pieces of text resembling REPL
+sessions, then it evaluates them and checks their values against the
+expected ones.
+
+Suppose you have the package TEST, defined as follows:
+
+--------------------------------------------------------------
+  (defpackage #:test
+    (:use #:common-lisp #:incf-cl)
+    (:export #:factorial))
+
+  (in-package :test)           
+  
+  (defun factorial (n &optional (acc 1))
+    "Returns the factorial of N, where N is an integer >= 0.
+
+    Examples:
+
+    TEST> (assemble (factorial n) (<- n (range 1 5)))
+    (1 2 6 24 120)
+  
+    TEST> (factorial 450/15)
+    265252859812191058636308480000000
+
+    TEST> (handler-case (factorial 30.1)
+            (type-error () 'caught-type-error))
+    CAUGHT-TYPE-ERROR
+
+    TEST> (handler-case (factorial -1)
+            (arithmetic-error () 'caught-arithmetic-error))
+    CAUGHT-ARITHMETIC-ERROR
+
+    TEST> (factorial 0)
+    1"
+    (declare (type integer n))
+  
+    (when (/= n (floor n))
+      (error 'type-error))
+    (when (minusp n)
+      (error 'arithmetic-error))
+
+    (if (= n 0)
+        acc
+        (factorial (1- n) (* n acc))))
+--------------------------------------------------------------
+
+and you want to make sure the examples given in FACTORIAL's doc
+strings work as expected:
+
+----------------------------
+  CL-USER> (doctest :test)
+  .....T
+----------------------------
+
+So now you know everything was correct.
+
+This idea is very popular in the Python community and DOCTEST provides
+similar functionality to
+http://docs.python.org/lib/module-doctest.html[Python's doctest
+module]
+
+Prelude
+^^^^^^^
+
+There are a few compatibility functions with Haskell's Prelude.
+Currently, the following are implemented:
+
+* BREAK*
+* CURRY
+* DROP
+* DROP-WHILE
+* FILTER (more general than its Haskell counterpart).
+* FLIP
+* INSERT
+* REPLICATE
+* SPAN
+* SPLIT-AT
+* TAKE
+* TAKE-WHILE
+* UNZIP
+
+Since Common Lisp doesn't guarantee tail call elimination, these
+functions are written iteratively instead of recursively to avoid
+stack overflows.
+
+You can read the online documentation for each function (using
+DESCRIBE or C-c C-d d in SLIME) and also
+http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
+tour of the Haskell's prelude] to see more use cases.
+
 Hash table utilities
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -125,35 +219,6 @@ converts the specified hash table to an association list:
   CL-USER> (hash-table->alist *hash-table*)
   (("one" . 1) ("two" . 2) ("three" . 3))
 ---------------------------------------------
-
-Prelude
-^^^^^^^
-
-There are a few compatibility functions with Haskell's Prelude.
-Currently, the following are implemented:
-
-* BREAK*
-* CURRY
-* DROP
-* DROP-WHILE
-* FILTER (more general than its Haskell counterpart).
-* FLIP
-* INSERT
-* REPLICATE
-* SPAN
-* SPLIT-AT
-* TAKE
-* TAKE-WHILE
-* UNZIP
-
-Since Common Lisp doesn't guarantee tail call elimination, these
-functions are written iteratively instead of recursively to avoid
-stack overflows.
-
-You can read the online documentation for each function (using
-DESCRIBE or C-c C-d d in SLIME) and also
-http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
-tour of the Haskell's prelude] to see more use cases.
 
 Sequences
 ^^^^^^^^^

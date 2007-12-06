@@ -81,8 +81,8 @@ otherwise."
          finally (return passed-p))))
 
 (defun doctest (package &optional (stream *standard-output*))
-  "Checks the docstrings of each exported function in PACKAGE
-and outputs the results to STREAM."
+  "Tests the docstrings of each exported function in PACKAGE and
+outputs the results to STREAM."
   (let ((passed-p t)
         (*package* (find-package package)))
     (do-external-symbols (symbol package passed-p)
