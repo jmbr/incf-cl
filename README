@@ -95,8 +95,8 @@ expected ones.
 Suppose you have the package TEST, defined as follows:
 
 --------------------------------------------------------------
-  (defpackage #:test
-    (:use #:common-lisp #:incf-cl)
+  (defpackage :test
+    (:use :common-lisp :incf-cl)
     (:export #:factorial))
 
   (in-package :test)           
