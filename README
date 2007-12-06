@@ -112,22 +112,21 @@ Suppose you have the package TEST, defined as follows:
     TEST> (factorial 450/15)
     265252859812191058636308480000000
 
-    TEST> (handler-case (factorial 30.1)
-            (type-error () 'caught-type-error))
-    CAUGHT-TYPE-ERROR
-
     TEST> (handler-case (factorial -1)
             (arithmetic-error () 'caught-arithmetic-error))
     CAUGHT-ARITHMETIC-ERROR
+
+    TEST> (handler-case (factorial 30.1)
+            (type-error () 'caught-type-error))
+    CAUGHT-TYPE-ERROR
 
     TEST> (factorial 0)
     1"
     (declare (type integer n))
   
-    (when (/= n (floor n))
-      (error 'type-error))
-    (when (minusp n)
-      (error 'arithmetic-error))
+    (cond
+      ((minusp n) (error 'arithmetic-error))
+      ((/= n (floor n)) (error 'type-error)))
 
     (if (= n 0)
         acc
@@ -143,11 +142,6 @@ strings work as expected:
 ----------------------------
 
 So now you know everything was correct.
-
-This idea is very popular in the Python community and DOCTEST provides
-similar functionality to
-http://docs.python.org/lib/module-doctest.html[Python's doctest
-module]
 
 Prelude
 ^^^^^^^
