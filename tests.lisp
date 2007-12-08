@@ -94,6 +94,18 @@
   (is (equal (multiple-value-list (filter #'oddp (list 1 2 3 4 5)))
              (list (list 1 3 5) (list 2 4)))))
 
+(deftest test-split-at ()
+  (is (eq (split-at -10 (list 1 2 3)) nil))
+  (is (eq (split-at 0 nil) nil))
+  (is (eq (split-at 0 1) nil))
+  (multiple-value-bind (x y) (split-at 0 (list 1 2 3))
+    (is (and (equal x nil)
+             (equal y (list 1 2 3)))))
+  (is (equal (split-at 100 (list 1 2 3)) (list 1 2 3)))
+  (multiple-value-bind (x y) (split-at 1 (list 1 2 3))
+    (is (and (equal x (list 1))
+             (equal y (list 2 3))))))
+
 (deftest test-doctest ()
   "This is a sample docstring.
 
