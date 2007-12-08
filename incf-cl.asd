@@ -33,6 +33,7 @@
   :depends-on ("cl-ppcre")              ; for doctest
   :serial t
   :components ((:static-file "incf-cl.asd")
+               (:doc-file "LICENSE")
                (:doc-file "README")
                (:doc-file "THANKS")
                (:file "package")
@@ -48,7 +49,7 @@
                (:file "doctest")))
 
 (defsystem "incf-cl-tests"
-  :description "Test suite for the INCF-CL library."
+  :description "Test suite for the incf-cl library."
   :depends-on (:stefil :incf-cl)
   :components ((:file "tests")))
 
