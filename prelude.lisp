@@ -42,7 +42,7 @@ If LIST has less than N elements then it returns NIL."
 (defun drop-while (predicate list)
   "Applied to PREDICATE and LIST, removes elements from the front of
 LIST while PREDICATE is satisfied."
-  (when (and (functionp predicate) (consp list))
+  (when (and (functionp predicate) (listp list))
     (do ((list list (rest list)))
         ((or (null list)
              (not (funcall predicate (first list)))) list))))
@@ -51,7 +51,7 @@ LIST while PREDICATE is satisfied."
   "Applied to PREDICATE and LIST, returns two values: a list
 containing all the elements from LIST that satisfy PREDICATE, and its
 complementary list."
-  (when (and (functionp predicate) (consp list))
+  (when (and (functionp predicate) (listp list))
     (let* ((result1 (cons nil nil))
            (result2 (cons nil nil))
            (splice1 result1)
@@ -71,8 +71,9 @@ order of the arguments reversed."
 (defun insert (x list &key (test #'<))
   "Inserts X before the first element in LIST which is greater than X.
 The order relation can be specified by the keyword TEST"
-  (multiple-value-bind (lt ge) (span (curry (flip test) x) list)
-    (nconc lt (cons x ge))))
+  (when (and (listp list) (functionp test))
+    (multiple-value-bind (lt ge) (span (curry (flip test) x) list)
+      (nconc lt (cons x ge)))))
 
 (defun replicate (n x)
   "Returns a list contaning N times the value X"
@@ -84,7 +85,7 @@ The order relation can be specified by the keyword TEST"
 in the first list are taken from the head of LIST while PREDICATE is
 satisfied, and elements in the second list are the remaining elements
 from LIST once PREDICATE is not satisfied."
-  (when (and (functionp predicate) (consp list))
+  (when (and (functionp predicate) (listp list))
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (rest (rplacd splice (cons (first list) nil)))))
@@ -97,7 +98,7 @@ from LIST once PREDICATE is not satisfied."
 two lists (returned as VALUES) at the position corresponding to the
 given integer.  If N is greater than the length of LIST, it returns
 the entire list first and the empty list second in VALUES."
-  (when (and (>= n 0) (consp list))
+  (when (and (>= n 0) (listp list))
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (n n (1- n))
@@ -115,7 +116,7 @@ TAKE returns the entire LIST."
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
-  (when (and (functionp predicate) (consp list))
+  (when (and (functionp predicate) (listp list))
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (rest (rplacd splice
@@ -128,7 +129,7 @@ from the front of LIST while PREDICATE is satisfied."
   "Applied to the association list ALIST, returns two lists (as
 VALUES) containing the keys and values of each element in ALIST
 respectively.  This function is the inverse of PAIRLIS."
-  (when (consp alist)
+  (when (listp alist)
     (do ((alist alist (rest alist))
          (xs nil (cons (caar alist) xs))
          (ys nil (cons (cdar alist) ys)))
