@@ -89,12 +89,16 @@ from LIST once PREDICATE is not satisfied."
 two lists (returned as VALUES) at the position corresponding to the
 given integer.  If N is greater than the length of LIST, it returns
 the entire list first and the empty list second in VALUES."
-  (do ((list list (rest list))
-       (n n (1- n))
-       (xs nil (cons (first list) xs)))
-      ((or (zerop n)
-           (null list))
-       (values (nreverse xs) list))))
+  (when (and (>= n 0) (consp list))
+    (let ((result (cons nil nil)))
+      (do ((list list (rest list))
+           (n n (1- n))
+           (splice result (let ((x (cons (first list) nil)))
+                            (rplacd splice x)
+                            x)))
+          ((or (zerop n)
+               (null list))
+           (values (rest result) list))))))
 
 (defun take (n list)
   "Applied to the integer N and LIST, returns the specified number of
