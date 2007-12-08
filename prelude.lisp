@@ -50,11 +50,16 @@ LIST while PREDICATE is satisfied."
   "Applied to PREDICATE and LIST, returns two values: a list
 containing all the elements from LIST that satisfy PREDICATE, and its
 complementary list."
-  (let (xs ys)
-    (dolist (elem list (values (nreverse xs) (nreverse ys)))
-      (if (funcall predicate elem)
-          (push elem xs)
-          (push elem ys)))))
+  (when (and (functionp predicate) (consp list))
+    (let* ((result1 (cons nil nil))
+           (result2 (cons nil nil))
+           (splice1 result1)
+           (splice2 result2))
+      (dolist (x list (values (rest result1) (rest result2)))
+        (let ((c (cons x nil)))
+          (if (funcall predicate x)
+              (setf splice1 (rest (rplacd splice1 c)))
+              (setf splice2 (rest (rplacd splice2 c)))))))))
 
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
@@ -78,11 +83,13 @@ The order relation can be specified by the keyword TEST"
 in the first list are taken from the head of LIST while PREDICATE is
 satisfied, and elements in the second list are the remaining elements
 from LIST once PREDICATE is not satisfied."
-  (do ((list list (rest list))
-       (xs nil (cons (first list) xs)))
-      ((or (null list)
-           (not (funcall predicate (first list))))
-       (values (nreverse xs) list))))
+  (when (and (functionp predicate) (consp list))
+    (let ((result (cons nil nil)))
+      (do ((list list (rest list))
+           (splice result (rest (rplacd splice (cons (first list) nil)))))
+          ((or (null list)
+               (not (funcall predicate (first list))))
+           (values (rest result) list))))))
 
 (defun split-at (n list)
   "Given an integer N (positive or zero) and LIST, splits LIST into
@@ -93,9 +100,8 @@ the entire list first and the empty list second in VALUES."
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (n n (1- n))
-           (splice result (let ((x (cons (first list) nil)))
-                            (rplacd splice x)
-                            x)))
+           (splice result (rest (rplacd splice
+                                        (cons (first list) nil)))))
           ((or (zerop n)
                (null list))
            (values (rest result) list))))))
@@ -109,10 +115,13 @@ TAKE returns the entire LIST."
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
-  (do ((list list (rest list))
-       (xs nil (cons (first list) xs)))
-      ((or (null list)
-           (not (funcall predicate (first list)))) (nreverse xs))))
+  (let ((result (cons nil nil)))
+    (do ((list list (rest list))
+         (splice result (rest (rplacd splice
+                                      (cons (first list) nil)))))
+        ((or (null list)
+             (not (funcall predicate (first list))))
+         (rest result)))))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
