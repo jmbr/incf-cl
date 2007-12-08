@@ -42,9 +42,10 @@ If LIST has less than N elements then it returns NIL."
 (defun drop-while (predicate list)
   "Applied to PREDICATE and LIST, removes elements from the front of
 LIST while PREDICATE is satisfied."
-  (do ((list list (rest list)))
-      ((or (null list)
-           (not (funcall predicate (first list)))) list)))
+  (when (and (functionp predicate) (consp list))
+    (do ((list list (rest list)))
+        ((or (null list)
+             (not (funcall predicate (first list)))) list))))
 
 (defun filter (predicate list)
   "Applied to PREDICATE and LIST, returns two values: a list
@@ -100,8 +101,7 @@ the entire list first and the empty list second in VALUES."
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (n n (1- n))
-           (splice result (rest (rplacd splice
-                                        (cons (first list) nil)))))
+           (splice result (rest (rplacd splice (cons (first list) nil)))))
           ((or (zerop n)
                (null list))
            (values (rest result) list))))))
@@ -115,19 +115,21 @@ TAKE returns the entire LIST."
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
-  (let ((result (cons nil nil)))
-    (do ((list list (rest list))
-         (splice result (rest (rplacd splice
-                                      (cons (first list) nil)))))
-        ((or (null list)
-             (not (funcall predicate (first list))))
-         (rest result)))))
+  (when (and (functionp predicate) (consp list))
+    (let ((result (cons nil nil)))
+      (do ((list list (rest list))
+           (splice result (rest (rplacd splice
+                                        (cons (first list) nil)))))
+          ((or (null list)
+               (not (funcall predicate (first list))))
+           (rest result))))))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
 VALUES) containing the keys and values of each element in ALIST
 respectively.  This function is the inverse of PAIRLIS."
-  (do ((alist alist (rest alist))
-       (xs nil (cons (caar alist) xs))
-       (ys nil (cons (cdar alist) ys)))
-      ((null alist) (values xs ys))))
+  (when (consp alist)
+    (do ((alist alist (rest alist))
+         (xs nil (cons (caar alist) xs))
+         (ys nil (cons (cdar alist) ys)))
+        ((null alist) (values xs ys)))))
