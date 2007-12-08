@@ -21,6 +21,14 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
+;;; To run test coverage use:
+;;; 
+;;; (progn
+;;;   (declaim (optimize sb-cover:store-coverage-data))
+;;;   (incf-cl-tests:test)
+;;;   (declaim (optimize (sb-cover:store-coverage-data 0)))
+;;;   (sb-cover:report "/home/jmbr/projects/incf-cl/coverage-report/"))
+
 (defpackage :com.superadditive.incf-cl-tests
   (:nicknames :incf-cl-tests)
   (:use :common-lisp :incf-cl :stefil)
@@ -32,17 +40,50 @@
 
 (in-suite test)
 
+(deftest test-range ()
+  (signals simple-error (range 1 -1))
+  (signals simple-error (range 1 -1 2))
+  (is (equal (range 1 5) (list 1 2 3 4 5)))
+  (is (equal (range 1 2 5) (list 1 3 5))))
+
 (deftest test-drop ()
   (is (eq nil (drop 0 nil)))
   (is (eq nil (drop 1 nil)))
   (is (eq nil (drop -1 (list 1 2 3))))
   (is (equal (list 1 2 3) (drop 0 (list 1 2 3))))
-  (is (equal nil (drop 3 (list 1 2 3)))))
+  (is (equal nil (drop 3 (list 1 2 3))))
+  (is (equal nil (drop 100 (list 1 2 3))))
+  (is (equal (list 3) (drop 2 (list 1 2 3)))))
+
+(deftest test-take ()
+  (is (eq nil (take 0 nil)))
+  (is (eq nil (take 1 nil)))
+  (is (eq nil (take -1 (list 1 2 3))))
+  (is (eq nil (take 0 (list 1 2 3))))
+  (is (equal (list 1 2 3) (take 3 (list 1 2 3))))
+  (is (equal (list 1 2 3) (take 100 (list 1 2 3))))
+  (is (equal (list 1 2) (take 2 (list 1 2 3)))))
+
+(deftest test-take-while ()
+  (is (eq nil (take-while nil nil)))
+  (is (eq nil (take-while (constantly t) 0)))
+  (is (eq nil (take-while nil (list 1 2 3))))
+  (is (eq nil (take-while (constantly t) nil)))
+  (is (eq nil (take-while (constantly nil) (list 1 2 3))))
+  (is (equal (list 1 2 3) (take-while (constantly t) (list 1 2 3))))
+  (is (equal (list 1 2) (take-while (curry (flip #'<=) 2)
+                                    (list 1 2 3)))))
 
 (deftest test-drop-while ()
+  (is (eq nil (drop-while nil nil)))
+  (is (eq nil (drop-while (constantly t) 0)))
+  (is (eq nil (drop-while nil (list 1 2 3))))
   (is (eq nil (drop-while (constantly t) nil)))
+  (is (eq nil (drop-while (constantly t) (list 1 2 3))))
   (is (equal (list 1 2 3) (drop-while (constantly nil)
-                                      (list 1 2 3)))))
+                                      (list 1 2 3))))
+  (is (equal (list 3) (drop-while (curry (flip #'<=) 2)
+                                  (list 1 2 3)))))
 
 (deftest test-filter ()
   (is (eq (filter nil nil) nil))
@@ -74,6 +115,11 @@
      (is (equal x (list 1 1 1 3 5)))
      (is (equal y (list 6 8))))))
 
+(deftest test-break ()
+  (multiple-value-bind (x y) (break* #'oddp (nreverse (list 1 1 1 3 5 6 8)))
+    (is (equal x (list 8 6)))
+    (is (equal y (nreverse (list 1 1 1 3 5))))))
+
 (deftest test-split-at ()
   (is (eq (split-at -10 (list 1 2 3)) nil))
   (is (eq (split-at 0 nil) nil))
@@ -85,6 +131,14 @@
   (multiple-value-bind (x y) (split-at 1 (list 1 2 3))
     (is (and (equal x (list 1))
              (equal y (list 2 3))))))
+
+(deftest test-insert ()
+  (is (eq nil (insert nil nil :test nil)))
+  (is (equal (range 1 10)
+             (let ((xs (list 3 6 10 7 4 1 8 2 9 5))
+                   (ys nil))
+               (dolist (x xs ys)
+                 (setf ys (insert x ys)))))))
 
 (deftest test-starts-with ()
   (is (eq t (starts-with "Hello, world!" "Hell")))
@@ -125,5 +179,12 @@
 
   INCF-CL-TESTS> (unzip (pairlis (list 'a 'b 'c) (list 1 2 3)))
   (A B C)
-  (1 2 3)"
+  (1 2 3)
+
+  INCF-CL-TESTS> (unzip 0)
+  NIL
+
+  INCF-CL-TESTS> (handler-case (floor 1 0)
+                   (division-by-zero () 'caught-division-by-zero))
+  CAUGHT-DIVISION-BY-ZERO"
   (is (eq t (doctest :incf-cl-tests))))
