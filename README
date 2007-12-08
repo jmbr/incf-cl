@@ -250,7 +250,12 @@ space.
   CL-USER> (string-join (list "Hello" "world") ", ")
   "Hello, world"
 ------------------------------------------------------
- 
+
+Links
+-----
+
+http://kyle-burton.livejournal.com/8219.html[Playing with List Comprehensions in CL]
+
 Feedback
 --------
 
