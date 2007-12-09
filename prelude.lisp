@@ -116,14 +116,7 @@ TAKE returns the entire LIST."
 (defun take-while (predicate list)
   "Applied to PREDICATE and LIST, returns a list containing elements
 from the front of LIST while PREDICATE is satisfied."
-  (when (and (functionp predicate) (listp list))
-    (let ((result (cons nil nil)))
-      (do ((list list (rest list))
-           (splice result (rest (rplacd splice
-                                        (cons (first list) nil)))))
-          ((or (null list)
-               (not (funcall predicate (first list))))
-           (rest result))))))
+  (values (span predicate list)))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
