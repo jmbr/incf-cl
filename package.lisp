@@ -29,6 +29,7 @@
   (:export #:curry
            #:vector+ #:vector- #:vector* #:vector> #:vector= #:vector-zero-p
            #:assemble #:<-
+           #:unfold #:unfold-right
            #:range
            #:break* #:drop #:drop-while #:filter #:flip #:insert #:replicate
            #:span #:split-at #:take #:take-while #:unzip

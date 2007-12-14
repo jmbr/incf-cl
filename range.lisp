@@ -26,6 +26,8 @@
 ;;; resembling Matlab vector notation).
 
 (defun range (a b &optional c)
+  ;; This could be implemented using unfold too but we do it this way
+  ;; for efficiency.
   (flet ((aux (start step stop)
            (assert (and (<= start stop) (> step 0)))
            (loop for x from start to stop by step collect x)))

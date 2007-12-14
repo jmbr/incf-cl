@@ -40,6 +40,7 @@
                (:file "curry")
                (:file "vector")
                (:file "assemble")
+               (:file "unfold")
                (:file "range")
                (:file "prelude")
                (:file "hash-table")

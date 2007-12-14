@@ -174,6 +174,34 @@
   (is (string= "Hello, world"
                (string-join (list "Hello" "world") ", "))))
 
+(defun read-lines (stream)
+  (when (streamp stream)
+    (unfold (curry #'eq stream)
+            #'identity
+            (lambda (x)
+              (declare (ignore x))
+              (read-line stream nil stream))
+            (read-line stream nil stream))))
+
+(deftest test-unfold ()
+  (is (eq nil (unfold (constantly t) #'identity #'identity 0)))
+  (is (eq t (doctest :incf-cl :function #'unfold)))
+  (is (equal (range 0 .1 (/ pi 2))
+             (unfold (curry (flip #'>) (/ pi 2))
+                     #'identity
+                     (lambda (x) (+ x 0.1))
+                     0)))
+  (with-input-from-string (stream
+                           "1
+                                     2
+                                     3")
+    (is (equal (list "1" "2" "3")
+               (mapcar (curry #'string-trim " #\Tab")
+                       (read-lines stream))))))
+
+(deftest test-unfold-right ()
+  (is (eq t (doctest :incf-cl :function #'unfold-right))))
+
 (deftest test-doctest ()
   "This is a sample docstring.
 
