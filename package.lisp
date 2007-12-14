@@ -27,15 +27,38 @@
   (:nicknames :incf-cl)
   (:use #:common-lisp)
   (:export #:curry
-           #:vector+ #:vector- #:vector* #:vector> #:vector= #:vector-zero-p
-           #:assemble #:<-
-           #:unfold #:unfold-right
+           #:vector+
+           #:vector-
+           #:vector*
+           #:vector>
+           #:vector=
+           #:vector-zero-p
+           #:assemble
+           #:<-
+           #:unfold
+           #:unfold-right
            #:range
-           #:break* #:cycle #:ncycle #:drop #:drop-while #:filter #:flip
-           #:insert #:replicate #:span #:split-at #:take #:take-while
-           #:unzip #:scanl
-           #-clisp #:dohash #:hash-table->alist #:alist->hash-table
-           #:starts-with #:ends-with
+           #:break*
+           #:cycle #:ncycle
+           #:drop
+           #:drop-while
+           #:filter
+           #:flip
+           #:insert
+           #:replicate
+           #:span
+           #:split-at
+           #:take
+           #:take-while
+           #:unzip
+           #:scan*
+           #:intersperse
+           #:nintersperse
+           #-clisp #:dohash
+           #:hash-table->alist
+           #:alist->hash-table
+           #:starts-with
+           #:ends-with
            #:while
            #:string-join
            #:doctest))
