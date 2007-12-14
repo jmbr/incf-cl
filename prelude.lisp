@@ -58,7 +58,7 @@ LIST while PREDICATE is satisfied."
         ((or (null list)
              (not (funcall predicate (first list)))) list))))
 
-(defun filter (predicate list)
+(defun partition (predicate list)
   "Applied to PREDICATE and LIST, returns two values: a list
 containing all the elements from LIST that satisfy PREDICATE, and its
 complementary list."

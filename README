@@ -154,10 +154,10 @@ Currently, the following are implemented:
 * CURRY
 * DROP
 * DROP-WHILE
-* FILTER (more general than its Haskell counterpart).
 * FLIP
 * INSERT
 * INTERSPERSE (and its destructive version NINTERSPERSE).
+* PARTITION
 * REPLICATE
 * SCAN* (using the key parameters :initial-value and :from-end it works as
   scanl, scanl1, scanr or scanr1)

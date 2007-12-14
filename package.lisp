@@ -43,9 +43,9 @@
            #:ncycle
            #:drop
            #:drop-while
-           #:filter
            #:flip
            #:insert
+           #:partition
            #:replicate
            #:span
            #:split-at
