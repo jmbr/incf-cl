@@ -158,7 +158,8 @@ Currently, the following are implemented:
 * FLIP
 * INSERT
 * REPLICATE
-* SCANL
+* SCAN* (using the key parameters :initial-value and :from-end it works as
+  scanl, scanl1, scanr or scanr1)
 * SPAN
 * SPLIT-AT
 * TAKE
