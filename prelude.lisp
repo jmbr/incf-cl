@@ -177,12 +177,58 @@ respectively.  This function is the inverse of PAIRLIS."
   (10 9 7 4)"
   (when (and (functionp function)
              (if initial-value-p (listp list) (consp list)))
-    (flet ((make-cell (x y)
-             (cons (funcall function x y) nil)))
-      (let ((result (cons (if initial-value-p initial-value (first list))
-                          nil)))
-        (do ((list (if initial-value-p list (rest list)) (rest list))
-             (splice result (rest (rplacd splice
-                                          (make-cell (first splice)
-                                                     (first list))))))
-            ((null list) result))))))
+    (labels ((key-first (list)
+               (if key
+                   (funcall key (first list))
+                   (first list)))
+             (operate (x y)
+               (funcall function x y))
+             (scan-left (list)
+               (let ((result (cons (if initial-value-p
+                                       initial-value
+                                       (key-first list))
+                                   nil)))
+                 (do ((list (if initial-value-p list (rest list)) (rest list))
+                      (splice
+                       result
+                       (rest (rplacd splice (cons (operate (first splice)
+                                                           (key-first list))
+                                                  nil)))))
+                     ((null list) result))))
+             (scan-right (list)
+               (let ((list (reverse list)))
+                 (do ((list (if initial-value-p list (rest list)) (rest list))
+                      (result
+                       (cons (if initial-value-p initial-value (key-first list))
+                             nil)
+                       (cons (operate (key-first list) (first result))
+                             result)))
+                     ((null list) result)))))
+      (if from-end
+          (scan-right list)
+          (scan-left list)))))
+
+(defun intersperse (element list)
+  "Returns a list where ELEMENT is interspersed between the elements
+of LIST.
+
+  For example,
+
+  INCF-CL> (intersperse 'x (replicate 3 'z))
+  (Z X Z X Z)"
+  (when (consp list)
+    (let ((result (cons nil nil)))
+      (do ((list list (rest list))
+           (splice result
+                   (cddr (rplacd splice (cons (first list)
+                                              (cons element nil))))))
+          ((null (rest list))
+           (rplacd splice (cons (first list) nil))
+           (rest result))))))
+
+(defun nintersperse (element list)
+  "Destructive version of INTERSPERSE."
+  (when (listp list)
+    (do ((xs list (let ((newcdr (cons element (rest xs))))
+                    (cddr (rplacd xs newcdr)))))
+        ((null (cdr xs)) list))))

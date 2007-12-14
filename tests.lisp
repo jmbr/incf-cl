@@ -241,3 +241,19 @@
 (deftest test-cycle ()
   (is (eq nil (cycle 0)))
   (is (equal (list 0 1 0 1) (take 4 (cycle (list 0 1))))))
+
+(deftest test-ncycle ()
+  (is (eq nil (ncycle 0)))
+  (is (equal (list 0 1 0 1) (take 4 (ncycle (list 0 1))))))
+
+(deftest test-intersperse ()
+  (is (eq nil (intersperse nil 0)))
+  (is (eq nil (intersperse 0 nil)))
+  (is (equal (list 'z) (intersperse 'x (list 'z))))
+  (is (equal (list 'z 'x 'z) (intersperse 'x (list 'z 'z)))))
+
+(deftest test-nintersperse ()
+  (is (eq nil (nintersperse nil 0)))
+  (is (eq nil (nintersperse 0 nil)))
+  (is (equal (list 'z) (nintersperse 'x (list 'z))))
+  (is (equal (list 'z 'x 'z) (nintersperse 'x (list 'z 'z)))))
