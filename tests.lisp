@@ -257,3 +257,11 @@
   (is (eq nil (nintersperse 0 nil)))
   (is (equal (list 'z) (nintersperse 'x (list 'z))))
   (is (equal (list 'z 'x 'z) (nintersperse 'x (list 'z 'z)))))
+
+(deftest test-group ()
+  (is (eq nil (group nil :test #'equal)))
+  (is (eq nil (group 0 :test #'equal)))
+  (is (equal (concatenate 'string
+                          (mapcan #'identity
+                                  (group (coerce "Mississippi" 'list))))
+             "Mississippi")))

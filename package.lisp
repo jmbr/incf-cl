@@ -44,6 +44,7 @@
            #:drop
            #:drop-while
            #:flip
+           #:group
            #:insert
            #:partition
            #:replicate

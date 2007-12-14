@@ -155,6 +155,7 @@ Currently, the following are implemented:
 * DROP
 * DROP-WHILE
 * FLIP
+* GROUP
 * INSERT
 * INTERSPERSE (and its destructive version NINTERSPERSE).
 * PARTITION
