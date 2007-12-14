@@ -24,7 +24,9 @@
 ;;; To run test coverage use:
 ;;; 
 ;;; (progn
+;;;   (require :sb-cover)
 ;;;   (declaim (optimize sb-cover:store-coverage-data))
+;;;   (asdf:oos 'asdf:load-op :incf-cl :force t)
 ;;;   (incf-cl-tests:test)
 ;;;   (declaim (optimize (sb-cover:store-coverage-data 0)))
 ;;;   (sb-cover:report "/home/jmbr/projects/incf-cl/coverage-report/"))
@@ -133,6 +135,7 @@
              (equal y (list 2 3))))))
 
 (deftest test-insert ()
+  (is (eq nil (insert 1 1 :test nil)))
   (is (eq nil (insert nil nil :test nil)))
   (is (equal (range 1 10)
              (let ((xs (list 3 6 10 7 4 1 8 2 9 5))

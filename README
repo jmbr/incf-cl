@@ -157,6 +157,7 @@ Currently, the following are implemented:
 * FLIP
 * INSERT
 * REPLICATE
+* SCANL
 * SPAN
 * SPLIT-AT
 * TAKE

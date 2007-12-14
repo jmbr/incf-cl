@@ -127,3 +127,35 @@ respectively.  This function is the inverse of PAIRLIS."
          (xs nil (cons (caar alist) xs))
          (ys nil (cons (cdar alist) ys)))
         ((null alist) (values xs ys)))))
+
+(defun scanl (function list &key (initial-value nil initial-value-p))
+  "SCANL is similar to REDUCE, but returns a list of successive
+  reduced values:
+
+  (scanl f (list x1 x2 ...) :initial-value z) 
+  ==> (z (funcall f z x1) (funcall f (funcall f z x1) x2) ...)
+
+  (scanl f (list x1 x2 ...))
+  ==> (x1 (funcall f x1 x2) (funcall f (funcall f x1 x2) x2) ...)
+
+  Examples,
+
+  INCF-CL> (scanl #'/ (list 4 2 4) :initial-value 64) 
+  (64 16 8 2)
+
+  INCF-CL> (scanl #'max (range 1 7) :initial-value 5) 
+  (5 5 5 5 5 5 6 7)
+
+  INCF-CL> (scanl (lambda (x y) (+ (* 2 x) y)) (list 1 2 3) :initial-value 4)
+  (4 9 20 43)"
+  (when (and (functionp function)
+             (if initial-value-p (listp list) (consp list)))
+    (flet ((make-cell (x y)
+             (cons (funcall function x y) nil)))
+      (let ((result (cons (if initial-value-p initial-value (first list))
+                          nil)))
+        (do ((list (if initial-value-p list (rest list)) (rest list))
+             (splice result (rest (rplacd splice
+                                          (make-cell (first splice)
+                                                     (first list))))))
+            ((null list) result))))))
