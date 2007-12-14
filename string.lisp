@@ -25,6 +25,9 @@
 (defun string-join (list &optional (sep " "))
   "Returns a string joining each string in LIST by SEP.  If SEP is not
 specified, the default separator is a space."
+  ;; TODO This should use intersperse as soon as it works with
+  ;; arbitrary sequences.
+
   ;; Based on Pascal Costanza's approach at
   ;; http://groups.google.com/group/comp.lang.lisp/msg/8adbef3a067ece78
   (when list

@@ -150,13 +150,14 @@ There are a few compatibility functions with Haskell's Prelude.
 Currently, the following are implemented:
 
 * BREAK*
-* CYCLE (and its destructive variant NCYCLE).
+* CYCLE (and its destructive version NCYCLE).
 * CURRY
 * DROP
 * DROP-WHILE
 * FILTER (more general than its Haskell counterpart).
 * FLIP
 * INSERT
+* INTERSPERSE (and its destructive version NINTERSPERSE).
 * REPLICATE
 * SCAN* (using the key parameters :initial-value and :from-end it works as
   scanl, scanl1, scanr or scanr1)
@@ -174,6 +175,41 @@ You can read the online documentation for each function (using
 DESCRIBE or C-c C-d d in SLIME) and also
 http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
 tour of the Haskell's prelude] to see more use cases.
+
+Unfolding
+^^^^^^^^^
+
+There's an implementation of UNFOLD and UNFOLD-RIGHT as specified in
+http://srfi.schemers.org/srfi-1/srfi-1.html#unfold[SRFI 1: List
+library]
+
+Here's an example of UNFOLD:
+
+--------------------------------------------------------------------------
+  (defun euler (f x0 y0 interval h)
+    "Computes an approximate solution of the differential equation
+
+      y' = f(x, y), x in interval;  y(x0) = y0
+
+    using Euler's explicit method.  Interval is a list of two elements
+    representing a closed interval.  The function returns a list of
+    points and the values of the approximate solution at those points.
+
+    For example,
+
+    EULER> (euler (lambda (x y)
+                    (declare (ignore y))
+                    (- (sin x)))
+                  0 1 (list 0 (/ pi 2)) 0.5)
+    ((0 1) (0.5 1.0) (1.0 0.7602872) (1.5 0.33955175))"
+    (assert (<= (first interval) (second interval)))
+    (unfold (lambda (x) (> (first x) (second interval)))
+            #'identity
+            (lambda (pair)
+              (destructuring-bind (x y) pair
+                (list (+ x h) (+ y (* h (funcall f x y))))))
+            (list x0 y0)))
+-------------------------------------------------------------------------
 
 Hash table utilities
 ^^^^^^^^^^^^^^^^^^^^
