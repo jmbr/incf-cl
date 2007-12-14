@@ -26,7 +26,7 @@
 
 (defun unfold (predicate transformer incrementor initial-value
                &optional (tail-gen (constantly nil)))
-  "TODO write docstring -- Check bananas, lenses, ... for inspiration.
+  "TODO write docstring.
 
   Note that this implementation is fast but it may have to call
   TRANSFORMER and INCREMENTOR at runtime, which imposes a penalty on performance.
