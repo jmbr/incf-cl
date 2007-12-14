@@ -150,6 +150,7 @@ There are a few compatibility functions with Haskell's Prelude.
 Currently, the following are implemented:
 
 * BREAK*
+* CYCLE (and its destructive variant NCYCLE).
 * CURRY
 * DROP
 * DROP-WHILE

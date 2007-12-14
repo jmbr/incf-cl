@@ -32,6 +32,17 @@ PREDICATE is never satisfied then the first returned value is the
 entire LIST and the second element is NIL."
   (span (complement predicate) list))
 
+(defun cycle (list)
+  "Returns a circular list containing the elements in LIST (which
+should be a proper list)."
+  (when (consp list)
+    (ncycle (copy-list list))))
+
+(defun ncycle (list)
+  "Destructive version of CYCLE."
+  (when (consp list)
+    (rest (rplacd (last list) list))))
+
 (defun drop (n list)
   "Applied to N (a non-negative integer) and LIST, returns the list
 with the specified number of elements removed from the front of LIST.

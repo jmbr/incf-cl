@@ -31,8 +31,9 @@
            #:assemble #:<-
            #:unfold #:unfold-right
            #:range
-           #:break* #:drop #:drop-while #:filter #:flip #:insert #:replicate
-           #:span #:split-at #:take #:take-while #:unzip
+           #:break* #:cycle #:ncycle #:drop #:drop-while #:filter #:flip
+           #:insert #:replicate #:span #:split-at #:take #:take-while
+           #:unzip #:scanl
            #-clisp #:dohash #:hash-table->alist #:alist->hash-table
            #:starts-with #:ends-with
            #:while

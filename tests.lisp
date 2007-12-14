@@ -219,3 +219,22 @@
                    (division-by-zero () 'caught-division-by-zero))
   CAUGHT-DIVISION-BY-ZERO"
   (is (eq t (doctest :incf-cl-tests))))
+
+(defun random-list (n m)
+  "Returns a list of N elements taken uniformly from the positive
+ integers less than M."
+  (let (list)
+    (dotimes (i n list)
+      (push (random m) list))))
+
+(deftest test-scanl ()
+  (is (eq nil (scanl 1 nil :initial-value 0)))
+  (is (eq nil (scanl #'+ 3 :initial-value 0)))
+  (let ((zs (random-list 100 100)))
+    (is (eql (car (last (scanl #'max zs :initial-value 5)))
+             (reduce #'max zs :initial-value 5))))
+  (is (eq t (doctest :incf-cl :function #'scanl))))
+
+(deftest test-cycle ()
+  (is (eq nil (cycle 0)))
+  (is (equal (list 0 1 0 1) (take 4 (cycle (list 0 1))))))
