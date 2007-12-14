@@ -140,7 +140,7 @@ respectively.  This function is the inverse of PAIRLIS."
         ((null alist) (values xs ys)))))
 
 (defun scan* (function list
-              &key key from-end (initial-value nil initial-value-p))
+              &key key from-end (initial-value nil ivp))
   "SCAN* is similar to REDUCE, but returns a list of successive
   reduced values:
 
@@ -176,7 +176,7 @@ respectively.  This function is the inverse of PAIRLIS."
   INCF-CL> (scan* #'+ (list 1 2 3 4) :from-end t)
   (10 9 7 4)"
   (when (and (functionp function)
-             (if initial-value-p (listp list) (consp list)))
+             (if ivp (listp list) (consp list)))
     (labels ((key-first (list)
                (if key
                    (funcall key (first list))
@@ -184,11 +184,11 @@ respectively.  This function is the inverse of PAIRLIS."
              (operate (x y)
                (funcall function x y))
              (scan-left (list)
-               (let ((result (cons (if initial-value-p
+               (let ((result (cons (if ivp
                                        initial-value
                                        (key-first list))
                                    nil)))
-                 (do ((list (if initial-value-p list (rest list)) (rest list))
+                 (do ((list (if ivp list (rest list)) (rest list))
                       (splice
                        result
                        (rest (rplacd splice (cons (operate (first splice)
@@ -197,9 +197,9 @@ respectively.  This function is the inverse of PAIRLIS."
                      ((null list) result))))
              (scan-right (list)
                (let ((list (reverse list)))
-                 (do ((list (if initial-value-p list (rest list)) (rest list))
+                 (do ((list (if ivp list (rest list)) (rest list))
                       (result
-                       (cons (if initial-value-p initial-value (key-first list))
+                       (cons (if ivp initial-value (key-first list))
                              nil)
                        (cons (operate (key-first list) (first result))
                              result)))
