@@ -39,7 +39,8 @@
            #:unfold-right
            #:range
            #:break*
-           #:cycle #:ncycle
+           #:cycle
+           #:ncycle
            #:drop
            #:drop-while
            #:filter
