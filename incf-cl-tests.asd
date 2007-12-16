@@ -21,30 +21,23 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defpackage :com.superadditive.incf-cl-system
+(defpackage :com.superadditive.incf-cl-tests-system
   (:use :common-lisp :asdf))
 
-(in-package :com.superadditive.incf-cl-system)
+(in-package :com.superadditive.incf-cl-tests-system)
 
-(defsystem "incf-cl"
-  :description "INCF CL is a library of convenience functions for Common Lisp"
-  :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
-  :license "X11"
-  :depends-on ("cl-ppcre")
-  :serial t
-  :components ((:file "package")
-               (:file "curry")
-               (:file "vector")
-               (:file "assemble")
-               (:file "unfold")
-               (:file "range")
-               (:file "prelude")
-               (:file "hash-table")
-               (:file "sequence")
-               (:file "iteration")
-               (:file "string")
-               (:file "doctest")))
+(defsystem "incf-cl-tests"
+  :description "Test suite for the INCF CL library."
+  :depends-on (:stefil :incf-cl)
+  :components ((:static-file "incf-cl-tests.asd")
+               (:file "tests")))
 
-(defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
-  (asdf:operate 'asdf:load-op :incf-cl-tests)
-  (asdf:operate 'asdf:test-op :incf-cl-tests))
+(defmethod perform ((op test-op) (system (eql (find-system :incf-cl-tests))))
+  (operate 'load-op :incf-cl-tests)
+  (declaim (optimize (debug 3)))
+  (warn "(declaim (optimize (debug 3))) was issued to help later C-c C-c'ing")
+  (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
+  (values))
+
+(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl-tests))))
+  nil)
