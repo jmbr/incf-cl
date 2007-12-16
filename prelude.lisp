@@ -242,7 +242,7 @@ TEST and the concatenation of the result is equal to LIST.
   INCF-CL> (mapcar (curry #'concatenate 'string)
                    (group (coerce \"Mississippi\" 'list)))
   (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"
-  (when (listp list)
+  (when (and (listp list) (functionp test))
     (let* ((result (cons nil nil))
            (splice result))
       (do ()
