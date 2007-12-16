@@ -139,6 +139,35 @@ respectively.  This function is the inverse of PAIRLIS."
          (ys nil (cons (cdar alist) ys)))
         ((null alist) (values xs ys)))))
 
+(defun first-with (key list)
+  (if key
+      (funcall key (first list))
+      (first list)))
+
+(defun scan-left* (function list key initial-value ivp)
+  (let ((result (cons (if ivp
+                          initial-value
+                          (first-with key list))
+                      nil)))
+    (do ((list (if ivp list (rest list)) (rest list))
+         (splice
+          result
+          (rest (rplacd splice (cons (funcall function
+                                              (first splice)
+                                              (first-with key list))
+                                     nil)))))
+        ((null list) result))))
+
+(defun scan-right* (function list key initial-value ivp)
+  (let ((list (reverse list)))
+    (do ((list (if ivp list (rest list)) (rest list))
+         (result
+          (cons (if ivp initial-value (first-with key list))
+                nil)
+          (cons (funcall function (first-with key list) (first result))
+                result)))
+        ((null list) result))))
+
 (defun scan* (function list
               &key key from-end (initial-value nil ivp))
   "SCAN* is similar to REDUCE, but returns a list of successive
@@ -177,36 +206,9 @@ respectively.  This function is the inverse of PAIRLIS."
   (10 9 7 4)"
   (when (and (functionp function)
              (if ivp (listp list) (consp list)))
-    (labels ((key-first (list)
-               (if key
-                   (funcall key (first list))
-                   (first list)))
-             (operate (x y)
-               (funcall function x y))
-             (scan-left (list)
-               (let ((result (cons (if ivp
-                                       initial-value
-                                       (key-first list))
-                                   nil)))
-                 (do ((list (if ivp list (rest list)) (rest list))
-                      (splice
-                       result
-                       (rest (rplacd splice (cons (operate (first splice)
-                                                           (key-first list))
-                                                  nil)))))
-                     ((null list) result))))
-             (scan-right (list)
-               (let ((list (reverse list)))
-                 (do ((list (if ivp list (rest list)) (rest list))
-                      (result
-                       (cons (if ivp initial-value (key-first list))
-                             nil)
-                       (cons (operate (key-first list) (first result))
-                             result)))
-                     ((null list) result)))))
-      (if from-end
-          (scan-right list)
-          (scan-left list)))))
+    (if from-end
+        (scan-right* function list key initial-value ivp)
+        (scan-left* function list key initial-value ivp))))
 
 (defun intersperse (element list)
   "Returns a list where ELEMENT is interspersed between the elements
