@@ -39,5 +39,5 @@
   (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
   (values))
 
-(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl-tests))))
+(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
   nil)
