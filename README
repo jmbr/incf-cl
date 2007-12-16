@@ -177,8 +177,8 @@ DESCRIBE or C-c C-d d in SLIME) and also
 http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
 tour of the Haskell's prelude] to see more use cases.
 
-Unfolding
-^^^^^^^^^
+Unfolds
+^^^^^^^
 
 There's an implementation of UNFOLD and UNFOLD-RIGHT as specified in
 http://srfi.schemers.org/srfi-1/srfi-1.html#unfold[SRFI 1: List
