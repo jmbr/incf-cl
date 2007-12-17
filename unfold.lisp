@@ -26,7 +26,9 @@
 
 (defun unfold (predicate transformer incrementor initial-value
                &optional (tail-gen (constantly nil)))
-  "TODO write docstring.
+  "Returns a list built following the pattern:
+
+  transformer(initial-value), transformer(incrementor(initial-value)), ...
 
   Note that this implementation is fast but it may have to call
   TRANSFORMER and INCREMENTOR at runtime, which imposes a penalty on
@@ -58,7 +60,9 @@
 
 (defun unfold-right (predicate transformer incrementor initial-value
                      &optional (tail nil))
-  "...
+  "Returns a list built following the pattern:
+
+  ... transformer(incrementor(initial-value)), transformer(initial-value)
 
   Examples
   --------
