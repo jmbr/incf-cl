@@ -139,11 +139,13 @@ respectively.  This function is the inverse of PAIRLIS."
          (ys nil (cons (cdar alist) ys)))
         ((null alist) (values xs ys)))))
 
+(declaim (inline first-with))
 (defun first-with (key list)
   (if key
       (funcall key (first list))
       (first list)))
 
+(declaim (inline scan-left*))
 (defun scan-left* (function list key initial-value ivp)
   (let ((result (cons (if ivp
                           initial-value
@@ -158,6 +160,7 @@ respectively.  This function is the inverse of PAIRLIS."
                                      nil)))))
         ((null list) result))))
 
+(declaim (inline scan-right*))
 (defun scan-right* (function list key initial-value ivp)
   (let ((list (reverse list)))
     (do ((list (if ivp list (rest list)) (rest list))
