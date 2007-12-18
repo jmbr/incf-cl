@@ -83,7 +83,7 @@ order of the arguments reversed."
   "Inserts X before the first element in LIST which is greater than X.
 The order relation can be specified by the keyword TEST"
   (when (and (listp list) (functionp test))
-    (multiple-value-bind (lt ge) (span (curry (flip test) x) list)
+    (multiple-value-bind (lt ge) (span (slice test _ x) list)
       (nconc lt (cons x ge)))))
 
 (defun replicate (n x)

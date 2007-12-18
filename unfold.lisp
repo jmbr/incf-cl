@@ -39,7 +39,7 @@
 
   List of squares: 1^2, ..., 10^2
 
-  INCF-CL> (unfold (curry (flip #'>) 10) (curry (flip #'expt) 2) #'1+ 1)
+  INCF-CL> (unfold (slice #'> _ 10) (slice #'expt _ 2) #'1+ 1)
   (1 4 9 16 25 36 49 64 81 100)
 
   Append (3 4 5) onto (1 2)

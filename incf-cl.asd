@@ -33,7 +33,7 @@
   :depends-on ("cl-ppcre")
   :serial t
   :components ((:file "package")
-               (:file "curry")
+               (:file "slice")
                (:file "vector")
                (:file "assemble")
                (:file "unfold")

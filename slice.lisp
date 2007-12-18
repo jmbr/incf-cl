@@ -22,7 +22,17 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defun curry (fn &rest args)
-  "Curries the function FN using ARGS as the first parameters"
-  (lambda (&rest more-args)
-    (apply fn (append args more-args))))
+(defmacro slice (function &rest args)
+  ;; Inspired by iterate's sharpl reader macro and
+  ;; http://srfi.schemers.org/srfi-26/srfi-26.html
+  (let ((lambda-list nil)
+        (parameters nil))
+    (dolist (x args)
+      (cond
+        ((or (eq x '_))
+         (let ((s (gensym "SLICE")))
+           (push s parameters)
+           (push s lambda-list)))
+        (t (push x parameters))))
+    `(lambda ,(nreverse lambda-list)
+       (funcall ,function ,@(nreverse parameters)))))

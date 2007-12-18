@@ -73,7 +73,7 @@
   (is (eq nil (take-while (constantly t) nil)))
   (is (eq nil (take-while (constantly nil) (list 1 2 3))))
   (is (equal (list 1 2 3) (take-while (constantly t) (list 1 2 3))))
-  (is (equal (list 1 2) (take-while (curry (flip #'<=) 2)
+  (is (equal (list 1 2) (take-while (slice #'<= _ 2)
                                     (list 1 2 3)))))
 
 (deftest test-drop-while ()
@@ -84,7 +84,7 @@
   (is (eq nil (drop-while (constantly t) (list 1 2 3))))
   (is (equal (list 1 2 3) (drop-while (constantly nil)
                                       (list 1 2 3))))
-  (is (equal (list 3) (drop-while (curry (flip #'<=) 2)
+  (is (equal (list 3) (drop-while (slice #'<= _ 2)
                                   (list 1 2 3)))))
 
 (deftest test-partition ()
@@ -176,7 +176,7 @@
 
 (defun read-lines (stream)
   (when (streamp stream)
-    (unfold (curry #'eq stream)
+    (unfold (slice #'eq stream _)
             #'identity
             (lambda (x)
               (declare (ignore x))
@@ -187,7 +187,7 @@
   (is (eq nil (unfold (constantly t) #'identity #'identity 0)))
   (is (eq t (doctest :incf-cl :function #'unfold)))
   (is (equal (range 0 .1 (/ pi 2))
-             (unfold (curry (flip #'>) (/ pi 2))
+             (unfold (slice #'> _ (/ pi 2))
                      #'identity
                      (lambda (x) (+ x 0.1))
                      0)))
@@ -196,7 +196,7 @@
                                      2
                                      3")
     (is (equal (list "1" "2" "3")
-               (mapcar (curry #'string-trim " #\Tab")
+               (mapcar (slice #'string-trim " #\Tab" _)
                        (read-lines stream))))))
 
 (deftest test-unfold-right ()

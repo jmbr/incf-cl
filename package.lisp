@@ -26,8 +26,7 @@
 (cl:defpackage :com.superadditive.incf-cl
   (:nicknames :incf-cl)
   (:use #:common-lisp)
-  (:export #:curry
-           #:vector+
+  (:export #:vector+
            #:vector-
            #:vector*
            #:vector>
@@ -63,6 +62,7 @@
            #:ends-with
            #:while
            #:string-join
-           #:doctest))
+           #:doctest
+           #:slice #:_))
 
 (cl:pushnew :incf-cl *features*)
