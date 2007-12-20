@@ -50,7 +50,7 @@ signals DOCTEST-FAILURE otherwise."
       (let* ((sexpr (read input-stream))
              (actual-values (multiple-value-list (eval sexpr)))
              (expected-values (mapcar #'aux actual-values))
-             (eof-pos (position-if (curry #'eq input-stream)
+             (eof-pos (position-if (slice #'eq input-stream)
                                    expected-values)))
         (if (every #'equalp actual-values expected-values)
             t

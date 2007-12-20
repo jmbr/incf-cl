@@ -26,7 +26,8 @@
   ;; Inspired by iterate's sharpl reader macro and
   ;; http://srfi.schemers.org/srfi-26/srfi-26.html
   (let ((lambda-list nil)
-        (parameters nil))
+        (parameters nil)
+        (remaining-args (gensym "SLICE")))
     (dolist (x args)
       (cond
         ((or (eq x '_))
@@ -34,5 +35,5 @@
            (push s parameters)
            (push s lambda-list)))
         (t (push x parameters))))
-    `(lambda ,(nreverse lambda-list)
-       (funcall ,function ,@(nreverse parameters)))))
+    `(lambda (,@(nreverse lambda-list) &rest ,remaining-args)
+       (apply ,function ,@(nreverse parameters) ,remaining-args))))

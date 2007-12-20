@@ -151,7 +151,6 @@ Currently, the following are implemented:
 
 * BREAK*
 * CYCLE (and its destructive version NCYCLE).
-* CURRY
 * DROP
 * DROP-WHILE
 * FLIP

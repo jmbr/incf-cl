@@ -244,7 +244,7 @@ TEST and the concatenation of the result is equal to LIST.
 
   For example,
 
-  INCF-CL> (mapcar (curry #'concatenate 'string)
+  INCF-CL> (mapcar (slice #'concatenate 'string)
                    (group (coerce \"Mississippi\" 'list)))
   (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"
   (when (and (listp list) (functionp test))
@@ -253,6 +253,6 @@ TEST and the concatenation of the result is equal to LIST.
       (do ()
           ((null list) (rest result))
         (destructuring-bind (x . xs) list
-          (multiple-value-bind (ys zs) (span (curry test x) xs)
+          (multiple-value-bind (ys zs) (span (slice test x) xs)
             (setf splice (rest (rplacd splice (list (cons x ys)))))
             (setf list zs)))))))
