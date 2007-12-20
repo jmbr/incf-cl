@@ -1,3 +1,4 @@
+(in-package :com.superadditive.incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;; 
@@ -21,49 +22,19 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(cl:in-package :cl-user)
+(defun $ (&rest functions)
+  "Returns the composition of FUNCTIONS.  
 
-(cl:defpackage :com.superadditive.incf-cl
-  (:nicknames :incf-cl)
-  (:use #:common-lisp)
-  (:export #:vector+
-           #:vector-
-           #:vector*
-           #:vector>
-           #:vector=
-           #:vector-zero-p
-           #:assemble
-           #:<-
-           #:unfold
-           #:unfold-right
-           #:range
-           #:break*
-           #:cycle
-           #:ncycle
-           #:drop
-           #:drop-while
-           #:flip
-           #:group
-           #:insert
-           #:partition
-           #:replicate
-           #:span
-           #:split-at
-           #:take
-           #:take-while
-           #:unzip
-           #:scan*
-           #:intersperse
-           #:nintersperse
-           #-clisp #:dohash
-           #:hash-table->alist
-           #:alist->hash-table
-           #:starts-with
-           #:ends-with
-           #:while
-           #:string-join
-           #:doctest
-           #:slice #:_
-           #:$))
+  For example,
 
-(cl:pushnew :incf-cl *features*)
+  INCF-CL> (funcall ($ (lambda (x) (* x x))
+                       (lambda (x) (+ x 2)))
+                    2)
+  16
+
+  INCF-CL> (funcall ($ #'sqrt (slice #'expt _ 2)) -2)
+  2.0"
+  (flet ((compose (f g)
+           (lambda (&rest args)
+             (funcall f (apply g args)))))
+    (reduce #'compose functions)))

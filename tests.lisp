@@ -265,3 +265,7 @@
                           (mapcan #'identity
                                   (group (coerce "Mississippi" 'list))))
              "Mississippi")))
+
+(deftest test-$ ()
+  (is (eq 5 (funcall ($ #'1+ #'1+ #'1+ #'1+ #'1+) 0)))
+  (is (eq t (doctest :incf-cl :function #'$))))
