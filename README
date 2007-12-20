@@ -32,9 +32,9 @@ Installation
 The easiest way to install (incf-cl) is to use ASDF-INSTALL if you
 have it on your system:
 
------------------------------------------------------------------------------
-  (asdf-install:install "http://superadditive.com/software/incf-cl.tar.gz")
------------------------------------------------------------------------------
+-----------------------------------
+  (asdf-install:install :incf-cl)
+-----------------------------------
 
 Usage
 -----
@@ -210,6 +210,30 @@ Here's an example of UNFOLD:
                 (list (+ x h) (+ y (* h (funcall f x y))))))
             (list x0 y0)))
 -------------------------------------------------------------------------
+
+Functions
+^^^^^^^^^
+
+The function $ composes a list of functions together.  The following
+example illustrates its use:
+
+----------------------------------------------
+  CL-USER> (funcall ($ (lambda (x) (* x x))
+                       (lambda (x) (+ x 2)))
+                    2)
+  16
+----------------------------------------------
+
+SLICE fixes certain arguments of a given function and returns a
+function on the remaining (free) arguments.  Here are some examples:
+
+-----------------------------------------------------
+  CL-USER> (funcall (slice #'< _ 10) 5)
+  T
+  CL-USER> (funcall (slice #'concatenate 'string)
+                    (list #\f #\o #\o #\b #\a #\r))
+  "foobar"
+-----------------------------------------------------
 
 Hash table utilities
 ^^^^^^^^^^^^^^^^^^^^
