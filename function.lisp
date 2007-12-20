@@ -37,3 +37,21 @@
         (t (push x parameters))))
     `(lambda (,@(nreverse lambda-list) &rest ,remaining-args)
        (apply ,function ,@(nreverse parameters) ,remaining-args))))
+
+(defun $ (&rest functions)
+  "Returns the composition of FUNCTIONS.  Note that FUNCTIONS must 
+  be composable in the order specified.
+
+  For example,
+
+  INCF-CL> (funcall ($ (lambda (x) (* x x))
+                       (lambda (x) (+ x 2)))
+                    2)
+  16
+
+  INCF-CL> (funcall ($ #'sqrt (slice #'expt _ 2)) -2)
+  2.0"
+  (flet ((compose (f g)
+           (lambda (&rest args)
+             (funcall f (apply g args)))))
+    (reduce #'compose functions)))
