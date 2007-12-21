@@ -187,7 +187,7 @@ Here's an example of UNFOLD:
 
 --------------------------------------------------------------------------
   (defun euler (f x0 y0 interval h)
-    "Computes an approximate solution of the differential equation
+    "Computes an approximate solution of the initial value problem:
 
       y' = f(x, y), x in interval;  y(x0) = y0
 
@@ -214,8 +214,8 @@ Here's an example of UNFOLD:
 Functions
 ^^^^^^^^^
 
-The function $ composes a list of functions together.  The following
-example illustrates its use:
+The function $ returns the composition of several functions.  The
+following example illustrates its use:
 
 ----------------------------------------------
   CL-USER> (funcall ($ (lambda (x) (* x x))
