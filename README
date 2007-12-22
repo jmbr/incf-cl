@@ -9,22 +9,24 @@ Overview
 The package (incf cl) is a collection of convenience functions and
 macros to aid in the development of software written in Common Lisp.
 
+Some of the available features are:
+
+1. List manipulation functions similar to those in Haskell's prelude.
+
+2. List comprehensions.
+
+3. Doctest suite for automatic verification of examples in docstrings.
+
 License
 -------
 
-The code is released under the X11 license.
-
-Availability
-------------
-
-You can download the latest version of (incf cl) from 
-http://superadditive.com/software/incf-cl.tar.gz[]
+This library is released under the X11 license.
 
 Portability
 -----------
 
-This code has been tested under SBCL 1.0.11, CMU Common Lisp 19d, and
-GNU CLISP 2.42
+This code has been tested under SBCL 1.0.12, CMU Common Lisp 19d, and
+GNU CLISP 2.43.
 
 Installation
 ------------
@@ -35,6 +37,14 @@ have it on your system:
 -----------------------------------
   (asdf-install:install :incf-cl)
 -----------------------------------
+
+(Note that you need http://common-lisp.net/project/stefil/[Stefil] if
+you want to run the test suite).
+
+If you don't have ASDF-INSTALL just download the latest version of
+(incf cl) from http://superadditive.com/software/incf-cl.tar.gz[] and
+follow the standard package installation procedure for your Lisp
+implementation.
 
 Usage
 -----
