@@ -32,11 +32,22 @@
       (funcall key (first list))
       (first list)))
 
+(declaim (inline function-or-nil-p))
+(defun function-or-nil-p (function)
+  (if function
+      (functionp function)
+      t))
+
 (defun break* (predicate list &key key)
   "Given a PREDICATE and a LIST, breaks LIST into two lists (returned
 as VALUES) at the point where PREDICATE is first satisfied.  If
 PREDICATE is never satisfied then the first returned value is the
-entire LIST and the second element is NIL."
+entire LIST and the second element is NIL.  
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used."
   (span (complement predicate) list :key key))
 
 (defun cycle (list)
@@ -57,26 +68,39 @@ If LIST has less than N elements then it returns NIL."
   (unless (minusp n)
     (nthcdr n list)))
 
-(defun drop-while (predicate list)
+(defun drop-while (predicate list &key key)
   "Applied to PREDICATE and LIST, removes elements from the front of
-LIST while PREDICATE is satisfied."
-  (when (and (functionp predicate) (listp list))
+LIST while PREDICATE is satisfied.
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used."
+  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
     (do ((list list (rest list)))
         ((or (null list)
-             (not (funcall predicate (first list)))) list))))
+             (not (funcall predicate (first-with key list)))) list))))
 
-(defun partition (predicate list)
+(defun partition (predicate list &key key)
   "Applied to PREDICATE and LIST, returns two values: a list
 containing all the elements from LIST that satisfy PREDICATE, and its
-complementary list."
-  (when (and (functionp predicate) (listp list))
+complementary list.
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used."
+  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
     (let* ((result1 (cons nil nil))
            (result2 (cons nil nil))
            (splice1 result1)
            (splice2 result2))
       (dolist (x list (values (rest result1) (rest result2)))
-        (let ((c (cons x nil)))
-          (if (funcall predicate x)
+        (let ((c (cons x nil))
+              (elem (if key
+                        (funcall key x)
+                        x)))
+          (if (funcall predicate elem)
               (setf splice1 (rest (rplacd splice1 c)))
               (setf splice2 (rest (rplacd splice2 c)))))))))
 
@@ -88,7 +112,7 @@ order of the arguments reversed."
 
 (defun insert (x list &key (test #'<))
   "Inserts X before the first element in LIST which is greater than X.
-The order relation can be specified by the keyword TEST"
+The order relation can be specified by the keyword parameter TEST"
   (when (and (listp list) (functionp test))
     (multiple-value-bind (lt ge) (span (slice test _ x) list)
       (nconc lt (cons x ge)))))
@@ -102,8 +126,13 @@ The order relation can be specified by the keyword TEST"
   "Splits LIST into two lists (returned as VALUES) such that elements
 in the first list are taken from the head of LIST while PREDICATE is
 satisfied, and elements in the second list are the remaining elements
-from LIST once PREDICATE is not satisfied."
-  (when (and (functionp predicate) (listp list))
+from LIST once PREDICATE is not satisfied.
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used."
+  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (rest (rplacd splice (cons (first list) nil)))))
@@ -131,10 +160,15 @@ elements from the front of LIST.  If LIST has less than N elements,
 TAKE returns the entire LIST."
   (values (funcall #'split-at n list)))
 
-(defun take-while (predicate list)
+(defun take-while (predicate list &key key)
   "Applied to PREDICATE and LIST, returns a list containing elements
-from the front of LIST while PREDICATE is satisfied."
-  (values (span predicate list)))
+from the front of LIST while PREDICATE is satisfied.
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used."
+  (values (span predicate list :key key)))
 
 (defun unzip (alist)
   "Applied to the association list ALIST, returns two lists (as
@@ -209,7 +243,8 @@ respectively.  This function is the inverse of PAIRLIS."
   INCF-CL> (scan* #'+ (list 1 2 3 4) :from-end t)
   (10 9 7 4)"
   (when (and (functionp function)
-             (if ivp (listp list) (consp list)))
+             (if ivp (listp list) (consp list))
+             (function-or-nil-p key))
     (if from-end
         (scan-right* function list key initial-value ivp)
         (scan-left* function list key initial-value ivp))))
@@ -243,12 +278,17 @@ of LIST.
   "Returns a list of lists where every item in each sublist satisfies
 TEST and the concatenation of the result is equal to LIST.
 
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used.
+
   For example,
 
   INCF-CL> (mapcar (slice #'concatenate 'string)
                    (group (coerce \"Mississippi\" 'list)))
   (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"
-  (when (and (listp list) (functionp test))
+  (when (and (listp list) (functionp test) (function-or-nil-p key))
     (let* ((result (cons nil nil))
            (splice result))
       (do ()
