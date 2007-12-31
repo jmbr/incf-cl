@@ -156,8 +156,9 @@ So now you know everything was correct.
 Prelude
 ^^^^^^^
 
-There are a few compatibility functions with Haskell's Prelude.
-Currently, the following are implemented:
+There are a some list manipulation functions compatible with Haskell's
+Prelude (although often Lispified, see their docstrings).  Currently,
+the following are implemented:
 
 * BREAK*
 * CYCLE (and its destructive version NCYCLE).
@@ -169,8 +170,8 @@ Currently, the following are implemented:
 * INTERSPERSE (and its destructive version NINTERSPERSE).
 * PARTITION
 * REPLICATE
-* SCAN* (using the key parameters :initial-value and :from-end it works as
-  scanl, scanl1, scanr or scanr1)
+* SCAN* (using the key parameters :INITIAL-VALUE and :FROM-END it works as
+  scanl, scanl1, scanr, or scanr1)
 * SPAN
 * SPLIT-AT
 * TAKE
