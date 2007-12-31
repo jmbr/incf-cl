@@ -30,10 +30,6 @@
 
   transformer(initial-value), transformer(incrementor(initial-value)), ...
 
-  Note that this implementation is fast but it may have to call
-  TRANSFORMER and INCREMENTOR at runtime, which imposes a penalty on
-  performance.
-
   Examples
   --------
 
