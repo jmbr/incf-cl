@@ -63,7 +63,8 @@
            #:while
            #:string-join
            #:doctest
-           #:slice #:_
+           #:slice
+           #:_
            #:$))
 
 (cl:pushnew :incf-cl *features*)

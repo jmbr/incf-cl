@@ -49,8 +49,9 @@
                     2)
   16
 
-  INCF-CL> (funcall ($ #'sqrt (slice #'expt _ 2)) -2)
-  2.0"
+  INCF-CL> (funcall ($ #'values #'floor #'sqrt (slice #'expt _ 2)) -2)
+  2"
+  (assert (every #'functionp functions))
   (flet ((compose (f g)
            (lambda (&rest args)
              (funcall f (apply g args)))))
