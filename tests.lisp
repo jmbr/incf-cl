@@ -117,7 +117,7 @@
      (is (equal x (list 1 1 1 3 5)))
      (is (equal y (list 6 8))))))
 
-(deftest test-break ()
+(deftest test-break* ()
   (multiple-value-bind (x y) (break* #'oddp (nreverse (list 1 1 1 3 5 6 8)))
     (is (equal x (list 8 6)))
     (is (equal y (nreverse (list 1 1 1 3 5))))))

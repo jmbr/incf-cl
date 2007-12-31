@@ -25,12 +25,19 @@
 ;;; Most of the docstrings are taken from A tour of the Haskell
 ;;; Prelude by Bernie Pope.
 
-(defun break* (predicate list)
+(declaim (inline first-with))
+(defun first-with (key list)
+  ;; This is useful for saving a function call
+  (if key
+      (funcall key (first list))
+      (first list)))
+
+(defun break* (predicate list &key key)
   "Given a PREDICATE and a LIST, breaks LIST into two lists (returned
 as VALUES) at the point where PREDICATE is first satisfied.  If
 PREDICATE is never satisfied then the first returned value is the
 entire LIST and the second element is NIL."
-  (span (complement predicate) list))
+  (span (complement predicate) list :key key))
 
 (defun cycle (list)
   "Returns a circular list containing the elements in LIST (which
@@ -91,7 +98,7 @@ The order relation can be specified by the keyword TEST"
   (when (plusp n)
     (loop repeat n collect x)))
 
-(defun span (predicate list)
+(defun span (predicate list &key key)
   "Splits LIST into two lists (returned as VALUES) such that elements
 in the first list are taken from the head of LIST while PREDICATE is
 satisfied, and elements in the second list are the remaining elements
@@ -101,7 +108,7 @@ from LIST once PREDICATE is not satisfied."
       (do ((list list (rest list))
            (splice result (rest (rplacd splice (cons (first list) nil)))))
           ((or (null list)
-               (not (funcall predicate (first list))))
+               (not (funcall predicate (first-with key list))))
            (values (rest result) list))))))
 
 (defun split-at (n list)
@@ -138,12 +145,6 @@ respectively.  This function is the inverse of PAIRLIS."
          (xs nil (cons (caar alist) xs))
          (ys nil (cons (cdar alist) ys)))
         ((null alist) (values xs ys)))))
-
-(declaim (inline first-with))
-(defun first-with (key list)
-  (if key
-      (funcall key (first list))
-      (first list)))
 
 (declaim (inline scan-left*))
 (defun scan-left* (function list key initial-value ivp)
@@ -238,7 +239,7 @@ of LIST.
                     (cddr (rplacd xs newcdr)))))
         ((null (cdr xs)) list))))
 
-(defun group (list &key (test #'eql))
+(defun group (list &key key (test #'eql))
   "Returns a list of lists where every item in each sublist satisfies
 TEST and the concatenation of the result is equal to LIST.
 
@@ -253,6 +254,9 @@ TEST and the concatenation of the result is equal to LIST.
       (do ()
           ((null list) (rest result))
         (destructuring-bind (x . xs) list
-          (multiple-value-bind (ys zs) (span (slice test x) xs)
+          (multiple-value-bind (ys zs) (span (slice test (if key
+                                                             (funcall key x)
+                                                             x))
+                                             xs :key key)
             (setf splice (rest (rplacd splice (list (cons x ys)))))
             (setf list zs)))))))
