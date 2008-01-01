@@ -30,8 +30,7 @@
 
   transformer(initial-value), transformer(incrementor(initial-value)), ...
 
-  Examples
-  --------
+  For example,
 
   List of squares: 1^2, ..., 10^2
 
@@ -60,8 +59,7 @@
 
   ... transformer(incrementor(initial-value)), transformer(initial-value)
 
-  Examples
-  --------
+  For example,
 
   List of squares: 1^2, ..., 10^2
 
