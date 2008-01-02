@@ -25,84 +25,105 @@
 ;;; Most of the docstrings are taken from A tour of the Haskell
 ;;; Prelude by Bernie Pope.
 
-(declaim (inline first-with))
-(defun first-with (key list)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmacro check-type-if (test-clause place type &optional type-string)
+    `(when ,test-clause
+       (check-type ,place ,type ,type-string))))
+
+(deftype function-or-null () `(or function null))
+
+(declaim (inline apply-key))
+(defun apply-key (key element)
   ;; This is useful for saving a function call
   (if key
-      (funcall key (first list))
-      (first list)))
+      (funcall key element)
+      element))
 
-(declaim (inline function-or-nil-p))
-(defun function-or-nil-p (function)
-  (if function
-      (functionp function)
-      t))
+(declaim (inline first-with))
+(defun first-with (key list)
+  (apply-key key (first list)))
 
-(defun break* (predicate list &key key)
-  "Given a PREDICATE and a LIST, breaks LIST into two lists (returned
-as VALUES) at the point where PREDICATE is first satisfied.  If
-PREDICATE is never satisfied then the first returned value is the
-entire LIST and the second element is NIL.  
+(defgeneric break* (predicate list &key key)
+  (:documentation "Given a PREDICATE and a LIST, breaks LIST into two
+lists (returned as VALUES) at the point where PREDICATE is first
+satisfied.  If PREDICATE is never satisfied then the first returned
+value is the entire LIST and the second element is NIL.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
 passed to PREDICATE.  If it is not supplied or is NIL, the element of
-LIST itself is used."
+LIST itself is used.")
+  (:argument-precedence-order list predicate))
+
+(defmethod break* ((predicate function) (list list) &key key)
   (span (complement predicate) list :key key))
 
-(defun cycle (list)
-  "Returns a circular list containing the elements in LIST (which
-should be a proper list)."
-  (when (consp list)
-    (ncycle (copy-list list))))
+(defgeneric cycle (list)
+  (:documentation "Returns a circular list containing the elements in
+LIST (which should be a proper list)."))
 
-(defun ncycle (list)
-  "Destructive version of CYCLE."
-  (when (consp list)
-    (rest (rplacd (last list) list))))
+(defmethod cycle ((eql list nil))
+  nil)
 
-(defun drop (n list)
-  "Applied to N (a non-negative integer) and LIST, returns the list
-with the specified number of elements removed from the front of LIST.
-If LIST has less than N elements then it returns NIL."
+(defmethod cycle ((list list))
+  (ncycle (copy-list list)))
+
+(defgeneric ncycle (list)
+  (:documentation "Destructive version of CYCLE."))
+
+(defmethod ncycle ((list list))
+  (rest (rplacd (last list) list)))
+
+(defgeneric drop (n list)
+  (:documentation "Applied to N (a non-negative integer) and LIST,
+returns the list with the specified number of elements removed from
+the front of LIST.  If LIST has less than N elements then it returns
+NIL.")
+  (:argument-precedence-order list n))
+
+(defmethod drop ((n integer) (list list))
   (unless (minusp n)
     (nthcdr n list)))
 
-(defun drop-while (predicate list &key key)
-  "Applied to PREDICATE and LIST, removes elements from the front of
-LIST while PREDICATE is satisfied.
+(defgeneric drop-while (predicate list &key key)
+  (:documentation "Applied to PREDICATE and LIST, removes elements
+from the front of LIST while PREDICATE is satisfied.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
 passed to PREDICATE.  If it is not supplied or is NIL, the element of
-LIST itself is used."
-  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
-    (do ((list list (rest list)))
-        ((or (null list)
-             (not (funcall predicate (first-with key list)))) list))))
+LIST itself is used.")
+  (:argument-precedence-order list predicate))
 
-(defun partition (predicate list &key key)
-  "Applied to PREDICATE and LIST, returns two values: a list
+(defmethod drop-while ((predicate function) (list list) &key (key nil key-p))
+  (check-type-if key-p key function)
+  (do ((list list (rest list)))
+        ((or (null list)
+             (not (funcall predicate (first-with key list)))) list)))
+
+(defgeneric partition (predicate list &key key)
+  (:documentation "Applied to PREDICATE and LIST, returns two values: a list
 containing all the elements from LIST that satisfy PREDICATE, and its
 complementary list.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
 passed to PREDICATE.  If it is not supplied or is NIL, the element of
-LIST itself is used."
-  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
-    (let* ((result1 (cons nil nil))
-           (result2 (cons nil nil))
-           (splice1 result1)
-           (splice2 result2))
-      (dolist (x list (values (rest result1) (rest result2)))
-        (let ((c (cons x nil))
-              (elem (if key
-                        (funcall key x)
-                        x)))
-          (if (funcall predicate elem)
-              (setf splice1 (rest (rplacd splice1 c)))
-              (setf splice2 (rest (rplacd splice2 c)))))))))
+LIST itself is used.")
+  (:argument-precedence-order list predicate))
+
+(defmethod partition ((predicate function) (list list) &key key)
+  (check-type key function-or-null)
+  (let* ((result1 (cons nil nil))
+         (result2 (cons nil nil))
+         (splice1 result1)
+         (splice2 result2))
+    (dolist (x list (values (rest result1) (rest result2)))
+      (let ((c (cons x nil))
+            (elem (apply-key key x)))
+        (if (funcall predicate elem)
+            (setf splice1 (rest (rplacd splice1 c)))
+            (setf splice2 (rest (rplacd splice2 c))))))))
 
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
@@ -110,11 +131,27 @@ order of the arguments reversed."
   (lambda (x y)
     (funcall f y x)))
 
-(defun insert (x list &key (test #'<))
-  "Inserts X before the first element in LIST which is greater than X.
-The order relation can be specified by the keyword parameter TEST"
-  (when (and (listp list) (functionp test))
-    (multiple-value-bind (lt ge) (span (slice test _ x) list)
+(defgeneric insert (x list &key key test test-not)
+  (:documentation "Inserts X before the first element in LIST which is
+greater than X.  The order relation can be specified by either one of
+the keyword arguments TEST and TEST-NOT.
+
+  KEY is a designator for a function of one argument, or NIL.  If KEY
+is supplied, it is applied once to each element of LIST before it is
+passed to PREDICATE.  If it is not supplied or is NIL, the element of
+LIST itself is used.")
+  (:argument-precedence-order list x))
+
+(defmethod insert (x (list list) &key key (test #'< test-p) (test-not nil test-not-p))
+  (check-type key function-or-null)
+  (check-type-if test-p test function)
+  (check-type-if test-not-p test-not function)
+  (when (and test-p test-not-p)
+    (error ":TEST and :TEST-NOT must not be used simultaneously."))
+  (let ((test (if test-not
+                  (complement test-not)
+                  test)))
+    (multiple-value-bind (lt ge) (span (slice test _ (apply-key key x)) list :key key)
       (nconc lt (cons x ge)))))
 
 (defun replicate (n x)
@@ -122,30 +159,36 @@ The order relation can be specified by the keyword parameter TEST"
   (when (plusp n)
     (loop repeat n collect x)))
 
-(defun span (predicate list &key key)
-  "Splits LIST into two lists (returned as VALUES) such that elements
-in the first list are taken from the head of LIST while PREDICATE is
-satisfied, and elements in the second list are the remaining elements
-from LIST once PREDICATE is not satisfied.
+(defgeneric span (predicate list &key key)
+  (:documentation "Splits LIST into two lists (returned as VALUES)
+such that elements in the first list are taken from the head of LIST
+while PREDICATE is satisfied, and elements in the second list are the
+remaining elements from LIST once PREDICATE is not satisfied.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
 passed to PREDICATE.  If it is not supplied or is NIL, the element of
-LIST itself is used."
-  (when (and (functionp predicate) (listp list) (function-or-nil-p key))
-    (let ((result (cons nil nil)))
+LIST itself is used.")
+  (:argument-precedence-order list predicate))
+
+(defmethod span ((predicate function) (list list) &key (key nil key-p))
+  (check-type-if key-p key function-or-null)
+  (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (rest (rplacd splice (cons (first list) nil)))))
           ((or (null list)
                (not (funcall predicate (first-with key list))))
-           (values (rest result) list))))))
+           (values (rest result) list)))))
 
-(defun split-at (n list)
-  "Given an integer N (positive or zero) and LIST, splits LIST into
-two lists (returned as VALUES) at the position corresponding to the
-given integer.  If N is greater than the length of LIST, it returns
-the entire list first and the empty list second in VALUES."
-  (when (and (>= n 0) (listp list))
+(defgeneric split-at (n list)
+  (:documentation "Given a non-negative integer N and LIST, splits
+LIST into two lists (returned as VALUES) at the position corresponding
+to the given integer.  If N is greater than the length of LIST, it
+returns the entire list first and the empty list second in VALUES.")
+  (:argument-precedence-order list n))
+
+(defmethod split-at ((n integer) (list list))
+  (unless (minusp n)
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (n n (1- n))
@@ -154,20 +197,27 @@ the entire list first and the empty list second in VALUES."
                (null list))
            (values (rest result) list))))))
 
-(defun take (n list)
-  "Applied to the integer N and LIST, returns the specified number of
+(defgeneric take (n list)
+  (:documentation "Applied to the integer N and LIST, returns the specified number of
 elements from the front of LIST.  If LIST has less than N elements,
-TAKE returns the entire LIST."
+TAKE returns the entire LIST.")
+  (:argument-precedence-order list n))
+
+(defmethod take ((n integer) (list list))
   (values (funcall #'split-at n list)))
 
-(defun take-while (predicate list &key key)
-  "Applied to PREDICATE and LIST, returns a list containing elements
-from the front of LIST while PREDICATE is satisfied.
+(defgeneric take-while (predicate list &key key)
+  (:documentation "Applied to PREDICATE and LIST, returns a list
+containing elements from the front of LIST while PREDICATE is
+satisfied.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
 passed to PREDICATE.  If it is not supplied or is NIL, the element of
-LIST itself is used."
+LIST itself is used.")
+  (:argument-precedence-order list predicate))
+
+(defmethod take-while ((predicate function) (list list) &key key)
   (values (span predicate list :key key)))
 
 (defun unzip (alist)
@@ -206,10 +256,9 @@ respectively.  This function is the inverse of PAIRLIS."
                 result)))
         ((null list) result))))
 
-(defun scan* (function list
-              &key key from-end (initial-value nil ivp))
-  "SCAN* is similar to REDUCE, but returns a list of successive
-  reduced values:
+(defgeneric scan* (function list &key key from-end initial-value)
+  (:documentation "SCAN* is similar to REDUCE, but returns a list of
+  successive reduced values:
 
   (scan* f (list x1 x2 ...) :initial-value z) 
   ==> (z (funcall f z x1) (funcall f (funcall f z x1) x2) ...)
@@ -223,7 +272,7 @@ respectively.  This function is the inverse of PAIRLIS."
   (scan* f (list x1 ... x_n-1 x_n) :from-end t)
   ==> (... (funcall f x_n-1 (funcall f x_n-1 x_n)) (funcall f x_n-1 x_n) x_n)
 
-  Examples,
+  Examples:
 
   INCF-CL> (scan* #'/ (list 4 2 4) :initial-value 64) 
   (64 16 8 2)
@@ -241,42 +290,55 @@ respectively.  This function is the inverse of PAIRLIS."
   (15 14 12 9 5)
 
   INCF-CL> (scan* #'+ (list 1 2 3 4) :from-end t)
-  (10 9 7 4)"
-  (when (and (functionp function)
-             (if ivp (listp list) (consp list))
-             (function-or-nil-p key))
-    (if from-end
-        (scan-right* function list key initial-value ivp)
-        (scan-left* function list key initial-value ivp))))
+  (10 9 7 4)")
+  (:argument-precedence-order list function))
 
-(defun intersperse (element list)
-  "Returns a list where ELEMENT is interspersed between the elements
-of LIST.
+(defmethod scan* ((function function) (list list)
+                  &key key from-end (initial-value nil ivp))
+  (check-type key function-or-null)
+  (if ivp
+      (check-type list list)
+      (check-type list cons))
+  (if from-end
+      (scan-right* function list key initial-value ivp)
+      (scan-left* function list key initial-value ivp)))
+
+(defgeneric intersperse (element list)
+  (:documentation "Returns a list where ELEMENT is interspersed
+between the elements of SEQUENCE.
 
   For example,
 
   INCF-CL> (intersperse 'x (replicate 3 'z))
-  (Z X Z X Z)"
-  (when (consp list)
-    (let ((result (cons nil nil)))
-      (do ((list list (rest list))
-           (splice result
-                   (cddr (rplacd splice (cons (first list)
-                                              (cons element nil))))))
-          ((null (rest list))
-           (rplacd splice (cons (first list) nil))
-           (rest result))))))
+  (Z X Z X Z)")
+  (:argument-precedence-order list element))
 
-(defun nintersperse (element list)
-  "Destructive version of INTERSPERSE."
-  (when (listp list)
-    (do ((xs list (let ((newcdr (cons element (rest xs))))
-                    (cddr (rplacd xs newcdr)))))
-        ((null (cdr xs)) list))))
+(defmethod intersperse (element (eql list nil))
+  nil)
 
-(defun group (list &key key (test #'eql))
-  "Returns a list of lists where every item in each sublist satisfies
-TEST and the concatenation of the result is equal to LIST.
+(defmethod intersperse (element (list cons))
+  (let ((result (cons nil nil)))
+    (do ((list list (rest list))
+         (splice result
+                 (cddr (rplacd splice (cons (first list)
+                                            (cons element nil))))))
+        ((null (rest list))
+         (rplacd splice (cons (first list) nil))
+         (rest result)))))
+
+(defgeneric nintersperse (element list)
+  (:documentation "Destructive version of INTERSPERSE.")
+  (:argument-precedence-order list element))
+
+(defmethod nintersperse (element (list list))
+  (do ((xs list (let ((newcdr (cons element (rest xs))))
+                  (cddr (rplacd xs newcdr)))))
+      ((null (cdr xs)) list)))
+
+(defgeneric group (list &key key test test-not)
+  (:documentation "Returns a list of lists where every item in each
+sublist satisfies TEST and the concatenation of the result is equal to
+LIST.
 
   KEY is a designator for a function of one argument, or NIL.  If KEY
 is supplied, it is applied once to each element of LIST before it is
@@ -287,16 +349,23 @@ LIST itself is used.
 
   INCF-CL> (mapcar (slice #'concatenate 'string)
                    (group (coerce \"Mississippi\" 'list)))
-  (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"
-  (when (and (listp list) (functionp test) (function-or-nil-p key))
+  (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"))
+
+(defmethod group ((list list) &key key (test #'eql test-p) (test-not nil test-not-p))
+  (check-type key function-or-null)
+  (check-type-if test-p test function)
+  (check-type-if test-not-p test-not function)
+  (when (and test-p test-not-p)
+    (error ":TEST and :TEST-NOT must not be used simultaneously."))
+  (let ((test (if test-not-p
+                  (complement test-not)
+                  test)))
     (let* ((result (cons nil nil))
            (splice result))
       (do ()
           ((null list) (rest result))
         (destructuring-bind (x . xs) list
-          (multiple-value-bind (ys zs) (span (slice test (if key
-                                                             (funcall key x)
-                                                             x))
+          (multiple-value-bind (ys zs) (span (slice test (apply-key key x))
                                              xs :key key)
             (setf splice (rest (rplacd splice (list (cons x ys)))))
             (setf list zs)))))))

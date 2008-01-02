@@ -67,9 +67,6 @@
   (is (equal (list 1 2) (take 2 (list 1 2 3)))))
 
 (deftest test-take-while ()
-  (is (eq nil (take-while nil nil)))
-  (is (eq nil (take-while (constantly t) 0)))
-  (is (eq nil (take-while nil (list 1 2 3))))
   (is (eq nil (take-while (constantly t) nil)))
   (is (eq nil (take-while (constantly nil) (list 1 2 3))))
   (is (equal (list 1 2 3) (take-while (constantly t) (list 1 2 3))))
@@ -77,9 +74,6 @@
                                     (list 1 2 3)))))
 
 (deftest test-drop-while ()
-  (is (eq nil (drop-while nil nil)))
-  (is (eq nil (drop-while (constantly t) 0)))
-  (is (eq nil (drop-while nil (list 1 2 3))))
   (is (eq nil (drop-while (constantly t) nil)))
   (is (eq nil (drop-while (constantly t) (list 1 2 3))))
   (is (equal (list 1 2 3) (drop-while (constantly nil)
@@ -88,11 +82,8 @@
                                   (list 1 2 3)))))
 
 (deftest test-partition ()
-  (is (eq nil (partition nil nil)))
   (is (eq nil (partition (constantly t) nil)))
-  (is (eq nil (partition (constantly t) 0)))
-  (is (eq nil (partition nil (list 1 2 3))))
-  (is (eq nil (partition (constantly t) nil :key 0)))
+  (signals type-error (partition (constantly t) nil :key 0))
   (is (equal (multiple-value-list (partition (constantly t) (list 1 2 3)))
              (list (list 1 2 3) nil)))
   (is (equal (multiple-value-list (partition (constantly nil) (list 1 2 3)))
@@ -115,7 +106,6 @@
 
 (deftest test-span ()
   (let ((xs (list 1 1 1 3 5 6 8)))
-   (is (eq (span nil xs) nil))
    (is (eq (span (constantly t) nil) nil))
    (is (eq (span (constantly nil) xs) nil))
    (is (equal (span (constantly t) xs) xs))
@@ -129,9 +119,8 @@
     (is (equal y (nreverse (list 1 1 1 3 5))))))
 
 (deftest test-split-at ()
-  (is (eq (split-at -10 (list 1 2 3)) nil))
-  (is (eq (split-at 0 nil) nil))
-  (is (eq (split-at 0 1) nil))
+  (is (eq nil (split-at -10 (list 1 2 3))))
+  (is (eq nil (split-at 0 nil)))
   (multiple-value-bind (x y) (split-at 0 (list 1 2 3))
     (is (and (equal x nil)
              (equal y (list 1 2 3)))))
@@ -141,8 +130,7 @@
              (equal y (list 2 3))))))
 
 (deftest test-insert ()
-  (is (eq nil (insert 1 1 :test nil)))
-  (is (eq nil (insert nil nil :test nil)))
+  (signals type-error (insert nil nil :test nil))
   (is (equal (range 1 10)
              (let ((xs (list 3 6 10 7 4 1 8 2 9 5))
                    (ys nil))
@@ -234,8 +222,6 @@
       (push (random m) list))))
 
 (deftest test-scan* ()
-  (is (eq nil (scan* 1 nil :initial-value 0)))
-  (is (eq nil (scan* #'+ 3 :initial-value 0)))
   (let ((zs (random-list 100 100)))
     (is (eql (first (last (scan* #'max zs :initial-value 5)))
              (reduce #'max zs :initial-value 5))))
@@ -245,30 +231,24 @@
   (is (eq t (doctest :incf-cl :function #'scan*))))
 
 (deftest test-cycle ()
-  (is (eq nil (cycle 0)))
   (is (equal (list 0 1 0 1) (take 4 (cycle (list 0 1))))))
 
 (deftest test-ncycle ()
-  (is (eq nil (ncycle 0)))
   (is (equal (list 0 1 0 1) (take 4 (ncycle (list 0 1))))))
 
 (deftest test-intersperse ()
-  (is (eq nil (intersperse nil 0)))
   (is (eq nil (intersperse 0 nil)))
   (is (equal (list 'z) (intersperse 'x (list 'z))))
   (is (equal (list 'z 'x 'z) (intersperse 'x (list 'z 'z)))))
 
 (deftest test-nintersperse ()
-  (is (eq nil (nintersperse nil 0)))
   (is (eq nil (nintersperse 0 nil)))
   (is (equal (list 'z) (nintersperse 'x (list 'z))))
   (is (equal (list 'z 'x 'z) (nintersperse 'x (list 'z 'z)))))
 
 (deftest test-group ()
+  (signals type-error (group nil :key 0))
   (is (eq nil (group nil :test #'equal)))
-  (is (eq nil (group 0 :test #'equal)))
-  (is (eq nil (group nil :test 0)))
-  (is (eq nil (group nil :key 0)))
   (is (equal (group (list "abc" "aardvark" "ant" "buffalo" "zebra") :key (slice #'elt _ 0))
              '(("abc" "aardvark" "ant") ("buffalo") ("zebra"))))
   (is (equal (concatenate 'string
