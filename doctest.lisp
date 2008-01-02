@@ -83,10 +83,10 @@ otherwise."
 (defun doctest (package
                 &key (function nil function-p) (stream *standard-output*))
   "Tests docstrings present in functions defined in PACKAGE and
- outputs its results to STREAM.  It returns T if the tests succeed,
- NIL on error.  If FUNCTION is specified, DOCTEST will check that
- function only.  By default, DOCTEST will test each function exported
- by PACKAGE."
+outputs its results to STREAM.  It returns T if the tests succeed, NIL
+on error.  If FUNCTION is specified, DOCTEST will check that function
+only.  By default, DOCTEST will test each function exported by
+PACKAGE."
   (let ((passed-p t)
         (package-name (etypecase package
                         (string (string-upcase package))

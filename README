@@ -238,13 +238,12 @@ following example illustrates its use:
 SLICE fixes certain arguments of a given function and returns a
 function on the remaining (free) arguments.  Here are some examples:
 
------------------------------------------------------
+-----------------------------------------------------------------------------------
   CL-USER> (funcall (slice #'< _ 10) 5)
   T
-  CL-USER> (funcall (slice #'concatenate 'string)
-                    (list #\f #\o #\o #\b #\a #\r))
+  CL-USER> (funcall (slice #'concatenate 'string) (list #\f #\o #\o #\b #\a #\r))
   "foobar"
------------------------------------------------------
+-----------------------------------------------------------------------------------
 
 Hash table utilities
 ^^^^^^^^^^^^^^^^^^^^
