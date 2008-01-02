@@ -231,6 +231,7 @@
   (is (eq t (doctest :incf-cl :function #'scan*))))
 
 (deftest test-cycle ()
+  (is (eq nil (cycle nil)))
   (is (equal (list 0 1 0 1) (take 4 (cycle (list 0 1))))))
 
 (deftest test-ncycle ()
