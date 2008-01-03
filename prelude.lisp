@@ -25,10 +25,9 @@
 ;;; Most of the docstrings are taken from A tour of the Haskell
 ;;; Prelude by Bernie Pope.
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmacro check-type-if (test-clause place type &optional type-string)
-    `(when ,test-clause
-       (check-type ,place ,type ,type-string))))
+(defmacro check-type-if (test-clause place type &optional type-string)
+  `(when ,test-clause
+     (check-type ,place ,type ,type-string)))
 
 (deftype function-or-null () `(or function null))
 
