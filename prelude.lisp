@@ -229,32 +229,6 @@ respectively.  This function is the inverse of PAIRLIS."
          (ys nil (cons (cdar alist) ys)))
         ((null alist) (values xs ys)))))
 
-(declaim (inline scan-left*))
-(defun scan-left* (function list key initial-value ivp)
-  (let ((result (cons (if ivp
-                          initial-value
-                          (first-with key list))
-                      nil)))
-    (do ((list (if ivp list (rest list)) (rest list))
-         (splice
-          result
-          (rest (rplacd splice (cons (funcall function
-                                              (first splice)
-                                              (first-with key list))
-                                     nil)))))
-        ((null list) result))))
-
-(declaim (inline scan-right*))
-(defun scan-right* (function list key initial-value ivp)
-  (let ((list (reverse list)))
-    (do ((list (if ivp list (rest list)) (rest list))
-         (result
-          (cons (if ivp initial-value (first-with key list))
-                nil)
-          (cons (funcall function (first-with key list) (first result))
-                result)))
-        ((null list) result))))
-
 (defgeneric scan* (function list &key key from-end initial-value)
   (:documentation "SCAN* is similar to REDUCE, but returns a list of
   successive reduced values:
@@ -292,10 +266,36 @@ respectively.  This function is the inverse of PAIRLIS."
   (10 9 7 4)")
   (:argument-precedence-order list function))
 
+(declaim (inline scan-left*))
+(defun scan-left* (function list key initial-value ivp)
+  (let ((result (cons (if ivp
+                          initial-value
+                          (first-with key list))
+                      nil)))
+    (do ((list (if ivp list (rest list)) (rest list))
+         (splice
+          result
+          (rest (rplacd splice (cons (funcall function
+                                              (first splice)
+                                              (first-with key list))
+                                     nil)))))
+        ((null list) result))))
+
+(declaim (inline scan-right*))
+(defun scan-right* (function list key initial-value ivp)
+  (let ((list (reverse list)))
+    (do ((list (if ivp list (rest list)) (rest list))
+         (result
+          (cons (if ivp initial-value (first-with key list))
+                nil)
+          (cons (funcall function (first-with key list) (first result))
+                result)))
+        ((null list) result))))
+
 (defmethod scan* ((function function) (list list)
                   &key key from-end (initial-value nil ivp))
   (check-type key function-or-null)
-  (if ivp
+  (if ivp                               ; Hrm...
       (check-type list list)
       (check-type list cons))
   (if from-end
