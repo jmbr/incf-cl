@@ -61,7 +61,7 @@ LIST itself is used.")
   (:documentation "Returns a circular list containing the elements in
 LIST (which should be a proper list)."))
 
-(defmethod cycle ((list (eql nil)))
+(defmethod cycle ((list null))
   nil)
 
 (defmethod cycle ((list list))
@@ -312,7 +312,7 @@ between the elements of SEQUENCE.
   (Z X Z X Z)")
   (:argument-precedence-order list element))
 
-(defmethod intersperse (element (list (eql nil)))
+(defmethod intersperse (element (list null))
   (declare (ignore element))
   nil)
 
