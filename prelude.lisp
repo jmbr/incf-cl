@@ -25,10 +25,6 @@
 ;;; Most of the docstrings are taken from A tour of the Haskell
 ;;; Prelude by Bernie Pope.
 
-(defmacro check-type-if (test-clause place type &optional type-string)
-  `(when ,test-clause
-     (check-type ,place ,type ,type-string)))
-
 (deftype function-or-null () `(or function null))
 
 (declaim (inline apply-key))
@@ -41,6 +37,15 @@
 (declaim (inline first-with))
 (defun first-with (key list)
   (apply-key key (first list)))
+
+(defun get-test-function (test test-not)
+  "Returns a validated test function for those methods that use :test
+and :test-not keyword arguments."
+  (let ((test (if test-not
+                  (complement test-not)
+                  test)))
+    (check-type test function)
+    test))
 
 (defgeneric break* (predicate list &key key)
   (:documentation "Given a PREDICATE and a LIST, breaks LIST into two
@@ -94,8 +99,8 @@ passed to PREDICATE.  If it is not supplied or is NIL, the element of
 LIST itself is used.")
   (:argument-precedence-order list predicate))
 
-(defmethod drop-while ((predicate function) (list list) &key (key nil key-p))
-  (check-type-if key-p key function)
+(defmethod drop-while ((predicate function) (list list) &key key)
+  (check-type key function-or-null)
   (do ((list list (rest list)))
         ((or (null list)
              (not (funcall predicate (first-with key list)))) list)))
@@ -141,15 +146,9 @@ passed to PREDICATE.  If it is not supplied or is NIL, the element of
 LIST itself is used.")
   (:argument-precedence-order list x))
 
-(defmethod insert (x (list list) &key key (test #'< test-p) (test-not nil test-not-p))
+(defmethod insert (x (list list) &key key (test #'<) test-not)
   (check-type key function-or-null)
-  (check-type-if test-p test function)
-  (check-type-if test-not-p test-not function)
-  (when (and test-p test-not-p)
-    (error ":TEST and :TEST-NOT must not be used simultaneously."))
-  (let ((test (if test-not
-                  (complement test-not)
-                  test)))
+  (let ((test (get-test-function test test-not)))
     (multiple-value-bind (lt ge) (span (slice test _ (apply-key key x)) list :key key)
       (nconc lt (cons x ge)))))
 
@@ -170,8 +169,8 @@ passed to PREDICATE.  If it is not supplied or is NIL, the element of
 LIST itself is used.")
   (:argument-precedence-order list predicate))
 
-(defmethod span ((predicate function) (list list) &key (key nil key-p))
-  (check-type-if key-p key function-or-null)
+(defmethod span ((predicate function) (list list) &key key)
+  (check-type key function-or-null)
   (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (rest (rplacd splice (cons (first list) nil)))))
@@ -351,21 +350,15 @@ LIST itself is used.
                    (group (coerce \"Mississippi\" 'list)))
   (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"))
 
-(defmethod group ((list list) &key key (test #'eql test-p) (test-not nil test-not-p))
+(defmethod group ((list list) &key key (test #'eql) test-not)
   (check-type key function-or-null)
-  (check-type-if test-p test function)
-  (check-type-if test-not-p test-not function)
-  (when (and test-p test-not-p)
-    (error ":TEST and :TEST-NOT must not be used simultaneously."))
-  (let ((test (if test-not-p
-                  (complement test-not)
-                  test)))
-    (let* ((result (cons nil nil))
-           (splice result))
-      (do ()
-          ((null list) (rest result))
-        (destructuring-bind (x . xs) list
-          (multiple-value-bind (ys zs) (span (slice test (apply-key key x))
-                                             xs :key key)
-            (setf splice (rest (rplacd splice (list (cons x ys)))))
-            (setf list zs)))))))
+  (let* ((test (get-test-function test test-not))
+         (result (cons nil nil))
+         (splice result))
+    (do ()
+        ((null list) (rest result))
+      (destructuring-bind (x . xs) list
+        (multiple-value-bind (ys zs) (span (slice test (apply-key key x))
+                                           xs :key key)
+          (setf splice (rest (rplacd splice (list (cons x ys)))))
+          (setf list zs))))))

@@ -131,6 +131,9 @@
 
 (deftest test-insert ()
   (signals type-error (insert nil nil :test nil))
+  (signals type-error (insert 'x nil :test 0))
+  (signals type-error (insert 'x nil :test nil :test-not nil))
+  (is (equal (list 1 2 3) (insert 2 (list 1 3) :test-not #'>)))
   (is (equal (range 1 10)
              (let ((xs (list 3 6 10 7 4 1 8 2 9 5))
                    (ys nil))
@@ -249,7 +252,9 @@
 
 (deftest test-group ()
   (signals type-error (group nil :key 0))
+  (signals type-error (group nil :test 0))
   (is (eq nil (group nil :test #'equal)))
+  
   (is (equal (group (list "abc" "aardvark" "ant" "buffalo" "zebra") :key (slice #'elt _ 0))
              '(("abc" "aardvark" "ant") ("buffalo") ("zebra"))))
   (is (equal (concatenate 'string
