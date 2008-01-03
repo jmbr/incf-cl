@@ -22,7 +22,6 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-;;; See also: http://srfi.schemers.org/srfi-1/srfi-1.html#unfold
 
 (defun unfold (predicate transformer incrementor initial-value
                &optional (tail-gen (constantly nil)))
@@ -39,10 +38,13 @@
 
   2. Append (3 4 5) onto (1 2)
 
-  INCF-CL> (unfold #'null #'car #'cdr (list 1 2) (lambda (x)
-                                                   (declare (ignore x))
-                                                   (list 3 4 5)))
-  (1 2 3 4 5)"
+  INCF-CL> (unfold #'null #'first #'rest (list 1 2) (lambda (x)
+                                                    (declare (ignore x))
+                                                    (list 3 4 5)))
+  (1 2 3 4 5)
+
+  See also: 
+    http://srfi.schemers.org/srfi-1/srfi-1.html#unfold"
   (let ((result (cons nil nil)))
     (do ((item initial-value (funcall incrementor item))
          (splice result (rest (rplacd splice
@@ -50,8 +52,6 @@
         ((funcall predicate item) (nconc (rest result)
                                          (funcall tail-gen item))))))
 
-
-;;; See also: http://srfi.schemers.org/srfi-1/srfi-1.html#unfold-right
 
 (defun unfold-right (predicate transformer incrementor initial-value
                      &optional (tail nil))
@@ -68,8 +68,11 @@
 
   2. Reverse a proper list:
 
-  INCF-CL> (unfold-right #'null #'car #'cdr (list 1 2 3 4 5))
-  (5 4 3 2 1)"
+  INCF-CL> (unfold-right #'null #'first #'rest (list 1 2 3 4 5))
+  (5 4 3 2 1)
+
+  See also: 
+    http://srfi.schemers.org/srfi-1/srfi-1.html#unfold-right"
   (do ((item initial-value (funcall incrementor item))
          (result tail (cons (funcall transformer item) result)))
         ((funcall predicate item) result)))
