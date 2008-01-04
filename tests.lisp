@@ -34,7 +34,7 @@
 (defpackage :com.superadditive.incf-cl-tests
   (:nicknames :incf-cl-tests)
   (:use :common-lisp :incf-cl :stefil)
-  (:export #:test #:test-doctest))
+  (:export #:test))
 
 (in-package :com.superadditive.incf-cl-tests)
 
@@ -182,7 +182,6 @@
 
 (deftest test-unfold ()
   (is (eq nil (unfold (constantly t) #'identity #'identity 0)))
-  (is (eq t (doctest :incf-cl :function #'unfold)))
   (is (equal (range 0 .1 (/ pi 2))
              (unfold (slice #'> _ (/ pi 2))
                      #'identity
@@ -195,9 +194,6 @@
     (is (equal (list "1" "2" "3")
                (mapcar (slice #'string-trim " #\Tab" _)
                        (read-lines stream))))))
-
-(deftest test-unfold-right ()
-  (is (eq t (doctest :incf-cl :function #'unfold-right))))
 
 (deftest test-doctest ()
   "This is a sample docstring.
@@ -212,10 +208,11 @@
   INCF-CL-TESTS> (unzip 0)
   NIL
 
-  INCF-CL-TESTS> (handler-case (floor 1 0)
-                   (division-by-zero () 'caught-division-by-zero))
-  CAUGHT-DIVISION-BY-ZERO"
-  (is (eq t (doctest :incf-cl-tests))))
+  INCF-CL-TESTS> (signals-p division-by-zero (floor 1 0))
+  T"
+  (is (eq t (doctest :incf-cl-tests :function 'test-doctest)))
+  ;; Here we run doctests for the whole package.
+  (is (eq t (doctest :incf-cl))))
 
 (defun random-list (n m)
   "Returns a list of N elements taken uniformly from the positive
@@ -230,8 +227,7 @@
              (reduce #'max zs :initial-value 5))))
   (is (eql (first (scan* #'+ (coerce "Hello, world!" 'list)
                          :key #'char-code :from-end t))
-           (reduce #'+ "Hello, world!" :key #'char-code)))
-  (is (eq t (doctest :incf-cl :function #'scan*))))
+           (reduce #'+ "Hello, world!" :key #'char-code))))
 
 (deftest test-cycle ()
   (is (eq nil (cycle nil)))
@@ -263,5 +259,4 @@
              "Mississippi")))
 
 (deftest test-$ ()
-  (is (eq 5 (funcall ($ #'1+ #'1+ #'1+ #'1+ #'1+) 0)))
-  (is (eq t (doctest :incf-cl :function #'$))))
+  (is (eq 5 (funcall ($ #'1+ #'1+ #'1+ #'1+ #'1+) 0))))

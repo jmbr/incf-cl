@@ -22,6 +22,13 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
+(defmacro signals-p (condition &body body)
+  "Returns T if evaluating BODY results in CONDITION being signalled,
+NIL otherwise."
+  `(let ((sym (gensym "SIGNALS")))
+     (eq sym (handler-case (progn ,@body)
+               (,condition () sym)))))
+
 (define-condition doctest-failure ()
   ((sexpr :initarg :sexpr :reader sexpr)
    (actual-values :initarg :actual-values :reader actual-values)

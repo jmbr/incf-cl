@@ -122,13 +122,11 @@ Suppose you have the package TEST, defined as follows:
     TEST> (factorial 450/15)
     265252859812191058636308480000000
 
-    TEST> (handler-case (factorial -1)
-            (arithmetic-error () 'caught-arithmetic-error))
-    CAUGHT-ARITHMETIC-ERROR
+    TEST> (signals-p arithmetic-error (factorial -1))
+    T
 
-    TEST> (handler-case (factorial 30.1)
-            (type-error () 'caught-type-error))
-    CAUGHT-TYPE-ERROR
+    TEST> (signals-p type-error (factorial 30.1))
+    T
 
     TEST> (factorial 0)
     1"

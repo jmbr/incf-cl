@@ -62,6 +62,7 @@
            #:ends-with
            #:while
            #:string-join
+           #:signals-p
            #:doctest
            #:slice
            #:_
