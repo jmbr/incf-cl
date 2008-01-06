@@ -29,12 +29,10 @@
         (parameters nil)
         (remaining-args (gensym "SLICE")))
     (dolist (x args)
-      (cond
-        ((or (eq x '_))
-         (let ((s (gensym "SLICE")))
-           (push s parameters)
-           (push s lambda-list)))
-        (t (push x parameters))))
+      (let ((s (gensym "SLICE")))
+        (when (eq x '_)
+          (push s lambda-list))
+        (push s parameters)))
     `(lambda (,@(nreverse lambda-list) &rest ,remaining-args)
        (apply ,function ,@(nreverse parameters) ,remaining-args))))
 
