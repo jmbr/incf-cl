@@ -107,7 +107,7 @@ Suppose you have the package TEST, defined as follows:
 --------------------------------------------------------------
   (defpackage :test
     (:use :common-lisp :incf-cl)
-    (:export #:factorial))
+    (:export :factorial))
 
   (in-package :test)           
   
