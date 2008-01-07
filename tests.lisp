@@ -43,8 +43,8 @@
 (in-suite test)
 
 (deftest test-range ()
-  (signals simple-error (range 1 -1))
-  (signals simple-error (range 1 -1 2))
+  (signals error (range 1 -1))
+  (signals error (range 1 -1 2))
   (is (equal (range 1 5) (list 1 2 3 4 5)))
   (is (equal (range 1 2 5) (list 1 3 5))))
 
@@ -250,7 +250,6 @@
   (signals type-error (group nil :key 0))
   (signals type-error (group nil :test 0))
   (is (eq nil (group nil :test #'equal)))
-  
   (is (equal (group (list "abc" "aardvark" "ant" "buffalo" "zebra") :key (slice #'elt _ 0))
              '(("abc" "aardvark" "ant") ("buffalo") ("zebra"))))
   (is (equal (concatenate 'string

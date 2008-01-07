@@ -29,7 +29,7 @@
 (defsystem "incf-cl"
   :description "INCF CL is a library of convenience functions for Common Lisp"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
-  :license "X11"
+  :licence "X11"
   :depends-on ("cl-ppcre")
   :serial t
   :components ((:file "package")
