@@ -25,7 +25,7 @@
 (defmacro signals-p (condition &body body)
   "Returns T if evaluating BODY results in CONDITION being signalled,
 NIL otherwise."
-  `(let ((sym (gensym "SIGNALS")))
+  `(let ((sym (gensym "SIGNALS-P")))
      (eq sym (handler-case (progn ,@body)
                (,condition () sym)))))
 
