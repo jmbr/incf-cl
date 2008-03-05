@@ -234,6 +234,7 @@
   (is (equal (list 0 1 0 1) (take 4 (cycle (list 0 1))))))
 
 (deftest test-ncycle ()
+  (is (eq nil (ncycle nil)))
   (is (equal (list 0 1 0 1) (take 4 (ncycle (list 0 1))))))
 
 (deftest test-intersperse ()
