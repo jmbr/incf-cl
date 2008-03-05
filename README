@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-January 2008
+March 2008
 
 Overview
 --------
@@ -17,6 +17,12 @@ Some of the available features are:
 
 3. Doctest suite for automatic verification of examples in docstrings.
 
+Download
+--------
+
+Fetch the latest version from
+http://superadditive.com/software/incf-cl.tar.gz[]
+
 License
 -------
 
@@ -25,7 +31,7 @@ This library is released under the X11 license.
 Portability
 -----------
 
-This code has been tested under SBCL 1.0.13, CMU Common Lisp 19d, GNU
+This code has been tested under SBCL 1.0.14, CMU Common Lisp 19d, GNU
 CLISP 2.43, and ECL 0.9j.
 
 Installation
@@ -34,9 +40,10 @@ Installation
 The easiest way to install (incf-cl) is to use ASDF-INSTALL if you
 have it on your system:
 
------------------------------------
+----------------------------------------------
+  (asdf:operate 'asdf:load-op :asdf-install)
   (asdf-install:install :incf-cl)
------------------------------------
+----------------------------------------------
 
 Note that you need http://common-lisp.net/project/stefil/[Stefil] if
 you want to run the test suite.

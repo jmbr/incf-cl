@@ -73,7 +73,8 @@ LIST (which should be a proper list)."))
   (ncycle (copy-list list)))
 
 (defgeneric ncycle (list)
-  (:documentation "Destructive version of CYCLE."))
+  (:documentation "Destructive version of CYCLE.  Again, keep in mind
+  that LIST must be a proper list."))
 
 (defmethod ncycle ((list list))
   (rest (rplacd (last list) list)))

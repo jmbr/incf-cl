@@ -39,8 +39,8 @@
   2. Append (3 4 5) onto (1 2)
 
   INCF-CL> (unfold #'null #'first #'rest (list 1 2) (lambda (x)
-                                                    (declare (ignore x))
-                                                    (list 3 4 5)))
+                                                      (declare (ignore x))
+                                                      (list 3 4 5)))
   (1 2 3 4 5)
 
   See also: 
