@@ -31,8 +31,8 @@ This library is released under the X11 license.
 Portability
 -----------
 
-This code has been tested under SBCL 1.0.14, CMU Common Lisp 19d, GNU
-CLISP 2.43, and ECL 0.9j.
+This code has been tested under SBCL 1.0.15, CMU Common Lisp 19d, GNU
+CLISP 2.44, and ECL 0.9j.
 
 Installation
 ------------
