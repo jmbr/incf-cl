@@ -37,14 +37,6 @@ NIL otherwise."
                      (actual-values condition)
                      (expected-values condition)))))
 
-(defun symbol-function-or-nil (symbol)
-  ;; Taken verbatim from the Hyperspec.
-  (if (and (fboundp symbol)
-           (not (macro-function symbol))
-           (not (special-operator-p symbol)))
-      (symbol-function symbol)
-      nil))
-
 (defun test-docstring (documentation)
   "Returns T if the first doctest found in DOCUMENTATION passes,
 signals DOCTEST-FAILURE otherwise."
@@ -100,7 +92,5 @@ PACKAGE."
     (if function-p
         (test-function package-name function stream)
         (do-external-symbols (symbol package passed-p)
-          (let ((function (symbol-function-or-nil symbol)))
-            (when function
-              (unless (test-function package-name function stream)
-                (setf passed-p nil))))))))
+          (unless (test-function package-name symbol stream)
+            (setf passed-p nil))))))
