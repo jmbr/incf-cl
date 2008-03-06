@@ -208,7 +208,10 @@
   INCF-CL-TESTS> (unzip 0)
   NIL
 
-  INCF-CL-TESTS> (signals-p division-by-zero (floor 1 0))
+  INCF-CL-TESTS> (signals-p cell-error (error 'division-by-zero))
+  NIL
+
+  INCF-CL-TESTS> (signals-p division-by-zero (error 'division-by-zero))
   T"
   (is (eq t (doctest :incf-cl-tests :function 'test-doctest)))
   ;; Here we run doctests for the whole package.

@@ -25,9 +25,7 @@
 (defmacro signals-p (condition &body body)
   "Returns T if evaluating BODY results in CONDITION being signalled,
 NIL otherwise."
-  `(let ((sym (gensym "SIGNALS-P")))
-     (eq sym (handler-case (progn ,@body)
-               (,condition () sym)))))
+  `(typep (nth-value 1 (ignore-errors ,@body)) ',condition))
 
 (define-condition doctest-failure ()
   ((sexpr :initarg :sexpr :reader sexpr)
