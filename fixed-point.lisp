@@ -24,7 +24,18 @@
 
 (defun fixed-point (function initial-value &key (test #'eql))
   "Returns the fixed point of FUNCTION starting with INITIAL-VALUE.
-The fixed point is determined using the keyword argument TEST."
+  The fixed point is determined using the keyword argument TEST.
+
+  For example, the square root of 2 using Newton's method can be
+  computed as:
+
+  INCF-CL> (fixed-point (lambda (x)
+                          (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
+                        1)
+  1.4142135
+
+  INCF-CL> (sqrt 2)
+  1.4142135"
   (do ((cur (funcall function initial-value) (funcall function cur))
        (prev initial-value cur))
       ((funcall test cur prev) cur)))
