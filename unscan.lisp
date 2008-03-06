@@ -26,7 +26,8 @@
   (:documentation "Semi-inverse of SCAN*.
 
   INCF-CL> (equal (unscan (flip #'-) (scan* #'+ '(1 2 3)) :initial-value 0)
-                  '(1 2 3))")
+                  '(1 2 3))
+  T")
   (:argument-precedence-order list function))
 
 (defmethod unscan ((function function) (list null) &key initial-value)
