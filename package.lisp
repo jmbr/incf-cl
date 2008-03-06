@@ -42,6 +42,7 @@
            #:ncycle
            #:drop
            #:drop-while
+           #:fixed-point
            #:flip
            #:group
            #:insert
@@ -51,6 +52,7 @@
            #:split-at
            #:take
            #:take-while
+           #:unscan
            #:unzip
            #:scan*
            #:intersperse

@@ -39,6 +39,8 @@
                (:file "unfold")
                (:file "range")
                (:file "prelude")
+               (:file "unscan")
+               (:file "fixed-point")
                (:file "hash-table")
                (:file "sequence")
                (:file "iteration")
