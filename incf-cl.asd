@@ -47,9 +47,10 @@
                (:file "string")
                (:file "doctest")))
 
-;; (defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
-;;   (asdf:operate 'asdf:load-op :incf-cl-tests)
-;;   (asdf:operate 'asdf:test-op :incf-cl-tests))
+(defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
+  (asdf:operate 'asdf:load-op :incf-cl-tests)
+  (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
+  (values))
 
-;; (defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
-;;   nil)
+(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
+  nil)
