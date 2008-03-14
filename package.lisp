@@ -32,6 +32,7 @@
            #:vector>
            #:vector=
            #:vector-zero-p
+           #:lc
            #:assemble
            #:<-
            #:unfold

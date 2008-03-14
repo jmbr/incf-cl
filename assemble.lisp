@@ -26,6 +26,9 @@
 ;;; Compilation of List Comprehension in Common Lisp by Mario
 ;;; Latendresse.
 
+(defmacro lc (collection-form &rest quantifiers)
+  `(assemble ,collection-form ,@quantifiers))
+
 (defmacro assemble (collection-form &rest quantifiers)
   "Assembles a multiset containing the results of evaluating
 COLLECTION-FORM and subject to QUANTIFIERS."
