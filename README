@@ -92,8 +92,8 @@ mimics the way you declare a set in mathematics and sometimes are more
 succinct and readable than using a composition of MAPCAR, DELETE-IF or
 an ad hoc imperative loop.
 
-Here are two examples on how to use the LC (short for list
-comprehension) macro:
+Here are two examples on how to use the LC (short for List
+Comprehension) macro:
 
 -----------------------------------------------------------------------
   CL-USER> (lc (sin x) (<- x (range 0 .25 (/ pi 2))))
