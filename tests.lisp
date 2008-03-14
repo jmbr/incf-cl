@@ -38,9 +38,9 @@
 
 (in-package :com.superadditive.incf-cl-tests)
 
-(defsuite test)
+(in-root-suite)
 
-(in-suite test)
+(in-suite (defsuite test))
 
 (deftest test-range ()
   (signals error (range 1 -1))
