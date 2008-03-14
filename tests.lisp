@@ -152,11 +152,11 @@
   (is (eq t (ends-with "Hello, world!" "world!")))
   (is (eq nil (ends-with "Hello, world!" "world"))))
 
-(deftest test-assemble ()
-  (is (eq nil (assemble (constantly nil))))
-  (is (equal (list 1 2 3) (assemble x (<- x (range 1 3)))))
+(deftest test-lc ()
+  (is (eq nil (lc (constantly nil))))
+  (is (equal (list 1 2 3) (lc x (<- x (range 1 3)))))
   (is (equal (acons 0 0 (acons 0 1 (acons 1 0 (acons 1 1 nil))))
-             (assemble (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
+             (lc (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
 
 (deftest test-hash-table->alist ()
   (is (equal (sort (hash-table->alist

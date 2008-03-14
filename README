@@ -92,11 +92,14 @@ mimics the way you declare a set in mathematics and sometimes are more
 succinct and readable than using a composition of MAPCAR, DELETE-IF or
 an ad hoc imperative loop.
 
+Here are two examples on how to use the LC (short for list
+comprehension) macro:
+
 -----------------------------------------------------------------------
-  CL-USER> (assemble (sin x) (<- x (range 0 .25 (/ pi 2))))
+  CL-USER> (lc (sin x) (<- x (range 0 .25 (/ pi 2))))
   (0.0 0.24740396 0.47942555 0.6816388 0.84147096 0.9489846 0.997495)
-  CL-USER> (assemble (cons x y) (<- x (range 0 2)) (<- y (range 0 2))
-                     (= (+ x y) 2))
+  CL-USER> (lc (cons x y) (<- x (range 0 2)) (<- y (range 0 2))
+               (= (+ x y) 2))
   ((0 . 2) (1 . 1) (2 . 0))
 -----------------------------------------------------------------------
 
@@ -123,7 +126,7 @@ Suppose you have the package TEST, defined as follows:
 
     Examples:
 
-    TEST> (assemble (factorial n) (<- n (range 1 5)))
+    TEST> (lc (factorial n) (<- n (range 1 5)))
     (1 2 6 24 120)
   
     TEST> (factorial 450/15)

@@ -35,7 +35,7 @@
   :components ((:file "package")
                (:file "function")
                (:file "vector")
-               (:file "assemble")
+               (:file "lc")
                (:file "unfold")
                (:file "range")
                (:file "prelude")

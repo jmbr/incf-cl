@@ -27,9 +27,6 @@
 ;;; Latendresse.
 
 (defmacro lc (collection-form &rest quantifiers)
-  `(assemble ,collection-form ,@quantifiers))
-
-(defmacro assemble (collection-form &rest quantifiers)
   "Assembles a multiset containing the results of evaluating
 COLLECTION-FORM and subject to QUANTIFIERS."
   (labels ((translate (collection-form qs)
@@ -49,3 +46,8 @@ COLLECTION-FORM and subject to QUANTIFIERS."
              `(when ,filter-form ,@(translate collection-form qs))))
     (when quantifiers
       `(loop repeat 1 ,@(translate collection-form quantifiers)))))
+
+;;; The ASSEMBLE macro is deprecated, use LC instead.  This
+;;; abbreviation is left here for backwards-compatibility.
+(defmacro assemble (collection-form &rest quantifiers)
+  `(lc ,collection-form ,@quantifiers))
