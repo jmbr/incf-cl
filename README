@@ -103,6 +103,9 @@ Comprehension) macro:
   ((0 . 2) (1 . 1) (2 . 0))
 -----------------------------------------------------------------------
 
+The previous name for this macro was ASSEMBLE and it is now deprecated
+(although programs relying on it will continue to work indefinitely).
+
 Doctests
 ^^^^^^^^
 
