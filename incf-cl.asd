@@ -26,7 +26,7 @@
 
 (in-package :com.superadditive.incf-cl-system)
 
-(defsystem "incf-cl"
+(defsystem :incf-cl
   :description "INCF CL is a library of convenience functions for Common Lisp"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :licence "X11"
@@ -45,7 +45,13 @@
                (:file "sequence")
                (:file "iteration")
                (:file "string")
-               (:file "doctest")))
+               (:file "doctest")
+               (:file "symbol")))
+
+(defsystem :incf-cl-tests
+  :description "Test suite for the INCF CL library."
+  :depends-on (:incf-cl :stefil)
+  :components ((:file "tests")))
 
 (defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
   (asdf:operate 'asdf:load-op :incf-cl-tests)
