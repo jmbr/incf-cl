@@ -38,15 +38,6 @@
 (defun first-with (key list)
   (apply-key key (first list)))
 
-(defun get-test-function (test test-not)
-  "Returns a validated test function for those methods that use :test
-and :test-not keyword arguments."
-  (let ((test (if test-not
-                  (complement test-not)
-                  test)))
-    (check-type test function)
-    test))
-
 (defgeneric break* (predicate list &key key)
   (:documentation "Given a PREDICATE and a LIST, breaks LIST into two
 lists (returned as VALUES) at the point where PREDICATE is first

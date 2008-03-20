@@ -55,3 +55,12 @@
            (lambda (&rest args)
              (funcall f (apply g args)))))
     (reduce #'compose functions)))
+
+(defun get-test-function (test test-not)
+  "Returns a validated test function for those functions that use TEST
+and TEST-NOT keyword arguments."
+  (let ((test (if test-not
+                  (complement test-not)
+                  test)))
+    (check-type test function)
+    test))
