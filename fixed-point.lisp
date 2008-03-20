@@ -22,29 +22,20 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defun fixed-point (function initial-value &key (test #'eql) (max-steps 0))
+(defun fixed-point (function initial-value &key (test #'eql) max-steps)
   "Returns the fixed point of FUNCTION starting with INITIAL-VALUE.
-  The keyword argument TEST determines when a fixed point has been
-  reached.  Use MAX-STEPS to stop after a certain (positive) number of
-  iterations.
+The keyword argument TEST determines when a fixed point has been
+reached.  Use MAX-STEPS to stop after a certain (positive) number of
+iterations.
 
-  For example, the square root of 2 using Newton's method can be
-  computed as:
+For example, the square root of 2 using Newton's method can be
+computed as:
 
-  INCF-CL> (fixed-point (lambda (x)
-                          (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
-                        1)
-  1.4142135
+INCF-CL> (fixed-point (lambda (x)
+                        (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
+                      1)
+1.4142135
 
-  INCF-CL> (sqrt 2)
-  1.4142135"
-  (do ((step 1 (1+ step))
-       (cur (funcall function initial-value) (funcall function cur))
-       (prev initial-value cur))
-      ((or (funcall test cur prev)
-           (if (plusp max-steps)
-               (>= step max-steps)
-               nil))
-       cur)))
-
-;;; TODO: fixed-point-list
+INCF-CL> (sqrt 2)
+1.4142135"
+  (nest function initial-value :test-not test :m 2 :max max-steps))

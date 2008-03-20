@@ -269,5 +269,5 @@
   (is (eq 5 (funcall ($ #'1+ #'1+ #'1+ #'1+ #'1+) 0))))
 
 (deftest test-fixed-point ()
-  (is (eql 0 (fixed-point #'identity 0 :max-steps -1)))
+  (signals simple-error (fixed-point #'identity 0 :max-steps -1))
   (is (eql 1 (fixed-point #'1+ 0 :max-steps 1))))
