@@ -69,6 +69,8 @@
            #:doctest
            #:slice
            #:_
-           #:$))
+           #:$
+           #:nest
+           #:nest-list))
 
 (cl:pushnew :incf-cl *features*)

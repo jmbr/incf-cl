@@ -36,6 +36,7 @@
                (:file "function")
                (:file "vector")
                (:file "lc")
+               (:file "nest")
                (:file "unfold")
                (:file "range")
                (:file "prelude")
