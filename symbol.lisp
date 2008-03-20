@@ -1,3 +1,4 @@
+(in-package :com.superadditive.incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;; 
@@ -21,57 +22,16 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(cl:in-package :cl-user)
+(defun list-external-symbols (package)
+  "Returns a list containing all the exported symbols in PACKAGE."
+  (let ((xs nil))
+    (do-external-symbols (x package (nreverse xs))
+      (push x xs))))
 
-(cl:defpackage :com.superadditive.incf-cl
-  (:nicknames :incf-cl)
-  (:use #:common-lisp)
-  (:export #:vector+
-           #:vector-
-           #:vector*
-           #:vector>
-           #:vector=
-           #:vector-zero-p
-           #:lc
-           #:assemble
-           #:<-
-           #:unfold
-           #:unfold-right
-           #:range
-           #:break*
-           #:cycle
-           #:ncycle
-           #:drop
-           #:drop-while
-           #:fixed-point
-           #:flip
-           #:group
-           #:insert
-           #:partition
-           #:replicate
-           #:span
-           #:split-at
-           #:take
-           #:take-while
-           #:unscan
-           #:unzip
-           #:scan*
-           #:intersperse
-           #:nintersperse
-           #-clisp #:dohash
-           #:hash-table->alist
-           #:alist->hash-table
-           #:starts-with
-           #:ends-with
-           #:while
-           #:string-join
-           #:signals-p
-           #:doctest
-           #:slice
-           #:_
-           #:$
-           #:nest
-           #:nest-list
-           #:list-external-symbols))
+;; #+sbcl
+;; (defmacro profile-external-symbols (package)
+;;   `(sb-profile:profile ,@(list-external-symbols package)))
 
-(cl:pushnew :incf-cl *features*)
+;; #+sbcl
+;; (defmacro unprofile-external-symbols (package)
+;;   `(sb-profile:unprofile ,@(list-external-symbols package)))
