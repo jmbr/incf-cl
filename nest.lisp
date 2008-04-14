@@ -24,34 +24,40 @@
 
 ;;; These functions are EXPERIMENTAL:
 
-(defun nest (f arg &key test test-not m max)
+(defun nest (function initial-value &key test test-not (m 1) max)
   (assert (plusp m))
   (when max (assert (plusp max)))
   (let ((test (get-test-function test test-not))
-        (args (list arg)))
+        (args (list initial-value)))
+    ;; Compute initial values if appropriate.
     (dotimes (i (1- m))
-      (push (funcall f (first args)) args))
+      (push (funcall function (first args)) args))
     (do* ((count m (1+ count))
-          (x (first args) (funcall f x))
+          (x (first args) (funcall function x))
           (args args (take m (cons x args))))
          ((or (if max (> count max) nil)
               (not (apply test (nreverse args))))
           x))))
 
 (defun nest-list (function initial-value &key test test-not (m 1) max)
-  "Returns a list of the results of applying F successively to ARG and
-continuing until applying TEST (respectively TEST-NOT) to the result
-no longer returns T.
+  "Returns a list of the results of applying FUNCTION successively to
+INITIAL-VALUE and continuing until applying TEST (respectively
+TEST-NOT) to the result no longer returns T.
 
-If M is specified, the function supplies the M most recent results as
-arguments for TEST (respectivelly TEST-NOT) at each step.
+This is what a list returned by NEST-LIST looks like:
 
-If MAX is specified then F is applied at most MAX times."
+ (FUNCTION ... (FUNCTION (FUNCTION INITIAL-VALUE))
+
+If M is specified, then NEST-LIST supplies the M most recent results
+as arguments for TEST (respectivelly TEST-NOT) at each step.
+
+If MAX is specified then FUNCTION is applied at most MAX times."
   (assert (plusp m))
   (when max (assert (plusp max)))
   (let ((test (get-test-function test test-not))
-        (args (list initial-value))
+        (args (cons initial-value nil))
         (results (cons initial-value nil)))
+    ;; Compute initial values if appropriate.
     (dotimes (i (1- m))
       (push (funcall function (first args)) args))
     (do* ((count m (1+ count))
