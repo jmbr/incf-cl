@@ -22,56 +22,57 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-;;; An implementation of a bounded circular list.
+;;; An implementation of a bounded circular list (aka ring).
 
-(defclass circular-list ()
+(defclass ring ()
   ((initial
     :initform nil
     :accessor initial)
    (current
     :initform nil
     :accessor current)
-   (circular-list-bound
+   (ring-bound
     :initform 0
     :initarg :bound
-    :reader circular-list-bound)
-   (circular-list-length
+    :reader ring-bound)
+   (ring-length
     :initform 0
-    :accessor circular-list-length)))
+    :accessor ring-length)))
 
 
-(defgeneric circular-list-first (circular-list))
+(defgeneric ring-first (ring))
 
-(defgeneric circular-list-bound-reached-p (circular-list))
+(defgeneric ring-add (ring elem))
 
-(defgeneric circular-list-add (circular-list elem))
-
-(defgeneric circular-list->proper-list (circular-list))
+(defgeneric ring->list (ring))
 
 
-(defmethod circular-list-first ((list circular-list))
-  (when (plusp (circular-list-length list))
+(defun make-ring (bound &optional initial-values)
+  (let ((list (make-instance 'ring :bound bound)))
+    (dolist (x initial-values list)
+      (ring-add list x))))
+
+(defmethod ring-first ((list ring))
+  (when (plusp (ring-length list))
     (first (initial list))))
 
-(defmethod circular-list-bound-reached-p ((list circular-list))
-  (= (circular-list-length list) (circular-list-bound list)))
-
-(defmethod circular-list-add ((list circular-list) elem)
-  (assert (<= (circular-list-length list) (circular-list-bound list)))
-  (if (circular-list-bound-reached-p list)
+(defmethod ring-add ((list ring) elem)
+  (assert (<= (ring-length list) (ring-bound list)))
+  (if (= (ring-length list) (ring-bound list))
       (let ((new-cell (cons elem (rest (initial list)))))
         (setf (initial list) (rest (initial list))
               (rest (current list)) new-cell
               (current list) new-cell))
       (let ((new-cell (cons elem (initial list))))
-        (if (zerop (circular-list-length list))
+        (if (zerop (ring-length list))
             (setf (initial list) new-cell
                   (current list) new-cell)
             (setf (rest (current list)) new-cell
                   (current list) new-cell))
-        (incf (circular-list-length list))))
+        (incf (ring-length list))))
   list)
 
-(defmethod circular-list->proper-list ((list circular-list))
-  (when (plusp (circular-list-length list))
-    (take (circular-list-bound list) (initial list))))
+(defmethod ring->list ((list ring))
+  (when (plusp (ring-length list))
+    (take (ring-bound list) (initial list))))
+
