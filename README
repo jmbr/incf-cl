@@ -17,6 +17,8 @@ Some of the available features are:
 
 3. Doctest suite for automatic verification of examples in docstrings.
 
+4. Nesting functions similar to those available in Mathematica.
+
 Download
 --------
 
