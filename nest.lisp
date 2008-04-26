@@ -22,48 +22,53 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-;;; These functions are EXPERIMENTAL:
+(defun ensure-list (x)
+  (if (listp x)
+      x
+      (list x)))
 
-(defun nest (function initial-value &key test test-not (m 1) max)
-  (assert (plusp m))
-  (when max (assert (plusp max)))
-  (let ((test (get-test-function test test-not))
-        (args (list initial-value)))
-    ;; Compute initial values if appropriate.
-    (dotimes (i (1- m))
-      (push (funcall function (first args)) args))
-    (do* ((count m (1+ count))
-          (x (first args) (funcall function x))
-          (args args (take m (cons x args))))
-         ((or (if max (> count max) nil)
-              (not (apply test (nreverse args))))
-          x))))
-
-(defun nest-list (function initial-value &key test test-not (m 1) max)
+(defun nest-list (function initial-values &key test test-not n (m 1) max)
   "Returns a list of the results of applying FUNCTION successively to
-INITIAL-VALUE and continuing until applying TEST (respectively
-TEST-NOT) to the result no longer returns T.
-
-This is what a list returned by NEST-LIST looks like:
-
- (FUNCTION ... (FUNCTION (FUNCTION INITIAL-VALUE))
+INITIAL-VALUES and continuing until applying TEST (respectively
+TEST-NOT) to the result is non NIL.
 
 If M is specified, then NEST-LIST supplies the M most recent results
 as arguments for TEST (respectivelly TEST-NOT) at each step.
 
 If MAX is specified then FUNCTION is applied at most MAX times."
-  (assert (plusp m))
-  (when max (assert (plusp max)))
-  (let ((test (get-test-function test test-not))
-        (args (cons initial-value nil))
-        (results (cons initial-value nil)))
-    ;; Compute initial values if appropriate.
-    (dotimes (i (1- m))
-      (push (funcall function (first args)) args))
-    (do* ((count m (1+ count))
-          (x (first args) (funcall function x))
-          (xs results (cdr (rplacd xs (cons x nil))))
-          (args args (take m (cons x args))))
-         ((or (if max (> count max) nil)
-              (not (apply test (nreverse args))))
-          results))))
+  (check-type function function)
+  (when max
+    (assert (not (minusp max))))
+  (let* ((initial-values (ensure-list initial-values))
+         (test (if (or test test-not)
+                   (canonicalize-test test test-not)
+                   nil))
+         (n (or n (length initial-values)))
+         (max (or max -1)))
+    (%nest-list function initial-values test n m max)))
+
+(defun %nest-list (function initial-values test n m max)
+  (assert (and (>= n 0) (>= m 0)))
+  (do ((max max (1- max))
+       (splice
+        (last initial-values)
+        (setf (cdr splice) (cons (apply function (last initial-values n))
+                                 nil))))
+      ((or (= max 0)
+           (if test
+               (not (apply test (last initial-values m)))
+               nil))
+       initial-values)))
+
+;; (defun %nest-list (function initial-values test n m max)
+;;   (if (or (= max 0)
+;;           (not (apply test (last initial-values m))))
+;;       initial-values
+;;       (%nest-list function
+;;                   (append initial-values
+;;                           (list
+;;                            (apply function (last initial-values n))))
+;;                   test
+;;                   n
+;;                   m
+;;                   (1- max))))

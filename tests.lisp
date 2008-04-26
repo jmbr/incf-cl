@@ -270,4 +270,18 @@
 
 (deftest test-fixed-point ()
   (signals simple-error (fixed-point #'identity 0 :max-steps -1))
-  (is (eql 1 (fixed-point #'1+ 0 :max-steps 1))))
+;;;   (is (eql 1 (fixed-point #'1+ 0 :max-steps 1)))
+  )
+
+(deftest test-nest-list ()
+  (signals type-error (nest-list 0 0))
+  (signals simple-error (nest-list #'identity 'x :n -1 :m -1))
+  (is (equal (nest-list #'identity 'x :max 9)
+             (replicate 10 'x)))
+  (is (equal (nest-list (constantly 'y) 'z :max 0) '(z)))
+  (is (equal (nest-list #'+ '(1 1) :max 20)
+             '(1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711)))
+  (is (= (length (nest-list (lambda (x) (mod (* 2 x) 19))
+                            2
+                            :test (lambda (x) (/= x 1))))
+         18)))
