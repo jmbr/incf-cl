@@ -49,14 +49,14 @@
                (:file "doctest")
                (:file "symbol")))
 
-(defsystem :incf-cl-tests
+(defsystem :incf-cl-test
   :description "Test suite for the INCF CL library."
   :depends-on (:incf-cl :stefil)
-  :components ((:file "tests")))
+  :components ((:file "test-suite")))
 
 (defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
-  (asdf:operate 'asdf:load-op :incf-cl-tests)
-  (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-tests:test)"))
+  (asdf:operate 'asdf:load-op :incf-cl-test)
+  (eval (read-from-string "(stefil:funcall-test-with-feedback-message 'incf-cl-test:test)"))
   (values))
 
 (defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))

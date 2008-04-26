@@ -27,16 +27,16 @@
 ;;;   (require :sb-cover)
 ;;;   (declaim (optimize sb-cover:store-coverage-data))
 ;;;   (asdf:oos 'asdf:load-op :incf-cl :force t)
-;;;   (incf-cl-tests:test)
+;;;   (incf-cl-test:test)
 ;;;   (declaim (optimize (sb-cover:store-coverage-data 0)))
 ;;;   (sb-cover:report "/home/jmbr/projects/incf-cl/coverage-report/"))
 
-(defpackage :com.superadditive.incf-cl-tests
-  (:nicknames :incf-cl-tests)
+(defpackage :com.superadditive.incf-cl-test
+  (:nicknames :incf-cl-test)
   (:use :common-lisp :incf-cl :stefil)
   (:export #:test))
 
-(in-package :com.superadditive.incf-cl-tests)
+(in-package :com.superadditive.incf-cl-test)
 
 (in-root-suite)
 
@@ -217,7 +217,7 @@
 
   INCF-CL-TESTS> (signals-p division-by-zero (error 'division-by-zero))
   T"
-  (is (eq t (doctest :incf-cl-tests :function 'test-doctest)))
+  (is (eq t (doctest :incf-cl-test :function 'test-doctest)))
   ;; Here we run doctests for the whole package.
   (is (eq t (doctest :incf-cl))))
 
