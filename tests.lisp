@@ -275,6 +275,7 @@
 
 (deftest test-nest-list ()
   (signals type-error (nest-list 0 0))
+  (signals simple-error (nest-list #'identity 1 :max -1))
   (signals simple-error (nest-list #'identity 'x :n -1 :m -1))
   (is (equal (nest-list #'identity 'x :max 9)
              (replicate 10 'x)))
