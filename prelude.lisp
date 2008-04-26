@@ -144,7 +144,7 @@ LIST itself is used.")
 
 (defmethod insert (x (list list) &key key (test #'<) test-not)
   (check-type key function-or-null)
-  (let ((test (get-test-function test test-not)))
+  (let ((test (canonicalize-test test test-not)))
     (multiple-value-bind (lt ge) (span (slice test _ (apply-key key x)) list :key key)
       (nconc lt (cons x ge)))))
 
@@ -348,7 +348,7 @@ LIST itself is used.
 
 (defmethod group ((list list) &key key (test #'eql) test-not)
   (check-type key function-or-null)
-  (let* ((test (get-test-function test test-not))
+  (let* ((test (canonicalize-test test test-not))
          (result (cons nil nil))
          (splice result))
     (do ()
