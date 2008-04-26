@@ -42,9 +42,7 @@ INCF-CL> (fixed-point (lambda (x)
 INCF-CL> (sqrt 2)
 1.4142135"
   (first (last (nest-list function
-                          (list initial-value
-                                (funcall function initial-value))
-                          :n 1
+                          initial-value :n 1
                           :test-not test :m 2
                           :max (if max-steps
                                    (+ 2 max-steps)

@@ -40,12 +40,20 @@ If MAX is specified then FUNCTION is applied at most MAX times."
   (when max
     (assert (not (minusp max))))
   (let* ((initial-values (ensure-and-copy-list initial-values))
+         (l (length initial-values))
+         (n (or n l))
          (test (if (or test test-not)
                    (canonicalize-test test test-not)
                    nil))
-         (n (or n (length initial-values)))
          (max (or max -1)))
-    (%nest-list function initial-values test n m max)))
+    (%nest-list function
+                (if (> m l)
+                    (%nest-list function initial-values nil n 0 (- m l))
+                    initial-values)
+                test
+                n
+                m
+                max)))
 
 (defun %nest-list (function initial-values test n m max)
   (assert (and (>= n 0) (>= m 0)))
@@ -59,16 +67,3 @@ If MAX is specified then FUNCTION is applied at most MAX times."
                (not (apply test (last initial-values m)))
                nil))
        initial-values)))
-
-;; (defun %nest-list (function initial-values test n m max)
-;;   (if (or (= max 0)
-;;           (not (apply test (last initial-values m))))
-;;       initial-values
-;;       (%nest-list function
-;;                   (append initial-values
-;;                           (list
-;;                            (apply function (last initial-values n))))
-;;                   test
-;;                   n
-;;                   m
-;;                   (1- max))))
