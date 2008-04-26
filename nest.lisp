@@ -22,9 +22,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defun ensure-list (x)
+(defun ensure-and-copy-list (x)
   (if (listp x)
-      x
+      (copy-list x)
       (list x)))
 
 (defun nest-list (function initial-values &key test test-not n (m 1) max)
@@ -39,7 +39,7 @@ If MAX is specified then FUNCTION is applied at most MAX times."
   (check-type function function)
   (when max
     (assert (not (minusp max))))
-  (let* ((initial-values (ensure-list initial-values))
+  (let* ((initial-values (ensure-and-copy-list initial-values))
          (test (if (or test test-not)
                    (canonicalize-test test test-not)
                    nil))
