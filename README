@@ -198,6 +198,43 @@ DESCRIBE or C-c C-d d in SLIME) and also
 http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html[A
 tour of the Haskell's prelude] to see more use cases.
 
+Nesting
+^^^^^^^
+
+The function NEST-LIST returns the results of applying a certain
+function F to a list of initial values.  This may go on up to a
+certain number of applications or until a given function is true.
+
+Some examples:
+
+---------------------------------------------------------
+  CL-USER> (nest-list (lambda (x) `(sin ,x)) 'z :max 3)
+  (Z (SIN Z) (SIN (SIN Z)) (SIN (SIN (SIN Z))))
+
+  CL-USER> (nest-list #'+ '(1 1) :max 10)
+  (1 1 2 3 5 8 13 21 34 55 89 144)
+
+  CL-USER> (nest-list (lambda (x) (mod (* 2 x) 19))
+                      2
+                      :test (lambda (x) (/= x 1)))
+  (2 4 8 16 13 7 14 9 18 17 15 11 3 6 12 5 10 1)
+---------------------------------------------------------
+
+A closely related function is FIXED-POINT which returns the fixed
+point of a function F starting with a given initial value.  Whether a
+fixed point has been reached or not is determined by a test
+function (EQL by default).
+
+For example, the square root of 2 using Newton's method can be
+computed as:
+
+-----------------------------------------------------------------------
+  CL-USER> (fixed-point (lambda (x)
+                          (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
+                        1)
+  1.4142135
+-----------------------------------------------------------------------
+
 Unfolds
 ^^^^^^^
 
