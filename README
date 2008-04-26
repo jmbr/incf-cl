@@ -207,6 +207,9 @@ The function NEST-LIST returns the results of applying a certain
 function F to a list of initial values.  This may go on up to a
 certain number of applications or until a given function is true.
 
+NEST works as NEST-LIST but it only returns the last result, not the
+whole list.
+
 Some examples:
 
 ---------------------------------------------------------
@@ -215,6 +218,9 @@ Some examples:
 
   CL-USER> (nest-list #'+ '(1 1) :max 10)
   (1 1 2 3 5 8 13 21 34 55 89 144)
+  
+  CL-USER> (nest #'+ '(1 1) :max 10)
+  144
 
   CL-USER> (nest-list (lambda (x) (mod (* 2 x) 19))
                       2

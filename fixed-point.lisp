@@ -22,9 +22,6 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-;;; The current implementation is suboptimal due to its reliance on
-;;; NEST-LIST.  This should change after a proper NEST is implemented.
-
 (defun fixed-point (function initial-value &key (test #'eql) max-steps)
   "Returns the fixed point of FUNCTION starting with INITIAL-VALUE.
 The keyword argument TEST determines when a fixed point has been
@@ -41,9 +38,10 @@ INCF-CL> (fixed-point (lambda (x)
 
 INCF-CL> (sqrt 2)
 1.4142135"
-  (first (last (nest-list function
-                          initial-value :n 1
-                          :test-not test :m 2
-                          :max (if max-steps
-                                   (+ 2 max-steps)
-                                   nil)))))
+  (nest function
+        initial-value :n 1
+        :test-not test :m 2
+        :max (if max-steps
+                 (+ 2 max-steps)
+                 nil)))
+

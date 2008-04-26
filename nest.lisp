@@ -56,14 +56,21 @@ If MAX is specified then FUNCTION is applied at most MAX times."
                 max)))
 
 (defun %nest-list (function initial-values test n m max)
-  (assert (and (>= n 0) (>= m 0)))
+  (assert (and (plusp n) (>= m 0)))
   (do ((max max (1- max))
        (splice
         (last initial-values)
-        (setf (cdr splice) (cons (apply function (last initial-values n))
-                                 nil))))
+        (setf (rest splice) (cons (apply function (last initial-values n))
+                                  nil))))
       ((or (= max 0)
            (if test
                (not (apply test (last initial-values m)))
                nil))
        initial-values)))
+
+(defun nest (function initial-values &key test test-not n (m 1) max)
+  ;; XXX - This is good enough for the moment.
+  (first (last (nest-list function
+                          initial-values
+                          :test test :test-not test-not
+                          :n n :m m :max max))))
