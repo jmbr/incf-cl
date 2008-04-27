@@ -72,7 +72,7 @@ LIST (which should be a proper list)."))
   nil)
 
 (defmethod ncycle ((list list))
-  (rest (rplacd (last list) list)))
+  (setf (rest (last list)) list))
 
 (defgeneric drop (n list)
   (:documentation "Applied to N (a non-negative integer) and LIST,
@@ -122,8 +122,8 @@ LIST itself is used.")
       (let ((c (cons x nil))
             (elem (apply-key key x)))
         (if (funcall predicate elem)
-            (setf splice1 (rest (rplacd splice1 c)))
-            (setf splice2 (rest (rplacd splice2 c))))))))
+            (setf splice1 (setf (rest splice1) c))
+            (setf splice2 (setf (rest splice2) c)))))))
 
 (defun flip (f)
   "Applied to a binary function F, returns the same function with the
@@ -169,7 +169,7 @@ LIST itself is used.")
   (check-type key function-or-null)
   (let ((result (cons nil nil)))
       (do ((list list (rest list))
-           (splice result (rest (rplacd splice (cons (first list) nil)))))
+           (splice result (setf (rest splice) (cons (first list) nil))))
           ((or (null list)
                (not (funcall predicate (first-with key list))))
            (values (rest result) list)))))
@@ -186,7 +186,7 @@ returns the entire list first and the empty list second in VALUES.")
     (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (n n (1- n))
-           (splice result (rest (rplacd splice (cons (first list) nil)))))
+           (splice result (setf (rest splice) (cons (first list) nil))))
           ((or (zerop n)
                (null list))
            (values (rest result) list))))))
@@ -270,10 +270,10 @@ respectively.  This function is the inverse of PAIRLIS."
     (do ((list (if ivp list (rest list)) (rest list))
          (splice
           result
-          (rest (rplacd splice (cons (funcall function
-                                              (first splice)
-                                              (first-with key list))
-                                     nil)))))
+          (setf (rest splice) (cons (funcall function
+                                             (first splice)
+                                             (first-with key list))
+                                    nil))))
         ((null list) result))))
 
 (declaim (inline scan-right*))
@@ -356,5 +356,5 @@ LIST itself is used.
       (destructuring-bind (x . xs) list
         (multiple-value-bind (ys zs) (span (slice test (apply-key key x))
                                            xs :key key)
-          (setf splice (rest (rplacd splice (list (cons x ys)))))
+          (setf splice (setf (rest splice) (list (cons x ys))))
           (setf list zs))))))

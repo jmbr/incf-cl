@@ -47,8 +47,8 @@
     http://srfi.schemers.org/srfi-1/srfi-1.html#unfold"
   (let ((result (cons nil nil)))
     (do ((item initial-value (funcall incrementor item))
-         (splice result (rest (rplacd splice
-                                      (cons (funcall transformer item) nil)))))
+         (splice result (setf (rest splice)
+                                      (cons (funcall transformer item) nil))))
         ((funcall predicate item) (nconc (rest result)
                                          (funcall tail-gen item))))))
 
