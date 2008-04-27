@@ -34,7 +34,7 @@ Portability
 -----------
 
 This code has been tested under SBCL 1.0.16, CMU Common Lisp 19d, GNU
-CLISP 2.44, and ECL 0.9j.
+CLISP 2.44, ECL 0.9j, and Allegro CL Free Express Edition 8.1.
 
 Installation
 ------------
