@@ -27,15 +27,15 @@
   (assert (and sequence prefix))
   (let ((sequence-len (length sequence))
         (prefix-len (length prefix)))
-    (assert (<= prefix-len sequence-len))
-    (funcall test (subseq sequence 0 prefix-len) prefix)))
+    (when (<= prefix-len sequence-len)
+      (funcall test (subseq sequence 0 prefix-len) prefix))))
 
 (defun ends-with (sequence suffix &key (test #'equal))
   "Returns T if SEQUENCE ends with SUFFIX, NIL otherwise."
   (assert (and sequence suffix))
   (let ((sequence-len (length sequence))
         (suffix-len (length suffix)))
-    (assert (<= suffix-len sequence-len))
-    (funcall test (subseq sequence
-                          (- sequence-len suffix-len)
-                          sequence-len) suffix)))
+    (when (<= suffix-len sequence-len)
+      (funcall test (subseq sequence
+                            (- sequence-len suffix-len)
+                            sequence-len) suffix))))
