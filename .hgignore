@@ -1,8 +1,0 @@
-syntax: glob
-
-*~
-*.fasl
-ChangeLog
-GNUmakefile
-lftp.commands
-todo.org
