@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-April 2008
+May 2008
 
 Overview
 --------
@@ -24,6 +24,13 @@ Download
 
 Fetch the latest version from
 http://superadditive.com/software/incf-cl.tar.gz[]
+
+You can also clone the Git repository by issuing the following
+command:
+
+------------------------------------------------------
+  $ git clone http://superadditive.com/repos/incf-cl
+------------------------------------------------------
 
 License
 -------
