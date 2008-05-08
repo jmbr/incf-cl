@@ -352,29 +352,6 @@ converts the specified hash table to an association list:
   (("one" . 1) ("two" . 2) ("three" . 3))
 ---------------------------------------------
 
-Sequences
-^^^^^^^^^
-
-To check whether a string (or another sequence) begins with a certain
-prefix, use:
-
--------------------------------------------------
-  CL-USER> (starts-with "Hello, world!" "Hell")
-  T
-  CL-USER> (starts-with "Hello, world!" "Hola")
-  NIL
--------------------------------------------------
-
-You can also provide a test function as the key parameter TEST.
-
-The function ENDS-WITH works in a similar way.
-
-Vectors
-^^^^^^^
-
-There are a few very basic functions to work with vectors (in the
-mathematical sense of the word).
-
 Strings
 ^^^^^^^
 

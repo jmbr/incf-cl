@@ -140,16 +140,6 @@
                (dolist (x xs ys)
                  (setf ys (insert x ys)))))))
 
-(deftest test-starts-with ()
-  (signals simple-error (starts-with nil nil))
-  (is (eq t (starts-with "Hello, world!" "Hell")))
-  (is (eq nil (starts-with "Hello, world!" "Hola"))))
-
-(deftest test-ends-with ()
-  (signals simple-error (ends-with nil nil))
-  (is (eq t (ends-with "Hello, world!" "world!")))
-  (is (eq nil (ends-with "Hello, world!" "world"))))
-
 (deftest test-lc ()
   (is (eq nil (lc (constantly nil))))
   (is (equal (list 1 2 3) (lc x (<- x (range 1 3)))))
