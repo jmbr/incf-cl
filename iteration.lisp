@@ -27,6 +27,3 @@
   `(do ()
        ((not ,predicate-form))
      ,@body))
-
-;;; (defmacro dosequence (var sequence &optional result &body body)
-;;;   )

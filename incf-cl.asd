@@ -34,7 +34,6 @@
   :serial t
   :components ((:file "package")
                (:file "function")
-               (:file "vector")
                (:file "lc")
                (:file "nest")
                (:file "unfold")
@@ -43,7 +42,6 @@
                (:file "unscan")
                (:file "fixed-point")
                (:file "hash-table")
-               (:file "sequence")
                (:file "iteration")
                (:file "string")
                (:file "doctest")

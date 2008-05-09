@@ -26,13 +26,7 @@
 (cl:defpackage :com.superadditive.incf-cl
   (:nicknames :incf-cl)
   (:use #:common-lisp)
-  (:export #:vector+
-           #:vector-
-           #:vector*
-           #:vector>
-           #:vector=
-           #:vector-zero-p
-           #:lc
+  (:export #:lc
            #:assemble
            #:<-
            #:unfold
@@ -61,8 +55,6 @@
            #-clisp #:dohash
            #:hash-table->alist
            #:alist->hash-table
-           #:starts-with
-           #:ends-with
            #:while
            #:string-join
            #:signals-p
