@@ -3,7 +3,7 @@
 Juan M. Bello Rivas <jmbr@superadditive.com>
 May 2008
 
-image:/images/lisp.png[Lisp logo (by Conrad Barski)]
+image:/images/lisp.png[Lisp logo by Conrad Barski]
 
 Overview
 --------
@@ -377,4 +377,4 @@ Feedback
 --------
 
 Please send your suggestions, patches, and bug reports to
-jmbr@superadditive.com
+jmbr at superadditive dot com
