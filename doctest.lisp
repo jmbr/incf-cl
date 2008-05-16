@@ -47,7 +47,8 @@ signals DOCTEST-FAILURE otherwise."
       (let* ((sexpr (read input-stream))
              (actual-values (multiple-value-list (eval sexpr)))
              (expected-values (mapcar #'aux actual-values))
-             (eof-pos (position-if (slice #'eq input-stream)
+             (eof-pos (position-if (lambda (x)
+                                     (eq input-stream x))
                                    expected-values)))
         (if (every #'equalp actual-values expected-values)
             t
@@ -55,7 +56,7 @@ signals DOCTEST-FAILURE otherwise."
                     :sexpr sexpr
                     :actual-values actual-values
                     :expected-values (if eof-pos
-                                         (take eof-pos expected-values)
+                                         (subseq expected-values 0 eof-pos)
                                          expected-values)))))))
 
 (defun test-function (package-name function stream)
