@@ -22,7 +22,6 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-
 (defun unfold (predicate transformer incrementor initial-value
                &optional (tail-gen (constantly nil)))
   "Returns a list built following the pattern:
@@ -33,7 +32,7 @@
 
   1. List of squares: 1^2, ..., 10^2
 
-  INCF-CL> (unfold (slice #'> _ 10) (slice #'expt _ 2) #'1+ 1)
+  INCF-CL> (unfold (lambda (x) (> x 10)) (lambda (x) (expt x 2)) #'1+ 1)
   (1 4 9 16 25 36 49 64 81 100)
 
   2. Append (3 4 5) onto (1 2)

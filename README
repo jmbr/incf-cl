@@ -300,36 +300,11 @@ following example illustrates its use:
   16
 ----------------------------------------------
 
-SLICE fixes certain arguments of a given function and returns a
-function on the remaining (free) arguments.  Here are some examples:
-
------------------------------------------------------------------------------------
-  CL-USER> (funcall (slice #'< _ 10) 5)
-  T
-  CL-USER> (funcall (slice #'concatenate 'string) (list #\f #\o #\o #\b #\a #\r))
-  "foobar"
------------------------------------------------------------------------------------
-
 Hash table utilities
 ^^^^^^^^^^^^^^^^^^^^
 
-To quickly create a hash table you can use ALIST->HASH-TABLE.  Here's
-an example:
-
------------------------------------------------------------------------------
-  CL-USER> (defparameter *hash-table*
-             (alist->hash-table (pairlis '("one" "two" "three") '(1 2 3))))
-  *HASH-TABLE*
-  CL-USER> *hash-table*
-  #<HASH-TABLE :TEST EQL :COUNT 3 {AAEAF99}>
------------------------------------------------------------------------------
-
-The function ALIST->HASH-TABLE will process the specified list and
-pass every other parameter to MAKE-HASH-TABLE.  That way, you can
-control how the hash table will behave.
-  
-Now, if you want to traverse a hash table, DOHASH can iterate over it
-with semantics similar to those of DOLIST:
+If you want to traverse a hash table, DOHASH can iterate over it with
+semantics similar to those of DOLIST:
 
 -------------------------------------------------------
   CL-USER> (dohash (key value *hash-table*)
@@ -343,14 +318,6 @@ with semantics similar to those of DOLIST:
                (setf product (* product value))))
   6  
 -------------------------------------------------------
-
-Finally, for easy serialization, there's HASH-TABLE->ALIST, which
-converts the specified hash table to an association list:
-
----------------------------------------------
-  CL-USER> (hash-table->alist *hash-table*)
-  (("one" . 1) ("two" . 2) ("three" . 3))
----------------------------------------------
 
 Strings
 ^^^^^^^

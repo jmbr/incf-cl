@@ -53,14 +53,10 @@
            #:intersperse
            #:nintersperse
            #-clisp #:dohash
-           #:hash-table->alist
-           #:alist->hash-table
            #:while
            #:string-join
            #:signals-p
            #:doctest
-           #:slice
-           #:_
            #:$
            #:nest
            #:nest-list
