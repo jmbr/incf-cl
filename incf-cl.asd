@@ -26,15 +26,11 @@
 
 (in-package :com.superadditive.incf-cl-system)
 
-(when (asdf:find-system :asdf-system-connections nil)
-  (asdf:operate 'asdf:load-op 'asdf-system-connections))
-
 (defsystem :incf-cl
   :description "INCF CL is a library of convenience functions for Common Lisp"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :licence "X11"
-  :depends-on (#+asdf-system-connections :asdf-system-connections
-               :cl-ppcre)
+  :depends-on (:cl-ppcre)
   :serial t
   :components ((:file "package")
                (:file "function")
@@ -63,8 +59,3 @@
 
 (defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
   nil)
-
-#+asdf-system-connections 
-(asdf:defsystem-connection incf-cl-and-series
-  :requires (:incf-cl :series)
-  :components ((:file "prelude-series")))
