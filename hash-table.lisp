@@ -31,19 +31,3 @@ NIL or the result of evaluating RESULT-FORM if it was specified."
       (progn
         ,@body)
       finally (return ,result-form)))
-
-(defun hash-table->alist (hash-table)
-  "Returns an association list containing the keys and values in
-HASH-TABLE."
-  (let (alist)
-    (dohash (key value hash-table alist)
-      (setf alist (acons key value alist)))))
-
-(defun alist->hash-table (alist &rest make-hash-table-parameters)
-  "Returns a new hash table containing the keys and values present in
-each element of the association list ALIST.  The hash table will be
-created using MAKE-HASH-TABLE-PARAMETERS."
-  (let ((hash-table
-         (apply #'make-hash-table make-hash-table-parameters)))
-    (dolist (x alist hash-table)
-      (setf (gethash (car x) hash-table) (cdr x)))))

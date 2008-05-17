@@ -145,7 +145,9 @@ LIST itself is used.")
 (defmethod insert (x (list list) &key key (test #'<) test-not)
   (check-type key function-or-null)
   (let ((test (canonicalize-test test test-not)))
-    (multiple-value-bind (lt ge) (span (slice test _ (apply-key key x)) list :key key)
+    (multiple-value-bind (lt ge) (span (lambda (z)
+                                         (funcall test z (apply-key key x)))
+                                       list :key key)
       (nconc lt (cons x ge)))))
 
 (defun replicate (n x)
@@ -342,7 +344,7 @@ LIST itself is used.
 
   For example,
 
-  INCF-CL> (mapcar (slice #'concatenate 'string)
+  INCF-CL> (mapcar (lambda (x) (concatenate 'string x))
                    (group (coerce \"Mississippi\" 'list)))
   (\"M\" \"i\" \"ss\" \"i\" \"ss\" \"i\" \"pp\" \"i\")"))
 
@@ -354,7 +356,8 @@ LIST itself is used.
     (do ()
         ((null list) (rest result))
       (destructuring-bind (x . xs) list
-        (multiple-value-bind (ys zs) (span (slice test (apply-key key x))
+        (multiple-value-bind (ys zs) (span (lambda (z)
+                                             (funcall test z (apply-key key x)))
                                            xs :key key)
           (setf splice (setf (rest splice) (list (cons x ys))))
           (setf list zs))))))

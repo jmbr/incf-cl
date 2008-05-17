@@ -70,7 +70,7 @@
   (is (eq nil (take-while (constantly t) nil)))
   (is (eq nil (take-while (constantly nil) (list 1 2 3))))
   (is (equal (list 1 2 3) (take-while (constantly t) (list 1 2 3))))
-  (is (equal (list 1 2) (take-while (slice #'<= _ 2)
+  (is (equal (list 1 2) (take-while (lambda (x) (<= x 2))
                                     (list 1 2 3)))))
 
 (deftest test-drop-while ()
@@ -78,7 +78,7 @@
   (is (eq nil (drop-while (constantly t) (list 1 2 3))))
   (is (equal (list 1 2 3) (drop-while (constantly nil)
                                       (list 1 2 3))))
-  (is (equal (list 3) (drop-while (slice #'<= _ 2)
+  (is (equal (list 3) (drop-while (lambda (x) (<= x 2))
                                   (list 1 2 3)))))
 
 (deftest test-partition ()
@@ -90,7 +90,7 @@
              (list nil (list 1 2 3))))
   (is (equal (multiple-value-list (partition #'oddp (list 1 2 3 4 5)))
              (list (list 1 3 5) (list 2 4))))
-  (is (equal (multiple-value-list (partition (slice #'= 3)
+  (is (equal (multiple-value-list (partition (lambda (x) (= x 3))
                                              (list "foo" "bar" "baz" "quux")
                                              :key #'length))
              '(("foo" "bar" "baz") ("quux")))))
@@ -146,14 +146,6 @@
   (is (equal (acons 0 0 (acons 0 1 (acons 1 0 (acons 1 1 nil))))
              (lc (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
 
-(deftest test-hash-table->alist ()
-  (is (equal (sort (hash-table->alist
-                    (alist->hash-table
-                     (pairlis '("one" "two" "three")
-                              '(1 2 3))))
-                   #'< :key #'cdr)
-             (acons "one" 1 (acons "two" 2 (acons "three" 3 nil))))))
-
 (deftest test-string-join ()
   (is (eq nil (string-join nil nil)))
   (is (eq nil (string-join nil)))
@@ -165,7 +157,7 @@
 
 (defun read-lines (stream)
   (when (streamp stream)
-    (unfold (slice #'eq stream _)
+    (unfold (lambda (x) (eq stream x))
             #'identity
             (lambda (x)
               (declare (ignore x))
@@ -175,7 +167,7 @@
 (deftest test-unfold ()
   (is (eq nil (unfold (constantly t) #'identity #'identity 0)))
   (is (equal (range 0 .1 (/ pi 2))
-             (unfold (slice #'> _ (/ pi 2))
+             (unfold (lambda (x) (> x (/ pi 2)))
                      #'identity
                      (lambda (x) (+ x 0.1))
                      0)))
@@ -184,7 +176,7 @@
                                      2
                                      3")
     (is (equal (list "1" "2" "3")
-               (mapcar (slice #'string-trim " #\Tab" _)
+               (mapcar (lambda (x) (string-trim " #\Tab" x))
                        (read-lines stream))))))
 
 (deftest test-doctest ()
@@ -246,7 +238,7 @@
   (signals type-error (group nil :key 0))
   (signals type-error (group nil :test 0))
   (is (eq nil (group nil :test #'equal)))
-  (is (equal (group (list "abc" "aardvark" "ant" "buffalo" "zebra") :key (slice #'elt _ 0))
+  (is (equal (group (list "abc" "aardvark" "ant" "buffalo" "zebra") :key (lambda (x) (elt x 0)))
              '(("abc" "aardvark" "ant") ("buffalo") ("zebra"))))
   (is (equal (concatenate 'string
                           (mapcan #'identity

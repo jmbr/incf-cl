@@ -22,21 +22,6 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defmacro slice (function &rest args)
-  ;; Inspired by iterate's sharpl reader macro and
-  ;; http://srfi.schemers.org/srfi-26/srfi-26.html
-  (let ((lambda-list nil)
-        (parameters nil)
-        (remaining-args (gensym "SLICE")))
-    (dolist (x args)
-      (if (eq x '_)
-          (let ((s (gensym "SLICE")))
-            (push s lambda-list)
-            (push s parameters))
-          (push x parameters)))
-    `(lambda (,@(nreverse lambda-list) &rest ,remaining-args)
-       (apply ,function ,@(nreverse parameters) ,remaining-args))))
-
 (defun $ (&rest functions)
   "Returns the composition of FUNCTIONS.  Note that FUNCTIONS must 
   be composable in the order specified.
@@ -48,7 +33,7 @@
                     2)
   16
 
-  INCF-CL> (funcall ($ #'values #'floor #'sqrt (slice #'expt _ 2)) -2)
+  INCF-CL> (funcall ($ #'values #'floor #'sqrt (lambda (x) (expt x 2))) -2)
   2"
   (assert (every #'functionp functions))
   (flet ((compose (f g)
