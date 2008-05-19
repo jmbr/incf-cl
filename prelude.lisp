@@ -317,8 +317,8 @@ between the elements of SEQUENCE.
   (let ((result (cons nil nil)))
     (do ((list list (rest list))
          (splice result
-                 (cddr (rplacd splice (cons (first list)
-                                            (cons element nil))))))
+                 (rest (setf (rest splice) (cons (first list)
+                                                 (cons element nil))))))
         ((null (rest list))
          (rplacd splice (cons (first list) nil))
          (rest result)))))
@@ -328,9 +328,9 @@ between the elements of SEQUENCE.
   (:argument-precedence-order list element))
 
 (defmethod nintersperse (element (list list))
-  (do ((xs list (let ((newcdr (cons element (rest xs))))
-                  (cddr (rplacd xs newcdr)))))
-      ((null (cdr xs)) list)))
+  (do ((xs list (let ((c (cons element (rest xs))))
+                  (rest (setf (rest xs) c)))))
+      ((null (rest xs)) list)))
 
 (defgeneric group (list &key key test test-not)
   (:documentation "Returns a list of lists where every item in each
