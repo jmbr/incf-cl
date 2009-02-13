@@ -24,15 +24,12 @@ Some of the available features are:
 Download
 --------
 
-Fetch the latest version from
-http://superadditive.com/software/incf-cl.tar.gz[]
+You can download a tarball from http://github.com/jmbr/incf-cl/tree or
+clone the Git repository by issuing the following command:
 
-You can also clone the Git repository by issuing the following
-command:
-
-------------------------------------------------------
-  $ git clone http://superadditive.com/repos/incf-cl
-------------------------------------------------------
+-------------------------------------------------
+  $ git clone git://github.com/jmbr/incf-cl.git
+-------------------------------------------------
 
 License
 -------
