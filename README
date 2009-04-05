@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-May 2008
+April 2009
 
 image:/images/lisp.png[Lisp logo by Conrad Barski]
 
@@ -39,8 +39,8 @@ This library is released under the X11 license.
 Portability
 -----------
 
-This code has been tested under SBCL 1.0.16, CMU Common Lisp 19d, GNU
-CLISP 2.44, ECL 0.9j, and Allegro CL Free Express Edition 8.1.
+This code has been tested under SBCL 1.0.26, CMU Common Lisp 19d, GNU
+CLISP 2.47, and ECL 9.4.0.
 
 Installation
 ------------
@@ -67,7 +67,7 @@ Usage
 Loading the package
 ~~~~~~~~~~~~~~~~~~~
 
-To start using the package write: 
+To start using the package write:
 
 --------------------------------------------------
   CL-USER> (asdf:operate 'asdf:load-op :incf-cl)
@@ -130,8 +130,8 @@ Suppose you have the package TEST, defined as follows:
     (:use :common-lisp :incf-cl)
     (:export :factorial))
 
-  (in-package :test)           
-  
+  (in-package :test)
+
   (defun factorial (n &optional (acc 1))
     "Returns the factorial of N, where N is an integer >= 0.
 
@@ -139,7 +139,7 @@ Suppose you have the package TEST, defined as follows:
 
     TEST> (lc (factorial n) (<- n (range 1 5)))
     (1 2 6 24 120)
-  
+
     TEST> (factorial 450/15)
     265252859812191058636308480000000
 
@@ -152,7 +152,7 @@ Suppose you have the package TEST, defined as follows:
     TEST> (factorial 0)
     1"
     (declare (type integer n))
-  
+
     (cond
       ((minusp n) (error 'arithmetic-error))
       ((/= n (floor n)) (error 'type-error)))
@@ -224,7 +224,7 @@ Some examples:
 
   CL-USER> (nest-list #'+ '(1 1) :max 10)
   (1 1 2 3 5 8 13 21 34 55 89 144)
-  
+
   CL-USER> (nest #'+ '(1 1) :max 10)
   144
 
@@ -313,7 +313,7 @@ semantics similar to those of DOLIST:
   CL-USER> (let ((product 1))
              (dohash (key value *hash-table* product)
                (setf product (* product value))))
-  6  
+  6
 -------------------------------------------------------
 
 Strings
