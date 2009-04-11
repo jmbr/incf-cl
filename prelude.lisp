@@ -1,7 +1,7 @@
 (in-package :com.superadditive.incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
-;;; 
+;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
 ;;; files (the "Software"), to deal in the Software without
@@ -9,10 +9,10 @@
 ;;; modify, merge, publish, distribute, sublicense, and/or sell copies
 ;;; of the Software, and to permit persons to whom the Software is
 ;;; furnished to do so, subject to the following conditions:
-;;; 
+;;;
 ;;; The above copyright notice and this permission notice shall be
 ;;; included in all copies or substantial portions of the Software.
-;;; 
+;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ;;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 ;;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -230,7 +230,7 @@ respectively.  This function is the inverse of PAIRLIS."
   (:documentation "SCAN* is similar to REDUCE, but returns a list of
   successive reduced values:
 
-  (scan* f (list x1 x2 ...) :initial-value z) 
+  (scan* f (list x1 x2 ...) :initial-value z)
   ==> (z (funcall f z x1) (funcall f (funcall f z x1) x2) ...)
 
   (scan* f (list x1 x2 ...))
@@ -244,10 +244,10 @@ respectively.  This function is the inverse of PAIRLIS."
 
   Examples:
 
-  INCF-CL> (scan* #'/ (list 4 2 4) :initial-value 64) 
+  INCF-CL> (scan* #'/ (list 4 2 4) :initial-value 64)
   (64 16 8 2)
 
-  INCF-CL> (scan* #'max (range 1 7) :initial-value 5) 
+  INCF-CL> (scan* #'max (range 1 7) :initial-value 5)
   (5 5 5 5 5 5 6 7)
 
   INCF-CL> (scan* (lambda (x y) (+ (* 2 x) y)) (list 1 2 3) :initial-value 4)
