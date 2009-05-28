@@ -8,8 +8,7 @@ image:/images/lisp.png[Lisp logo by Conrad Barski]
 Overview
 --------
 
-The package (incf cl) is a collection of convenience functions and
-macros to aid in the development of software written in Common Lisp.
+This is a collection of helpful functions and macros for Common Lisp.
 
 Some of the available features are:
 
@@ -56,18 +55,17 @@ have it on your system:
 Note that you need http://common-lisp.net/project/stefil/[Stefil] if
 you want to run the test suite.
 
-If you don't have ASDF-INSTALL just download the latest version of
-(incf cl) from http://superadditive.com/software/incf-cl.tar.gz[] and
-follow the standard package installation procedure for your Lisp
-implementation.
+If you don't have ASDF-INSTALL just download the latest tarball as
+explained above and follow the standard package installation procedure
+for your Lisp implementation.
 
 Usage
 -----
 
-Loading the package
+Loading the library
 ~~~~~~~~~~~~~~~~~~~
 
-To start using the package write:
+To start using the library write:
 
 --------------------------------------------------
   CL-USER> (asdf:operate 'asdf:load-op :incf-cl)
@@ -110,9 +108,6 @@ Comprehension) macro:
                (= (+ x y) 2))
   ((0 . 2) (1 . 1) (2 . 0))
 -----------------------------------------------------------------------
-
-The previous name for this macro was ASSEMBLE and it is now deprecated
-(although programs relying on it will continue to work indefinitely).
 
 Doctests
 ^^^^^^^^
