@@ -22,6 +22,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
+(defvar *doctest-show-progress* t
+  "Determines if a dot will be displayed for each passed test.")
+
 (defmacro signals-p (condition &body body)
   "Returns T if evaluating BODY results in CONDITION being signalled,
 NIL otherwise."
@@ -67,16 +70,17 @@ otherwise."
          (re (concatenate 'string "[ \t]*" package-name "> "))
          (matches (cl-ppcre:all-matches re documentation)))
     (loop for start in (rest matches) by #'cddr do
-         (handler-case
-             (when (test-docstring (subseq documentation start))
-               (princ #\. stream))
-           (end-of-file (_)
-             (declare (ignore _))
-             (format stream "~%MALFORMED TEST: ~a~%" function))
-           (doctest-failure (condition)
-             (format stream "~%FAILED TEST: ~a~%~a~%" function condition)
-             (setf passed-p nil)))
-         finally (return passed-p))))
+          (handler-case
+              (when (test-docstring (subseq documentation start))
+                (when *doctest-show-progress*
+                  (princ #\. stream)))
+            (end-of-file (_)
+              (declare (ignore _))
+              (format stream "~%MALFORMED TEST: ~a~%" function))
+            (doctest-failure (condition)
+              (format stream "~%FAILED TEST: ~a~%~a~%" function condition)
+              (setf passed-p nil)))
+          finally (return passed-p))))
 
 (defun doctest (package
                 &key (function nil function-p) (stream *standard-output*))

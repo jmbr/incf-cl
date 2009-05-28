@@ -57,6 +57,7 @@
            #:string-join
            #:signals-p
            #:doctest
+           #:*doctest-show-progress*
            #:$
            #:nest
            #:nest-list
