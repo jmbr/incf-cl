@@ -1,7 +1,7 @@
 (incf cl) utilities
 ===================
 Juan M. Bello Rivas <jmbr@superadditive.com>
-April 2009
+November 2009
 
 image:/images/lisp.png[Lisp logo by Conrad Barski]
 
@@ -38,8 +38,11 @@ This library is released under the X11 license.
 Portability
 -----------
 
-This code has been tested under SBCL 1.0.26, CMU Common Lisp 19d, GNU
-CLISP 2.47, and ECL 9.4.0.
+This code has been tested under
+
+1. SBCL 1.0.32
+2. Armed Bear Common Lisp 0.18.0-dev
+3. ECL 9.11.1
 
 Installation
 ------------
