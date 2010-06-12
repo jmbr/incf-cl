@@ -33,16 +33,12 @@
 
 (defpackage :com.superadditive.incf-cl-test
   (:nicknames :incf-cl-test)
-  (:use :common-lisp :incf-cl :stefil)
+  (:use :common-lisp :incf-cl :hu.dwim.stefil)
   (:export #:test))
 
 (in-package :com.superadditive.incf-cl-test)
 
-(in-root-suite)
-
-(defsuite (test :documentation "incf-cl test suite"))
-
-(in-suite test)
+(defsuite* (test :in root-suite :documentation "incf-cl test suite"))
 
 (deftest test-range ()
   (signals error (range 1 -1))
