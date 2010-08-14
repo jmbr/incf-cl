@@ -1,7 +1,7 @@
 #+TITLE: (INCF CL)
 #+AUTHOR: Juan M. Bello Rivas
 #+EMAIL: jmbr@superadditive.com
-#+DATE: <2010-08-14 Sat>
+#+DATE: <2010-08-15 Sun>
 
 * Overview
 
@@ -26,7 +26,7 @@ The easiest way to install =(INCF CL)= is to use ASDF-INSTALL:
 (asdf-install:install :incf-cl)
 #+END_SRC lisp
 
-If you don't have ASDF-INSTALL, [[http://github.com/jmbr/incf-cl/tarball/master][download the latest snapshot]] or clone the source code repository by issuing the following command:
+If you don't have ASDF-INSTALL, [[http://github.com/jmbr/incf-cl/tarball/master][download the latest snapshot]] or clone [[http://github.com/jmbr/incf-cl][the source code repository]] by issuing the following command:
 #+BEGIN_SRC sh
 $ git clone git://github.com/jmbr/incf-cl.git
 #+END_SRC
@@ -143,7 +143,7 @@ Namely,
   - =TAKE-WHILE=
   - =UNZIP=
 The on-line documentation for each of them can be read using =DESCRIBE= (or =M-x slime-describe-symbol= in SLIME).
-See also [[Http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html][A Tour of the Haskell Prelude]] for more information.
+See also [[http://ww2.cs.mu.oz.au/~bjpop/papers/haskell.tour.tar.gz][A Tour of the Haskell Prelude]] for more information.
 
 Since Common Lisp doesn't guarantee tail call elimination, these functions are written iteratively to avoid stack overflows.
 
