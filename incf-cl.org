@@ -1,0 +1,275 @@
+#+TITLE: (INCF CL)
+#+AUTHOR: Juan M. Bello Rivas
+#+EMAIL: jmbr@superadditive.com
+#+DATE: <2010-08-14 Sat>
+
+* Overview
+
+The library =(INCF CL)= is a collection of convenience functions and macros for Common Lisp.
+The features It provides are:
+  - List comprehensions.
+  - Doctest suite for automatic verification of examples in docstrings.
+  - List manipulation functions similar to those in Haskell's prelude.
+  - Nesting functions akin to those available in Mathematica.
+
+This library is released under the X11 license and it has been tested with the following Common Lisp implementations:
+  - SBCL 1.0.40
+  - Armed Bear Common Lisp 0.22.0
+
+* Usage
+
+** Installation
+
+The easiest way to install =(INCF CL)= is to use ASDF-INSTALL:
+#+BEGIN_SRC lisp
+(asdf:operate 'asdf:load-op :asdf-install)
+(asdf-install:install :incf-cl)
+#+END_SRC lisp
+
+If you don't have ASDF-INSTALL, [[http://github.com/jmbr/incf-cl/tarball/master][download the latest snapshot]] or clone the source code repository by issuing the following command:
+#+BEGIN_SRC sh
+$ git clone git://github.com/jmbr/incf-cl.git
+#+END_SRC
+and then follow the ASDF installation procedure for your CL implementation.
+
+Note that you will need [[http://common-lisp.net/project/stefil/][Stefil]] if you want to run the test suite.
+
+** Loading the library
+
+To begin using the library write:
+#+BEGIN_SRC lisp
+(asdf:operate 'asdf:load-op :incf-cl)
+(use-package :incf-cl)
+#+END_SRC
+
+** Features
+
+*** Ranges
+
+The function =RANGE= is similar to MATLAB's vector notation.  Some use cases are:
+
+#+BEGIN_SRC lisp
+CL-USER> (range 1 10)
+(1 2 3 4 5 6 7 8 9 10)
+
+CL-USER> (range 0 1/4 1)
+(0 1/4 1/2 3/4 1)
+#+END_SRC
+
+*** List comprehensions
+
+List comprehensions are a programming language construct that closely mimics the way you declare a set in mathematics and are sometimes more succinct and readable than a composition of =MAPCAR= and =DELETE-IF= or a loop.
+
+Here are two examples of how to use the =LC= (short for List Comprehension) macro:
+#+BEGIN_SRC lisp
+CL-USER> (lc (sin x) (<- x (range 0 .25 (/ pi 2))))
+(0.0 0.24740396 0.47942555 0.6816388 0.84147096 0.9489846 0.997495)
+CL-USER> (lc (cons x y) (<- x (range 0 2)) (<- y (range 0 2))
+             (= (+ x y) 2))
+((0 . 2) (1 . 1) (2 . 0))
+#+END_SRC
+
+*** Doctests
+
+=DOCTEST= checks documentation strings for correctness.
+For every exported function in the package name passed to =DOCTEST=,
+1. each docstring is scanned for pieces of text resembling interactive sessions,
+2. then those snippets are evaluated,
+3. and the resulting values are checked against the expected ones.
+
+For example, consider the package =TEST=:
+#+BEGIN_SRC lisp
+  (defpackage :test
+    (:use :common-lisp :incf-cl)
+    (:export :factorial))
+
+  (in-package :test)
+
+  (defun factorial (n &optional (acc 1))
+    "Returns the factorial of N, where N is an integer >= 0.
+
+    Examples:
+
+    TEST> (lc (factorial n) (<- n (range 1 5)))
+    (1 2 6 24 120)
+
+    TEST> (factorial 450/15)
+    265252859812191058636308480000000
+
+    TEST> (signals-p arithmetic-error (factorial -1))
+    T
+
+    TEST> (signals-p type-error (factorial 30.1))
+    T
+
+    TEST> (factorial 0)
+    1"
+    (declare (type integer n))
+
+    (cond
+      ((minusp n) (error 'arithmetic-error))
+      ((/= n (floor n)) (error 'type-error)))
+
+    (if (= n 0)
+        acc
+        (factorial (1- n) (* n acc))))
+#+END_SRC
+You can use =DOCTEST= to make sure the examples given in =FACTORIAL='s documentation string work as expected:
+#+BEGIN_SRC lisp
+CL-USER> (doctest :test)
+.....
+T
+#+END_SRC
+
+*** Prelude
+
+Some list manipulation functions patterned after Haskell's prelude are available.
+Namely,
+  - =BREAK*=
+  - =CYCLE= (and its destructive version =NCYCLE=).
+  - =DROP=
+  - =DROP-WHILE=
+  - =FLIP=
+  - =GROUP=
+  - =INSERT=
+  - =INTERSPERSE= (and its destructive version =NINTERSPERSE=).
+  - =PARTITION=
+  - =REPLICATE=
+  - =SCAN*= (using the key parameters =:INITIAL-VALUE= and =:FROM-END= it works as
+    =scanl=, =scanl1=, =scanr=, or =scanr1=)
+  - =SPAN=
+  - =SPLIT-AT=
+  - =TAKE=
+  - =TAKE-WHILE=
+  - =UNZIP=
+The on-line documentation for each of them can be read using =DESCRIBE= (or =M-x slime-describe-symbol= in SLIME).
+See also [[Http://undergraduate.csse.uwa.edu.au/units/230.301/lectureNotes/tourofprelude.html][A Tour of the Haskell Prelude]] for more information.
+
+Since Common Lisp doesn't guarantee tail call elimination, these functions are written iteratively to avoid stack overflows.
+
+*** Nesting
+
+The function =NEST-LIST= applies a function to an initial value, then applies the same function to the previous result, and so on.
+This stops after a specified number of evaluations or when a given predicate is true and a list containing all the results is returned.
+
+=NEST= works as =NEST-LIST= but it only returns the last result, not the whole list.
+
+Some examples:
+#+BEGIN_SRC lisp
+CL-USER> (setf *print-circle* nil)
+NIL
+CL-USER> (nest-list (lambda (x) `(sin ,x)) 'z :max 3)
+(Z (SIN Z) (SIN (SIN Z)) (SIN (SIN (SIN Z))))
+
+CL-USER> (nest-list #'+ '(1 1) :max 10)
+(1 1 2 3 5 8 13 21 34 55 89 144)
+
+CL-USER> (nest #'+ '(1 1) :max 10)
+144
+
+CL-USER> (nest-list (lambda (x) (mod (* 2 x) 19))
+                    2
+                    :test (lambda (x) (/= x 1)))
+(2 4 8 16 13 7 14 9 18 17 15 11 3 6 12 5 10 1)
+#+END_SRC
+
+The closely related function =FIXED-POINT= returns the fixed point of a function starting from an initial value.
+Whether a fixed point has been reached or not is determined by a test function (=EQL= by default).
+
+For example, the square root of 2 using Newton's method can be computed as:
+#+BEGIN_SRC lisp
+CL-USER> (fixed-point (lambda (x)
+                        (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
+                      1)
+1.4142135
+#+END_SRC
+
+*** Unfolds
+
+There's an implementation of =UNFOLD= and =UNFOLD-RIGHT= as specified in [[http://srfi.schemers.org/srfi-1/srfi-1.html#unfold][SRFI 1: List library]]
+Here's an example of =UNFOLD=:
+#+BEGIN_SRC lisp
+  (defun euler (f x0 y0 interval h)
+    "Computes an approximate solution of the initial value problem:
+
+      y' = f(x, y), x in interval;  y(x0) = y0
+
+    using Euler's explicit method.  Interval is a list of two elements
+    representing a closed interval.  The function returns a list of
+    points and the values of the approximate solution at those points.
+
+    For example,
+
+    EULER> (euler (lambda (x y)
+                    (declare (ignore y))
+                    (- (sin x)))
+                  0 1 (list 0 (/ pi 2)) 0.5)
+    ((0 1) (0.5 1.0) (1.0 0.7602872) (1.5 0.33955175))"
+    (assert (<= (first interval) (second interval)))
+    (unfold (lambda (x) (> (first x) (second interval)))
+            #'identity
+            (lambda (pair)
+              (destructuring-bind (x y) pair
+                (list (+ x h) (+ y (* h (funcall f x y))))))
+            (list x0 y0)))
+#+END_SRC
+
+*** Functions
+
+The function =$= returns the composition of several functions.
+The following example illustrates its use:
+#+BEGIN_SRC lisp
+CL-USER> (funcall ($ (lambda (x) (* x x))
+                     (lambda (x) (+ x 2)))
+                  2)
+16
+#+END_SRC
+
+*** Hash table utilities
+
+=DOHASH= iterates over a hash table with semantics similar to those of =DOLIST=:
+#+BEGIN_SRC lisp
+CL-USER> (defparameter *hash-table* (make-hash-table))
+*HASH-TABLE*
+CL-USER> (setf (gethash "one" *hash-table*) 1)
+1
+CL-USER> (setf (gethash "two" *hash-table*) 2)
+2
+CL-USER> (setf (gethash "three" *hash-table*) 3)
+3
+CL-USER> (dohash (key value *hash-table*)
+           (format t "~a => ~d~%" key value))
+three => 3
+two => 2
+one => 1
+NIL
+CL-USER> (let ((product 1))
+           (dohash (key value *hash-table* product)
+             (setf product (* product value))))
+6
+#+END_SRC
+
+*** Strings
+
+=STRING-JOIN= glues together a list of strings placing a given separator between each string.
+By default, the separator is a space.
+#+BEGIN_SRC lisp
+CL-USER> (string-join '("Hello" "world"))
+"Hello world"
+CL-USER> (string-join '("Hello" "world") ", ")
+"Hello, world"
+#+END_SRC
+
+* Links
+
+Some of the features of =(INCF CL)= are discussed in:
+- [[http://kyle-burton.livejournal.com/8219.html][Playing with List Comprehensions in CL]]
+- [[http://i-need-closures.blogspot.com/2008/01/programming-collective-intelligence-in.html][Programming Collective Intelligence in Common Lisp, Chapter 5 - Optimizations]]
+
+* Feedback
+
+Please send suggestions, patches, and bug reports to the [[http://superadditive.com/contact/][author's email address]].
+
+#+STYLE: <link rel="stylesheet" type="text/css" href="/css/chocolate.css" />
+#+STYLE: <link rel="stylesheet" type="text/css" href="/css/org-mode.css" />
+#+OPTIONS: toc:2
