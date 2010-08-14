@@ -10,13 +10,13 @@ release: index.html tarball
 	scp index.html $(PACKAGE_TARBALL) $(PACKAGE_TARBALL).asc \
 		jmbellorivas@superadditive.com:html/software/incf-cl/
 
-index.html: incf-cl.org
+index.html: README.org
 	emacs --batch \
 		--load=$(HOME)/.emacs.d/elpa/htmlize-1.37/htmlize.elc \
 		--eval "(setq org-export-html-style-include-default nil)" \
 		--eval "(setq org-export-htmlize-output-type 'css)" \
 		--visit=$^ --funcall org-export-as-html-batch
-	mv incf-cl.html index.html
+	mv $(addprefix $(basename $<), .html) index.html
 
 tarball: $(PACKAGE_TARBALL) $(PACKAGE_TARBALL).asc
 
