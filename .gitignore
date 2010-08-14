@@ -2,8 +2,10 @@ syntax: glob
 
 *~
 *.fasl
+*.fas
+*.lib
+*.o
 ChangeLog
-GNUmakefile
-lftp.commands
 todo.org
 *.tar.gz
+*.tar.gz.asc
