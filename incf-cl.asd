@@ -21,16 +21,16 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(defpackage :com.superadditive.incf-cl-system
-  (:use :common-lisp :asdf))
+(cl:defpackage #:incf-cl-system
+  (:use #:common-lisp #:asdf))
 
-(in-package :com.superadditive.incf-cl-system)
+(cl:in-package #:incf-cl-system)
 
-(defsystem :incf-cl
+(defsystem #:incf-cl
   :description "INCF CL is a library of convenience functions for Common Lisp"
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :licence "X11"
-  :depends-on (:cl-ppcre)
+  :depends-on (#:cl-ppcre)
   :serial t
   :components ((:file "package")
                (:file "function")
@@ -47,15 +47,17 @@
                (:file "doctest")
                (:file "symbol")))
 
-(defsystem :incf-cl-test
+(defsystem #:incf-cl-test
   :description "Test suite for the INCF CL library."
-  :depends-on (:incf-cl :hu.dwim.stefil :hu.dwim.stefil+swank)
+  :depends-on (#:incf-cl #:hu.dwim.stefil #:hu.dwim.stefil+swank)
   :components ((:file "test-suite")))
 
-(defmethod perform ((op test-op) (system (eql (find-system :incf-cl))))
-  (asdf:operate 'asdf:load-op :incf-cl-test)
+(defmethod perform ((op test-op) (system (eql (find-system "incf-cl"))))
+  (asdf:load-system "incf-cl-test")
   (eval (read-from-string "(hu.dwim.stefil:funcall-test-with-feedback-message 'incf-cl-test:test)"))
   (values))
 
-(defmethod operation-done-p ((op test-op) (system (eql (find-system :incf-cl))))
+(defmethod operation-done-p ((op test-op) (system (eql (find-system "incf-cl"))))
   nil)
+
+(delete-package *package*)

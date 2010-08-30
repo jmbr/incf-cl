@@ -21,10 +21,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(cl:in-package :cl-user)
+(cl:in-package #:common-lisp)
 
-(cl:defpackage :com.superadditive.incf-cl
-  (:nicknames :incf-cl)
+(defpackage #:incf-cl
   (:use #:common-lisp)
   (:export #:lc
            #:assemble

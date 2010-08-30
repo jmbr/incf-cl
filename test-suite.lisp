@@ -31,12 +31,11 @@
 ;;;   (declaim (optimize (sb-cover:store-coverage-data 0)))
 ;;;   (sb-cover:report "/home/jmbr/projects/incf-cl/coverage-report/"))
 
-(defpackage :com.superadditive.incf-cl-test
-  (:nicknames :incf-cl-test)
-  (:use :common-lisp :incf-cl :hu.dwim.stefil)
+(cl:defpackage #:incf-cl-test
+  (:use #:incf-cl #:common-lisp #:hu.dwim.stefil)
   (:export #:test))
 
-(in-package :com.superadditive.incf-cl-test)
+(cl:in-package #:incf-cl-test)
 
 (defsuite* (test :in root-suite :documentation "incf-cl test suite"))
 

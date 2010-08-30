@@ -1,4 +1,4 @@
-(in-package :com.superadditive.incf-cl)
+(cl:in-package #:incf-cl)
 
 ;;; Copyright (c) 2007 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
