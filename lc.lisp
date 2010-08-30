@@ -29,25 +29,28 @@
 (defmacro lc (collection-form &rest quantifiers)
   "Assembles a multiset containing the results of evaluating
 COLLECTION-FORM and subject to QUANTIFIERS."
-  (labels ((translate (collection-form qs)
-             (if (null qs)
-                 `(collect ,collection-form)
-                 (translate-generator-or-filter collection-form qs)))
-           (translate-generator-or-filter (collection-form qs)
-             (let ((q (first qs))
-                   (qr (rest qs)))
-               (if (eq (first q) '<-)
-                   (translate-generator collection-form (second q) (third q) qr)
-                   (translate-filter collection-form q qr))))
-           (translate-generator (collection-form variable collection qs)
-             `(nconc (loop for ,variable in ,collection
-                          ,@(translate collection-form qs))))
-           (translate-filter (collection-form filter-form qs)
-             `(when ,filter-form ,@(translate collection-form qs))))
-    (when quantifiers
-      `(loop repeat 1 ,@(translate collection-form quantifiers)))))
+  (if quantifiers
+      `(cl:loop :repeat 1
+                ,@(translate-comprehension collection-form quantifiers))
+      (error "No quantifiers specified.")))
 
-;;; The ASSEMBLE macro is deprecated, use LC instead.  This
-;;; abbreviation is left here for backwards-compatibility.
-(defmacro assemble (collection-form &rest quantifiers)
-  `(lc ,collection-form ,@quantifiers))
+(defun translate-comprehension (collection-form quantifiers)
+  (if (consp quantifiers)
+      (translate-generator-or-filter collection-form quantifiers)
+      `(:collect ,collection-form)))
+
+(defun translate-generator-or-filter (collection-form quantifiers)
+  (flet ((generator-p (z)
+           (and (consp z) (eq (first z) '<-) (= (length z) 3))))
+    (destructuring-bind (q . qr) quantifiers
+      (if (generator-p q)
+          (translate-generator collection-form (second q) (third q) qr)
+          (translate-filter collection-form q qr)))))
+
+(defun translate-generator (collection-form variable collection quantifiers)
+  `(:nconc (cl:loop :for ,variable :in ,collection
+                    ,@(translate-comprehension collection-form quantifiers))))
+
+(defun translate-filter (collection-form filter-form quantifiers)
+  `(:when ,filter-form
+     ,@(translate-comprehension collection-form quantifiers)))
