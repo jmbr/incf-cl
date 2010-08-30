@@ -61,6 +61,5 @@
            #:$
            #:nest
            #:nest-list
-           #:list-external-symbols))
-
-(cl:pushnew :incf-cl *features*)
+           #:list-external-symbols
+           #:list-all-symbols))

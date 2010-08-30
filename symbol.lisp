@@ -24,8 +24,14 @@
 
 (defun list-external-symbols (package)
   "Returns a list containing all the exported symbols in PACKAGE."
-  (let ((xs nil))
-    (do-external-symbols (x package (nreverse xs))
+  (let (xs)
+    (do-external-symbols (x package xs)
+      (push x xs))))
+
+(defun list-all-symbols (package)
+  "Returns a list containing all the symbols in PACKAGE."
+  (let (xs)
+    (do-symbols (x package xs)
       (push x xs))))
 
 ;; #+sbcl
