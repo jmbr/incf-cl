@@ -1,20 +1,23 @@
 #+TITLE: (INCF CL)
 #+AUTHOR: Juan M. Bello Rivas
 #+EMAIL: jmbr@superadditive.com
-#+DATE: <2010-08-15 Sun>
+#+DATE: <2010-08-30 Mon>    
 
 * Overview
 
-The library =(INCF CL)= is a collection of convenience functions and macros for Common Lisp.
-The features It provides are:
+The library =(INCF CL)= is a collection of convenience functions and
+macros for Common Lisp.
+The features it provides are:
   - List comprehensions.
   - Doctest suite for automatic verification of examples in docstrings.
   - List manipulation functions similar to those in Haskell's prelude.
   - Nesting functions akin to those available in Mathematica.
 
-This library is released under the X11 license and it has been tested with the following Common Lisp implementations:
-  - SBCL 1.0.40
-  - Armed Bear Common Lisp 0.22.0
+This library is released under the X11 license and it has been tested
+with the following Common Lisp implementations:
+  - [[http://www.clozure.com/clozurecl.html][Clozure Common Lisp]] 1.6
+  - [[http://www.sbcl.org][Steel Bank Common Lisp]] 1.0.41
+  - [[http://common-lisp.net/project/armedbear/][Armed Bear Common Lisp]] 0.22.0
 
 * Usage
 
@@ -22,15 +25,17 @@ This library is released under the X11 license and it has been tested with the f
 
 The easiest way to install =(INCF CL)= is to use ASDF-INSTALL:
 #+BEGIN_SRC lisp
-(asdf:operate 'asdf:load-op :asdf-install)
+(asdf:load-system :asdf-install)
 (asdf-install:install :incf-cl)
 #+END_SRC lisp
 
-If you don't have ASDF-INSTALL, [[http://github.com/jmbr/incf-cl/tarball/master][download the latest snapshot]] or clone [[http://github.com/jmbr/incf-cl][the source code repository]] by issuing the following command:
+If you don't have ASDF-INSTALL, [[http://github.com/jmbr/incf-cl/tarball/master][download the latest snapshot]] or clone
+[[http://github.com/jmbr/incf-cl][the source code repository]] by issuing the following command:
 #+BEGIN_SRC sh
 $ git clone git://github.com/jmbr/incf-cl.git
 #+END_SRC
-and then follow the ASDF installation procedure for your CL implementation.
+and then follow the ASDF installation procedure for your CL
+implementation.
 
 Note that you will need [[http://common-lisp.net/project/stefil/][Stefil]] if you want to run the test suite.
 
@@ -38,7 +43,7 @@ Note that you will need [[http://common-lisp.net/project/stefil/][Stefil]] if yo
 
 To begin using the library write:
 #+BEGIN_SRC lisp
-(asdf:operate 'asdf:load-op :incf-cl)
+(asdf:load-system :incf-cl)
 (use-package :incf-cl)
 #+END_SRC
 
@@ -46,8 +51,8 @@ To begin using the library write:
 
 *** Ranges
 
-The function =RANGE= is similar to MATLAB's vector notation.  Some use cases are:
-
+The function =RANGE= is similar to MATLAB's vector notation.  Some use
+cases are:
 #+BEGIN_SRC lisp
 CL-USER> (range 1 10)
 (1 2 3 4 5 6 7 8 9 10)
@@ -58,9 +63,13 @@ CL-USER> (range 0 1/4 1)
 
 *** List comprehensions
 
-List comprehensions are a programming language construct that closely mimics the way you declare a set in mathematics and are sometimes more succinct and readable than a composition of =MAPCAR= and =DELETE-IF= or a loop.
+List comprehensions are a programming language construct that closely
+mimics the way you declare a set in mathematics and are sometimes more
+succinct and readable than a composition of =MAPCAR= and =DELETE-IF=
+or a loop.
 
-Here are two examples of how to use the =LC= (short for List Comprehension) macro:
+Here are two examples of how to use the =LC= (short for List
+Comprehension) macro:
 #+BEGIN_SRC lisp
 CL-USER> (lc (sin x) (<- x (range 0 .25 (/ pi 2))))
 (0.0 0.24740396 0.47942555 0.6816388 0.84147096 0.9489846 0.997495)
@@ -114,7 +123,8 @@ For example, consider the package =TEST=:
         acc
         (factorial (1- n) (* n acc))))
 #+END_SRC
-You can use =DOCTEST= to make sure the examples given in =FACTORIAL='s documentation string work as expected:
+You can use =DOCTEST= to make sure the examples given in =FACTORIAL='s
+documentation string work as expected:
 #+BEGIN_SRC lisp
 CL-USER> (doctest :test)
 .....
@@ -123,8 +133,8 @@ T
 
 *** Prelude
 
-Some list manipulation functions patterned after Haskell's prelude are available.
-Namely,
+Some list manipulation functions patterned after Haskell's prelude are
+available.  Namely,
   - =BREAK*=
   - =CYCLE= (and its destructive version =NCYCLE=).
   - =DROP=
@@ -135,24 +145,29 @@ Namely,
   - =INTERSPERSE= (and its destructive version =NINTERSPERSE=).
   - =PARTITION=
   - =REPLICATE=
-  - =SCAN*= (using the key parameters =:INITIAL-VALUE= and =:FROM-END= it works as
-    =scanl=, =scanl1=, =scanr=, or =scanr1=)
+  - =SCAN*= (using the key parameters =:INITIAL-VALUE= and =:FROM-END=
+    it works as =scanl=, =scanl1=, =scanr=, or =scanr1=)
   - =SPAN=
   - =SPLIT-AT=
   - =TAKE=
   - =TAKE-WHILE=
   - =UNZIP=
-The on-line documentation for each of them can be read using =DESCRIBE= (or =M-x slime-describe-symbol= in SLIME).
-See also [[http://ww2.cs.mu.oz.au/~bjpop/papers/haskell.tour.tar.gz][A Tour of the Haskell Prelude]] for more information.
+The on-line documentation for each of them can be read using
+=DESCRIBE= (or =M-x slime-describe-symbol= in [[http://common-lisp.net/project/slime/][SLIME]]).  See also [[http://ww2.cs.mu.oz.au/~bjpop/papers/haskell.tour.tar.gz][A Tour
+of the Haskell Prelude]] for more information.
 
-Since Common Lisp doesn't guarantee tail call elimination, these functions are written iteratively to avoid stack overflows.
+Since Common Lisp doesn't guarantee tail call elimination, these
+functions are written iteratively to avoid stack overflows.
 
 *** Nesting
 
-The function =NEST-LIST= applies a function to an initial value, then applies the same function to the previous result, and so on.
-This stops after a specified number of evaluations or when a given predicate is true and a list containing all the results is returned.
+The function =NEST-LIST= applies a function to an initial value, then
+applies the same function to the previous result, and so on.  This
+stops after a specified number of evaluations or when a given
+predicate is true and a list containing all the results is returned.
 
-=NEST= works as =NEST-LIST= but it only returns the last result, not the whole list.
+=NEST= works as =NEST-LIST= but it only returns the last result, not
+the whole list.
 
 Some examples:
 #+BEGIN_SRC lisp
@@ -173,10 +188,13 @@ CL-USER> (nest-list (lambda (x) (mod (* 2 x) 19))
 (2 4 8 16 13 7 14 9 18 17 15 11 3 6 12 5 10 1)
 #+END_SRC
 
-The closely related function =FIXED-POINT= returns the fixed point of a function starting from an initial value.
-Whether a fixed point has been reached or not is determined by a test function (=EQL= by default).
+The closely related function =FIXED-POINT= returns the fixed point of
+a function starting from an initial value.  Whether a fixed point has
+been reached or not is determined by a test function (=EQL= by
+default).
 
-For example, the square root of 2 using Newton's method can be computed as:
+For example, the square root of 2 using Newton's method can be
+computed as:
 #+BEGIN_SRC lisp
 CL-USER> (fixed-point (lambda (x)
                         (float (- x (/ (- (expt x 2) 2) (* 2 x)))))
@@ -186,8 +204,8 @@ CL-USER> (fixed-point (lambda (x)
 
 *** Unfolds
 
-There's an implementation of =UNFOLD= and =UNFOLD-RIGHT= as specified in [[http://srfi.schemers.org/srfi-1/srfi-1.html#unfold][SRFI 1: List library]]
-Here's an example of =UNFOLD=:
+There's an implementation of =UNFOLD= and =UNFOLD-RIGHT= as specified
+in [[http://srfi.schemers.org/srfi-1/srfi-1.html#unfold][SRFI 1: List library]].  Here's an example of =UNFOLD=:
 #+BEGIN_SRC lisp
   (defun euler (f x0 y0 interval h)
     "Computes an approximate solution of the initial value problem:
@@ -216,8 +234,8 @@ Here's an example of =UNFOLD=:
 
 *** Functions
 
-The function =$= returns the composition of several functions.
-The following example illustrates its use:
+The function =$= returns the composition of several functions.  The
+following example illustrates its use:
 #+BEGIN_SRC lisp
 CL-USER> (funcall ($ (lambda (x) (* x x))
                      (lambda (x) (+ x 2)))
@@ -227,7 +245,8 @@ CL-USER> (funcall ($ (lambda (x) (* x x))
 
 *** Hash table utilities
 
-=DOHASH= iterates over a hash table with semantics similar to those of =DOLIST=:
+=DOHASH= iterates over a hash table with semantics similar to those of
+=DOLIST=:
 #+BEGIN_SRC lisp
 CL-USER> (defparameter *hash-table* (make-hash-table))
 *HASH-TABLE*
@@ -251,8 +270,8 @@ CL-USER> (let ((product 1))
 
 *** Strings
 
-=STRING-JOIN= glues together a list of strings placing a given separator between each string.
-By default, the separator is a space.
+=STRING-JOIN= glues together a list of strings placing a given
+separator between each string.  By default, the separator is a space.
 #+BEGIN_SRC lisp
 CL-USER> (string-join '("Hello" "world"))
 "Hello world"
@@ -264,12 +283,16 @@ CL-USER> (string-join '("Hello" "world") ", ")
 
 Some of the features of =(INCF CL)= are discussed in:
 - [[http://kyle-burton.livejournal.com/8219.html][Playing with List Comprehensions in CL]]
-- [[http://i-need-closures.blogspot.com/2008/01/programming-collective-intelligence-in.html][Programming Collective Intelligence in Common Lisp, Chapter 5 - Optimizations]]
+- [[http://i-need-closures.blogspot.com/2008/01/programming-collective-intelligence-in.html][Programming Collective Intelligence in Common Lisp, Chapter 5 -
+  Optimizations]]
 
 * Feedback
 
-Please send suggestions, patches, and bug reports to the [[http://superadditive.com/contact/][author's email address]].
+Please send suggestions, patches, and bug reports to the [[http://superadditive.com/contact/][author's
+email address]].
 
+# Some extra directives for HTML generation follow.  These have nothing to do with the document's content.
 #+STYLE: <link rel="stylesheet" type="text/css" href="/css/chocolate.css" />
 #+STYLE: <link rel="stylesheet" type="text/css" href="/css/org-mode.css" />
+#+STYLE: <link rel="icon" type="image/png" href="/images/favicon.png" />
 #+OPTIONS: toc:2
