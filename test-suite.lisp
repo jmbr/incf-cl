@@ -138,7 +138,6 @@
                  (setf ys (insert x ys)))))))
 
 (deftest test-lc ()
-  (is (eq nil (lc (constantly nil))))
   (is (equal (list 1 2 3) (lc x (<- x (range 1 3)))))
   (is (equal (acons 0 0 (acons 0 1 (acons 1 0 (acons 1 1 nil))))
              (lc (cons i j) (<- i '(0 1)) (<- j '(0 1))))))
@@ -194,7 +193,7 @@
 
   INCF-CL-TESTS> (signals-p division-by-zero (error 'division-by-zero))
   T"
-  (is (eq t (doctest :incf-cl-test :function 'test-doctest)))
+  (is (eq t (doctest 'incf-cl-test::test-doctest)))
   ;; Here we run doctests for the whole package.
   (is (eq t (doctest :incf-cl))))
 

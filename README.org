@@ -1,7 +1,7 @@
 #+TITLE: (INCF CL)
 #+AUTHOR: Juan M. Bello Rivas
 #+EMAIL: jmbr@superadditive.com
-#+DATE: <2010-08-30 Mon>    
+#+DATE: <2010-09-05 Sun>
 
 * Overview
 
@@ -124,12 +124,19 @@ For example, consider the package =TEST=:
         (factorial (1- n) (* n acc))))
 #+END_SRC
 You can use =DOCTEST= to make sure the examples given in =FACTORIAL='s
-documentation string work as expected:
+documentation string work as expected by writing
 #+BEGIN_SRC lisp
 CL-USER> (doctest :test)
 .....
 T
 #+END_SRC
+Or, equivalently,
+#+BEGIN_SRC lisp
+CL-USER> (doctest 'test::factorial)
+.....
+T
+#+END_SRC
+
 
 *** Prelude
 

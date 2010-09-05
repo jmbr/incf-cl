@@ -62,12 +62,14 @@ signals DOCTEST-FAILURE otherwise."
                                          (subseq expected-values 0 eof-pos)
                                          expected-values)))))))
 
-(defun test-function (package-name function stream)
-  "Returns T if every test written in FUNCTION's docstring passes, NIL
+(defun test-function (package function stream)
+  "Returns T if every test in FUNCTION's docstring passes, NIL
 otherwise."
   (let* ((passed-p t)
-         (documentation (documentation function 'function))
+         (*package* package)
+         (package-name (package-name package))
          (re (concatenate 'string "[ \t]*" package-name "> "))
+         (documentation (documentation function 'function))
          (matches (cl-ppcre:all-matches re documentation)))
     (loop for start in (rest matches) by #'cddr do
           (handler-case
@@ -82,20 +84,19 @@ otherwise."
               (setf passed-p nil)))
           finally (return passed-p))))
 
-(defun doctest (package
-                &key (function nil function-p) (stream *standard-output*))
-  "Tests docstrings present in functions defined in PACKAGE and
-outputs its results to STREAM.  It returns T if the tests succeed, NIL
-on error.  If FUNCTION is specified, DOCTEST will check that function
-only.  By default, DOCTEST will test each function exported by
-PACKAGE."
-  (let ((passed-p t)
-        (package-name (etypecase package
-                        (string (string-upcase package))
-                        (symbol (symbol-name package))))
-        (*package* (find-package package)))
-    (if function-p
-        (test-function package-name function stream)
-        (do-external-symbols (symbol package passed-p)
-          (unless (test-function package-name symbol stream)
-            (setf passed-p nil))))))
+(defun doctest (symbol &key (stream *standard-output*))
+  "If SYMBOL corresponds to a function, then its documentation string
+is tested and the results are printed to STREAM.  If SYMBOL refers to
+a package, then all the functions corresponding to the external
+symbols in the package are tested.  
+DOCTEST returns T if the tests succeed, NIL otherwise."
+  (flet ((get-package-and-function (symbol)
+           (let ((package (find-package symbol)))
+             (or package
+                 (values (symbol-package symbol) symbol)))))
+    (multiple-value-bind (package function) (get-package-and-function symbol)
+      (if function
+          (when (symbol-function function)
+            (test-function package function stream))
+          (every (lambda (x) (test-function package x stream))
+                 (list-external-symbols package))))))
