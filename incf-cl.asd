@@ -49,6 +49,8 @@
 
 (defsystem #:incf-cl-test
   :description "Test suite for the INCF CL library."
+  :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
+  :licence "X11"
   :depends-on (#:incf-cl #:hu.dwim.stefil #:hu.dwim.stefil+swank)
   :components ((:file "test-suite")))
 
