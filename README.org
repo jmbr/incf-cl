@@ -32,18 +32,15 @@ The easiest way to install =(INCF CL)= is to use [[http://www.quicklisp.org/][Qu
 You may alternatively clone [[http://github.com/jmbr/incf-cl][the source code repository]] by
 issuing the following command:
 #+BEGIN_SRC sh
-$ git clone git://github.com/jmbr/incf-cl.git
+$ git clone https://github.com/jmbr/incf-cl.git
 #+END_SRC
 and then follow the ASDF installation procedure for your CL
 implementation.
-
-Note that you will need [[http://common-lisp.net/project/stefil/][Stefil]] if you want to run the test suite.
 
 ** Loading the library
 
 To begin using the library, write:
 #+BEGIN_SRC lisp
-(asdf:load-system :incf-cl)
 (use-package :incf-cl)
 #+END_SRC
 
@@ -160,8 +157,8 @@ available.  Namely,
   - =TAKE-WHILE=
   - =UNZIP=
 The on-line documentation for each of them can be read using
-=DESCRIBE= (or =M-x slime-describe-symbol= in [[http://common-lisp.net/project/slime/][SLIME]]).  See also [[http://ww2.cs.mu.oz.au/~bjpop/papers/haskell.tour.tar.gz][A Tour
-of the Haskell Prelude]] for more information.
+=DESCRIBE= (or =M-x slime-describe-symbol= in [[http://common-lisp.net/project/slime/][SLIME]]).  See also [[http://berniepope.id.au/assets/files/haskell.tour.pdf][A Tour
+of the Haskell Prelude by Bernie Pope]] for more information.
 
 Since Common Lisp doesn't guarantee tail call elimination, these
 functions are written iteratively to avoid stack overflows.
@@ -286,16 +283,8 @@ CL-USER> (string-join '("Hello" "world") ", ")
 "Hello, world"
 #+END_SRC
 
-* Links
-
-Some of the features of =(INCF CL)= are discussed in:
-- [[http://kyle-burton.livejournal.com/8219.html][Playing with List Comprehensions in CL]]
-- [[http://i-need-closures.blogspot.com/2008/01/programming-collective-intelligence-in.html][Programming Collective Intelligence in Common Lisp, Chapter 5 -
-  Optimizations]]
-
 * Feedback
 
-Please send suggestions, patches, and bug reports to the [[http://superadditive.com/contact/][author's
-email address]].
+Please use Github to send patches and bug reports.
 
 #+STARTUP: showall
