@@ -1,6 +1,6 @@
 (cl:in-package #:incf-cl)
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -88,7 +88,7 @@ otherwise."
   "If SYMBOL corresponds to a function, then its documentation string
 is tested and the results are printed to STREAM.  If SYMBOL refers to
 a package, then all the functions corresponding to the external
-symbols in the package are tested.  
+symbols in the package are tested.
 DOCTEST returns T if the tests succeed, NIL otherwise."
   (flet ((get-package-and-function (symbol)
            (let ((package (find-package symbol)))

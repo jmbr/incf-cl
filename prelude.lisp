@@ -1,6 +1,6 @@
 (cl:in-package #:incf-cl)
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -98,7 +98,7 @@ LIST itself is used.")
 (defmethod drop-while ((predicate function) (list list) &key key)
   (check-type key function-or-null)
   (do ((list list (rest list)))
-        ((or (null list)
+        ((or (endp list)
              (not (funcall predicate (first-with key list)))) list)))
 
 (defgeneric partition (predicate list &key key)
@@ -172,7 +172,7 @@ LIST itself is used.")
   (let ((result (cons nil nil)))
       (do ((list list (rest list))
            (splice result (setf (rest splice) (cons (first list) nil))))
-          ((or (null list)
+          ((or (endp list)
                (not (funcall predicate (first-with key list))))
            (values (rest result) list)))))
 
@@ -190,7 +190,7 @@ returns the entire list first and the empty list second in VALUES.")
            (n n (1- n))
            (splice result (setf (rest splice) (cons (first list) nil))))
           ((or (zerop n)
-               (null list))
+               (endp list))
            (values (rest result) list))))))
 
 (defgeneric take (n list)
@@ -224,7 +224,7 @@ respectively.  This function is the inverse of PAIRLIS."
     (do ((alist alist (rest alist))
          (xs nil (cons (caar alist) xs))
          (ys nil (cons (cdar alist) ys)))
-        ((null alist) (values xs ys)))))
+        ((endp alist) (values xs ys)))))
 
 (defgeneric scan* (function list &key key from-end initial-value)
   (:documentation "SCAN* is similar to REDUCE, but returns a list of
@@ -276,7 +276,7 @@ respectively.  This function is the inverse of PAIRLIS."
                                              (first splice)
                                              (first-with key list))
                                     nil))))
-        ((null list) result))))
+        ((endp list) result))))
 
 (declaim (inline scan-right*))
 (defun scan-right* (function list key initial-value ivp)
@@ -287,7 +287,7 @@ respectively.  This function is the inverse of PAIRLIS."
                 nil)
           (cons (funcall function (first-with key list) (first result))
                 result)))
-        ((null list) result))))
+        ((endp list) result))))
 
 (defmethod scan* ((function function) (list list)
                   &key key from-end (initial-value nil ivp))
@@ -319,7 +319,7 @@ between the elements of SEQUENCE.
          (splice result
                  (rest (setf (rest splice) (cons (first list)
                                                  (cons element nil))))))
-        ((null (rest list))
+        ((endp (rest list))
          (rplacd splice (cons (first list) nil))
          (rest result)))))
 
@@ -330,7 +330,7 @@ between the elements of SEQUENCE.
 (defmethod nintersperse (element (list list))
   (do ((xs list (let ((c (cons element (rest xs))))
                   (rest (setf (rest xs) c)))))
-      ((null (rest xs)) list)))
+      ((endp (rest xs)) list)))
 
 (defgeneric group (list &key key test test-not)
   (:documentation "Returns a list of lists where every item in each
@@ -354,7 +354,7 @@ LIST itself is used.
          (result (cons nil nil))
          (splice result))
     (do ()
-        ((null list) (rest result))
+        ((endp list) (rest result))
       (destructuring-bind (x . xs) list
         (multiple-value-bind (ys zs) (span (lambda (z)
                                              (funcall test z (apply-key key x)))

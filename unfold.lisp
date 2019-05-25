@@ -1,6 +1,6 @@
 (cl:in-package #:incf-cl)
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -37,7 +37,7 @@
 
   2. Append (3 4 5) onto (1 2)
 
-  INCF-CL> (unfold #'null #'first #'rest (list 1 2) (lambda (x)
+  INCF-CL> (unfold #'endp #'first #'rest (list 1 2) (lambda (x)
                                                       (declare (ignore x))
                                                       (list 3 4 5)))
   (1 2 3 4 5)
@@ -67,7 +67,7 @@
 
   2. Reverse a proper list:
 
-  INCF-CL> (unfold-right #'null #'first #'rest (list 1 2 3 4 5))
+  INCF-CL> (unfold-right #'endp #'first #'rest (list 1 2 3 4 5))
   (5 4 3 2 1)
 
   See also:

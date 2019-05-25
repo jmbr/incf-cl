@@ -1,5 +1,5 @@
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -21,12 +21,9 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ;;; DEALINGS IN THE SOFTWARE.
 
-(cl:in-package #:common-lisp)
-
-(defpackage #:incf-cl
+(cl:defpackage #:incf-cl
   (:use #:common-lisp)
   (:export #:lc
-           #:assemble
            #:<-
            #:unfold
            #:unfold-right

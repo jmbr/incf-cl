@@ -1,6 +1,6 @@
 (cl:in-package #:incf-cl)
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -33,11 +33,3 @@
   (let (xs)
     (do-symbols (x package xs)
       (push x xs))))
-
-;; #+sbcl
-;; (defmacro profile-external-symbols (package)
-;;   `(sb-profile:profile ,@(list-external-symbols package)))
-
-;; #+sbcl
-;; (defmacro unprofile-external-symbols (package)
-;;   `(sb-profile:unprofile ,@(list-external-symbols package)))

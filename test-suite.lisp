@@ -1,5 +1,5 @@
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -29,15 +29,12 @@
 ;;;   (asdf:oos 'asdf:load-op :incf-cl :force t)
 ;;;   (incf-cl-test:test)
 ;;;   (declaim (optimize (sb-cover:store-coverage-data 0)))
-;;;   (sb-cover:report "/home/jmbr/projects/incf-cl/coverage-report/"))
+;;;   (sb-cover:report "/home/jmbr/sources/incf-cl/coverage-report/"))
 
-(cl:defpackage #:incf-cl-test
-  (:use #:incf-cl #:common-lisp #:hu.dwim.stefil)
-  (:export #:test))
+(fiasco:define-test-package #:incf-cl/tests
+  (:use #:incf-cl))
 
-(cl:in-package #:incf-cl-test)
-
-(defsuite* (test :in root-suite :documentation "incf-cl test suite"))
+(cl:in-package #:incf-cl/tests)
 
 (deftest test-range ()
   (signals error (range 1 -1))
@@ -178,22 +175,22 @@
 (deftest test-doctest ()
   "This is a sample docstring.
 
-  INCF-CL-TESTS> \"Hello, doctest!\"
+  INCF-CL/TESTS> \"Hello, doctest!\"
   \"Hello, doctest!\"
 
-  INCF-CL-TESTS> (unzip (pairlis (list 'a 'b 'c) (list 1 2 3)))
+  INCF-CL/TESTS> (unzip (pairlis (list 'a 'b 'c) (list 1 2 3)))
   (A B C)
   (1 2 3)
 
-  INCF-CL-TESTS> (unzip 0)
+  INCF-CL/TESTS> (unzip 0)
   NIL
 
-  INCF-CL-TESTS> (signals-p cell-error (error 'division-by-zero))
+  INCF-CL/TESTS> (signals-p cell-error (error 'division-by-zero))
   NIL
 
-  INCF-CL-TESTS> (signals-p division-by-zero (error 'division-by-zero))
+  INCF-CL/TESTS> (signals-p division-by-zero (error 'division-by-zero))
   T"
-  (is (eq t (doctest 'incf-cl-test::test-doctest)))
+  (is (eq t (doctest 'incf-cl/tests::test-doctest)))
   ;; Here we run doctests for the whole package.
   (is (eq t (doctest :incf-cl))))
 

@@ -1,5 +1,5 @@
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -8,10 +8,10 @@
 ;;; modify, merge, publish, distribute, sublicense, and/or sell copies
 ;;; of the Software, and to permit persons to whom the Software is
 ;;; furnished to do so, subject to the following conditions:
-;;; 
+;;;
 ;;; The above copyright notice and this permission notice shall be
 ;;; included in all copies or substantial portions of the Software.
-;;; 
+;;;
 ;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 ;;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 ;;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -45,21 +45,15 @@
                (:file "iteration")
                (:file "string")
                (:file "doctest")
-               (:file "symbol")))
+               (:file "symbol"))
+  :in-order-to ((test-op (test-op "incf-cl/tests"))))
 
-(defsystem #:incf-cl-test
+(defsystem #:incf-cl/tests
   :description "Test suite for the INCF CL library."
   :author "Juan M. Bello Rivas <jmbr@superadditive.com>"
   :licence "X11"
-  :depends-on (#:incf-cl #:hu.dwim.stefil #:hu.dwim.stefil+swank)
-  :components ((:file "test-suite")))
-
-(defmethod perform ((op test-op) (system (eql (find-system "incf-cl"))))
-  (asdf:load-system "incf-cl-test")
-  (eval (read-from-string "(hu.dwim.stefil:funcall-test-with-feedback-message 'incf-cl-test:test)"))
-  (values))
-
-(defmethod operation-done-p ((op test-op) (system (eql (find-system "incf-cl"))))
-  nil)
+  :depends-on (#:incf-cl #:fiasco #:uiop)
+  :components ((:file "test-suite"))
+  :perform (test-op (o c) (uiop/package:symbol-call :fiasco '#:run-tests '#:incf-cl/tests)))
 
 (delete-package *package*)

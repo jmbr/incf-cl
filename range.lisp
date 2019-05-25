@@ -1,6 +1,6 @@
 (cl:in-package #:incf-cl)
 
-;;; Copyright (c) 2007-2010 Juan M. Bello Rivas <jmbr@superadditive.com>
+;;; Copyright (c) 2007-2019 Juan M. Bello Rivas <jmbr@superadditive.com>
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person
 ;;; obtaining a copy of this software and associated documentation
@@ -23,7 +23,7 @@
 ;;; DEALINGS IN THE SOFTWARE.
 
 ;;; Miscellaneous functions to build ranges of numbers (vaguely
-;;; resembling Matlab vector notation).
+;;; resembling MATLAB's vector notation).
 
 (defun range (a b &optional c)
   ;; This could be implemented using unfold too but we do it this way
